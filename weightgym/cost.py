@@ -23,7 +23,7 @@ BUDGET_USD = 250.0
 STOP_FRACTION = 0.85
 # The scale-up run (NOTES.md, "Pre-registration: scale-up") has its own budget, tallied separately.
 SCALE_UP_BUDGET_USD = 300.0
-SCALE_UP_PREFIXES = ("sft_scale", "rl_scale", "final/scale", "diag/scale")
+SCALE_UP_PREFIXES = ("sft_scale", "rl_scale", "final/scale", "diag/scale", "final_verify")
 
 
 def _eval_file_cost(path: str) -> tuple[float, int, int] | None:
