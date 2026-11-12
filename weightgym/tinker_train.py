@@ -317,10 +317,14 @@ class RepairEnv(Env):
 
 
 class _StreamArgs:
-    """The two offsets ``stream_item`` reads, for the RL path (no SGD-trained cache: networks are built on demand)."""
+    """The two offsets ``stream_item`` reads, for the RL path (no SGD-trained cache: networks are built on demand).
+
+    RL draws its SGD-trained networks from indices 100,000-199,999 of ``train_trained`` (SFT uses the low
+    indices). The position follows ``train_offset`` so that successive chunks of ``rl_chunks`` see new
+    SGD-trained networks, as they do for hand-built ones."""
 
     def __init__(self, train_offset: int):
-        self.train_offset, self.trained_offset = train_offset, 100_000
+        self.train_offset, self.trained_offset = train_offset, 100_000 + train_offset % 100_000
 
 
 @dataclass(frozen=True)

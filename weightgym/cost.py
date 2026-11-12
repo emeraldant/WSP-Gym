@@ -21,6 +21,9 @@ from .tinker_train import PRICE
 
 BUDGET_USD = 250.0
 STOP_FRACTION = 0.85
+# The scale-up run (NOTES.md, "Pre-registration: scale-up") has its own budget, tallied separately.
+SCALE_UP_BUDGET_USD = 300.0
+SCALE_UP_PREFIXES = ("sft_scale", "rl_scale", "final/scale", "diag/scale")
 
 
 def _eval_file_cost(path: str) -> tuple[float, int, int] | None:
@@ -76,12 +79,19 @@ def tally(root: str = "runs") -> dict:
             c = _eval_file_cost(path)
             if c:
                 rows.append({"file": rel, "kind": "eval", "usd": c[0], "n_in": c[1], "n_out": c[2]})
-    total = sum(r["usd"] for r in rows)
+    for r in rows:
+        r["phase"] = "scale_up" if r["file"].startswith(SCALE_UP_PREFIXES) else "main"
+    total = sum(r["usd"] for r in rows if r["phase"] == "main")
+    scale = sum(r["usd"] for r in rows if r["phase"] == "scale_up")
     by_kind: dict[str, float] = {}
     for r in rows:
         by_kind[r["kind"]] = by_kind.get(r["kind"], 0.0) + r["usd"]
     return {"budget_usd": BUDGET_USD, "total_usd": round(total, 2), "fraction": round(total / BUDGET_USD, 3),
-            "stop_at_usd": BUDGET_USD * STOP_FRACTION, "by_kind": {k: round(v, 2) for k, v in by_kind.items()},
+            "stop_at_usd": BUDGET_USD * STOP_FRACTION,
+            "scale_up": {"budget_usd": SCALE_UP_BUDGET_USD, "total_usd": round(scale, 2),
+                         "fraction": round(scale / SCALE_UP_BUDGET_USD, 3), "stop_at_usd": SCALE_UP_BUDGET_USD * STOP_FRACTION},
+            "grand_total_usd": round(total + scale, 2),
+            "by_kind": {k: round(v, 2) for k, v in by_kind.items()},
             "runs": [{**r, "usd": round(r["usd"], 3)} for r in rows]}
 
 
@@ -93,3 +103,6 @@ if __name__ == "__main__":
     for r in top:
         print(f"  ${r['usd']:8.3f}  {r['kind']:10s} {r['file']}")
     print(f"TOTAL ${t['total_usd']:.2f} of ${t['budget_usd']:.0f} ({100 * t['fraction']:.1f}%), stop at ${t['stop_at_usd']:.0f}; by kind {t['by_kind']}")
+    su = t["scale_up"]
+    print(f"SCALE-UP ${su['total_usd']:.2f} of ${su['budget_usd']:.0f} ({100 * su['fraction']:.1f}%), stop at ${su['stop_at_usd']:.0f}; "
+          f"grand total ${t['grand_total_usd']:.2f}")

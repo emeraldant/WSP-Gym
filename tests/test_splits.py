@@ -58,3 +58,13 @@ def test_frozen_split_matches_generator(name):
         f.readline()
         stored = json.loads(f.readline())
     assert stored["prompt_hash"] == eps[0].prompt_hash()
+
+
+def test_rl_stream_offsets_advance_and_stay_clear_of_sft():
+    """RL's SGD-trained stream moves with the chunk offset and never enters the indices SFT uses."""
+    from weightgym.tinker_train import _StreamArgs
+
+    a, b = _StreamArgs(600_000), _StreamArgs(600_000 + 640)
+    assert a.trained_offset == 100_000 and b.trained_offset == 100_640
+    for off in (0, 100_000, 600_000, 999_360):
+        assert 100_000 <= _StreamArgs(off).trained_offset < 200_000
