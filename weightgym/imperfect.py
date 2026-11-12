@@ -385,6 +385,57 @@ def _subtask(task, idx):
     return replace(task, X=task.X[idx], Y=task.Y[idx])
 
 
+
+# ----------------------------------------------------------------------------------------------
+# Final evaluation of the verify loop and its table
+# ----------------------------------------------------------------------------------------------
+
+FINAL_DIR = "runs/final_improve"
+
+
+async def loop_eval(arm: str, model_path: str | None, split: str, k: int = 8) -> None:
+    """Sample ``k`` proposals per network from a Tinker model (None = untrained base model) and log them."""
+    import tinker
+
+    from .llm import INKLING, LLMPolicy, evaluate
+
+    items = [wrap(it.ep, loop=True) for it in load_items(split)]
+    policy = await LLMPolicy(tinker.ServiceClient(), INKLING, model_path, 0.0, 256).start()
+    await evaluate(policy, items, f"{FINAL_DIR}/{arm}/{split}.jsonl", k, 64, tag=f"{arm}/{split}", direct=True)
+
+
+def loop_table(splits=("test_imperfect", "test_imperfect_families"), ks=(1, 8), out: str = "results/table_improve.csv") -> None:
+    import json
+    import os
+
+    from .eval import load_jsonl, write_csv
+
+    rows = []
+    for split in splits:
+        if not os.path.exists(f"data/{split}.jsonl"):
+            continue
+        items = load_items(split)
+        cache = f"{FINAL_DIR}/baselines_{split}.json"
+        if not os.path.exists(cache):
+            os.makedirs(FINAL_DIR, exist_ok=True)
+            json.dump(loop_baselines(items, ks=(1, 8, 32, 128)), open(cache, "w"), indent=1)
+        for name, st in json.load(open(cache)).items():
+            rows.append({"split": split, "proposer": name, **{k: round(v, 4) if isinstance(v, float) else v for k, v in st.items()}})
+        for arm in sorted(d for d in os.listdir(FINAL_DIR) if os.path.isdir(f"{FINAL_DIR}/{d}")):
+            path = f"{FINAL_DIR}/{arm}/{split}.jsonl"
+            if not os.path.exists(path):
+                continue
+            recs = [r for r in load_jsonl(path) if not r.get("header")]
+            if not recs or "sample" not in recs[0]:
+                continue
+            for k in ks:
+                st = loop_from_records(items, recs, k)
+                rows.append({"split": split, "proposer": f"{arm} x{k}", **{kk: round(v, 4) if isinstance(v, float) else v for kk, v in st.items()}})
+    write_csv(out, rows)
+    for r in rows:
+        print(f"{r['split']:24s} {r['proposer']:44s} gap closed {r['gap_closed']:+.3f} [{r['gap_lo']:+.3f}, {r['gap_hi']:+.3f}] improved {r['improved']:.2f}")
+
+
 if __name__ == "__main__":
     import sys
 
@@ -395,3 +446,10 @@ if __name__ == "__main__":
     elif sys.argv[1] == "baselines":
         for sp in sys.argv[2:]:
             run_baselines(sp)
+    elif sys.argv[1] == "eval":  # eval <arm> <sampler path or "base"> <k> <split> [<split> ...]
+        import asyncio
+
+        for sp in sys.argv[5:]:
+            asyncio.run(loop_eval(sys.argv[2], None if sys.argv[3] == "base" else sys.argv[3], sp, int(sys.argv[4])))
+    elif sys.argv[1] == "table":
+        loop_table()

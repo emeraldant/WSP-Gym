@@ -1,0 +1,83 @@
+{
+ "random x1": {
+  "n": 500,
+  "gap_closed": 0.005598420476932942,
+  "gap_lo": 0.002467332989452556,
+  "gap_hi": 0.009457275272072829,
+  "improved": 0.016,
+  "harmed": 0.0,
+  "accepted": 0.048
+ },
+ "random simple edit x1": {
+  "n": 500,
+  "gap_closed": 0.01141511919646818,
+  "gap_lo": 0.0071478781491353905,
+  "gap_hi": 0.016412230316012303,
+  "improved": 0.048,
+  "harmed": 0.0,
+  "accepted": 0.09
+ },
+ "random x8": {
+  "n": 500,
+  "gap_closed": 0.04999810608591135,
+  "gap_lo": 0.04094307916829582,
+  "gap_hi": 0.05997702009619378,
+  "improved": 0.198,
+  "harmed": 0.0,
+  "accepted": 0.332
+ },
+ "random simple edit x8": {
+  "n": 500,
+  "gap_closed": 0.05631138505267454,
+  "gap_lo": 0.046541283111104136,
+  "gap_hi": 0.06681403006899263,
+  "improved": 0.196,
+  "harmed": 0.0,
+  "accepted": 0.382
+ },
+ "random x32": {
+  "n": 500,
+  "gap_closed": 0.11856296964267651,
+  "gap_lo": 0.1039234701123075,
+  "gap_hi": 0.13417887863079433,
+  "improved": 0.362,
+  "harmed": 0.0,
+  "accepted": 0.634
+ },
+ "random simple edit x32": {
+  "n": 500,
+  "gap_closed": 0.1208916706603095,
+  "gap_lo": 0.10688821478009533,
+  "gap_hi": 0.13595257732854377,
+  "improved": 0.392,
+  "harmed": 0.0,
+  "accepted": 0.636
+ },
+ "random x128": {
+  "n": 500,
+  "gap_closed": 0.18664394517663152,
+  "gap_lo": 0.16938292311024744,
+  "gap_hi": 0.20480481689782506,
+  "improved": 0.544,
+  "harmed": 0.0,
+  "accepted": 0.812
+ },
+ "random simple edit x128": {
+  "n": 500,
+  "gap_closed": 0.16217067941710472,
+  "gap_lo": 0.14665335910751118,
+  "gap_hi": 0.17834976194349045,
+  "improved": 0.52,
+  "harmed": 0.0,
+  "accepted": 0.744
+ },
+ "full search (hundreds of forward passes)": {
+  "n": 500,
+  "gap_closed": 0.21721829490036396,
+  "gap_lo": 0.19670921717082246,
+  "gap_hi": 0.23858461607283793,
+  "improved": 0.574,
+  "harmed": 0.0,
+  "accepted": 0.638
+ }
+}

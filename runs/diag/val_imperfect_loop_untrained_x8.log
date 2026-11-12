@@ -3,3 +3,7 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
   self.client = await self.service.create_sampling_client_async(base_model=self.base_model)
 /home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
   out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val_imperfect_loop_untrained_x8.jsonl] 2400 rollouts in 74s; tokens in 360891 (prompt, once per episode) out 531072
+n=2400 repair 0.000 [0.000, 0.000]  clean_ok nan  valid 0.18  noop_on_faulty 0.00  reward -0.814  mean out tokens 221
+   variant=weights            n=1160 repair 0.00 clean_ok nan valid 0.12 noop_f 0.00
+   variant=weights+failures   n=1240 repair 0.00 clean_ok nan valid 0.24 noop_f 0.00
