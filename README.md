@@ -13,6 +13,9 @@ networks.
 
 ![Repair rate by test split](results/repair_rate.png)
 
+*Chart: the untrained model and the two trained models described below. The supervised and RL stages of
+the first model are shown separately in `results/repair_rate_stages.png`.*
+
 ## Result
 
 Repair rate with **no reasoning tokens** (the model must answer at once; ~40 output tokens), on frozen
@@ -262,7 +265,12 @@ uv run python -m weightgym.tinker_train sft --log-path runs/sft --lr 3e-4 --deca
 uv run python -m weightgym.rl_chunks --log-path runs/rl --load tinker://<sft state> --init-sampler tinker://<sft sampler> \
     --init-val 0.754 --lr 2e-5 --chunks 6 --chunk-steps 10 --group-size 8 --groups-per-batch 64
 uv run python -m weightgym.final_eval --arm untrained --arm sft_rl=tinker://<sampler> --baselines --thinking-ref 100
-uv run python -m weightgym.plot --arms untrained,sft,sft_rl --labels "Untrained,Supervised stage,+ RL (final)"
+uv run python -m weightgym.tinker_train sft --log-path runs/sft_mixed --lr 3e-4 --decay 0.8 --steps 300 --batch-size 64 \
+    --mix repair,repair_trained --val-sets "repair:data/val.jsonl,repair:data/val_trained.jsonl"
+uv run python -m weightgym.rl_chunks --log-path runs/rl_improve --init-val 0.0 --lr 6e-5 --rank 16 --chunks 8 --group-size 16 \
+    --groups-per-batch 32 --mix improve_loop --val-task improve_loop --val-split data/val_imperfect.jsonl --val-samples 8 --select loop_gap
+uv run python -m weightgym.plot --arms untrained,sft_rl,sft_mixed \
+    --labels "Untrained,Trained on hand-built networks,Trained on hand-built + gradient-trained"
 uv run python -m weightgym.cost
 ```
 
