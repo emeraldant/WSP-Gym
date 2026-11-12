@@ -66,6 +66,8 @@ async def main() -> None:
     ap.add_argument("--val-split", default="data/val.jsonl")
     ap.add_argument("--n-val", type=int, default=300)
     ap.add_argument("--keep-all", action="store_true")
+    ap.add_argument("--mix", default="repair", help="training streams, passed through to tinker_train rl")
+    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile"])
     ap.add_argument("--keep-init", action="store_true", help="never delete the starting state/sampler")
     a = ap.parse_args()
     os.makedirs(a.log_path, exist_ok=True)
@@ -89,7 +91,7 @@ async def main() -> None:
                "--lr", str(a.lr), "--steps", str(a.chunk_steps), "--group-size", str(a.group_size),
                "--groups-per-batch", str(a.groups_per_batch), "--eval-every", "0", "--save-every", "0",
                "--load", state, "--effort", str(a.effort), "--max-tokens", str(a.max_tokens),
-               "--train-offset", str(a.train_offset + c * a.chunk_steps * a.groups_per_batch)]
+               "--train-offset", str(a.train_offset + c * a.chunk_steps * a.groups_per_batch), "--mix", a.mix]
         print(f"[chunk {c}] start from {state}", flush=True)
         proc = subprocess.Popen(cmd, stdout=open(os.path.join(log, "stdout.log"), "a"), stderr=subprocess.STDOUT)
         deleted_prev = False

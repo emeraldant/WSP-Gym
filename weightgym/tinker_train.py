@@ -217,9 +217,9 @@ async def run_sft(a) -> None:
             if kept.get("state") and not a.keep_all:
                 await delete_paths([kept["state"]], rest)
             st = await (await tc.save_state_async(f"sft-state-{step + 1:05d}"))
-            sw = await (await tc.save_weights_for_sampler_async(f"sft-sampler-{step + 1:05d}"))
             if kept.get("sampler") and not a.keep_all:
                 await delete_paths([kept["sampler"]], rest)
+            sw = await (await tc.save_weights_for_sampler_async(f"sft-sampler-{step + 1:05d}"))
             kept.update(state=st.path, sampler=sw.path)
             with open(os.path.join(a.log_path, "checkpoints.jsonl"), "a") as f:
                 f.write(json.dumps({"step": step + 1, "state_path": st.path, "sampler_path": sw.path}) + "\n")
