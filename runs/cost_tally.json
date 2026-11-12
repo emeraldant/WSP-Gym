@@ -1,12 +1,12 @@
 {
  "budget_usd": 250.0,
- "total_usd": 38.89,
- "fraction": 0.156,
+ "total_usd": 67.01,
+ "fraction": 0.268,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 6.19,
-  "rl_train": 7.45,
-  "sft_train": 25.26
+  "eval": 8.6,
+  "rl_train": 13.04,
+  "sft_train": 45.38
  },
  "runs": [
   {
@@ -97,6 +97,55 @@
    "n_out": 520
   },
   {
+   "file": "diag/sft300_on_rl_batch0.jsonl",
+   "kind": "eval",
+   "usd": 0.045,
+   "n_in": 87316,
+   "n_out": 18364
+  },
+  {
+   "file": "diag/val_sft150_T0.jsonl",
+   "kind": "eval",
+   "usd": 0.138,
+   "n_in": 417860,
+   "n_out": 12301
+  },
+  {
+   "file": "final/sft/test_families.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 688289,
+   "n_out": 19194
+  },
+  {
+   "file": "final/sft/test_faults.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 691088,
+   "n_out": 18582
+  },
+  {
+   "file": "final/sft/test_id.jsonl",
+   "kind": "eval",
+   "usd": 0.227,
+   "n_in": 689973,
+   "n_out": 19735
+  },
+  {
+   "file": "final/sft/test_larger.jsonl",
+   "kind": "eval",
+   "usd": 0.36,
+   "n_in": 1135673,
+   "n_out": 19436
+  },
+  {
+   "file": "final/sft/test_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.231,
+   "n_in": 703464,
+   "n_out": 20409
+  },
+  {
    "file": "final/untrained/test_families.jsonl",
    "kind": "eval",
    "usd": 0.309,
@@ -139,9 +188,21 @@
    "n_out": 1079676
   },
   {
+   "file": "rl_main/chunk00/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 5.591
+  },
+  {
+   "file": "rl_main/val_chunk00.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10660
+  },
+  {
    "file": "sft_main/metrics.jsonl",
    "kind": "sft_train",
-   "usd": 21.281
+   "usd": 41.409
   },
   {
    "file": "sft_main/val_step00000.jsonl",
@@ -191,6 +252,48 @@
    "usd": 0.137,
    "n_in": 417860,
    "n_out": 11480
+  },
+  {
+   "file": "sft_main/val_step00175.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11690
+  },
+  {
+   "file": "sft_main/val_step00200.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11330
+  },
+  {
+   "file": "sft_main/val_step00225.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11376
+  },
+  {
+   "file": "sft_main/val_step00250.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11294
+  },
+  {
+   "file": "sft_main/val_step00275.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11251
+  },
+  {
+   "file": "sft_main/val_step00300.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11281
   },
   {
    "file": "sweep/rl_lr2e-4/metrics.jsonl",

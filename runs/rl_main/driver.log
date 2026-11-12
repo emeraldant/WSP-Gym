@@ -2,3 +2,14 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 /home/user/WeightGym/weightgym/rl_chunks.py:74: FutureWarning: DEPRECATED: ServiceClient.create_rest_client() is deprecated and will be removed in a future tinker SDK version. Construct tinker.RestClient() directly instead; it takes the same base_url and api_key and needs no ServiceClient.
   rest = service.create_rest_client()
 [chunk 0] start from tinker://2e19a1df-0217-5277-9f3a-92cd52dae329:train:0/weights/sft-state-00300
+/home/user/WeightGym/weightgym/ckpt.py:30: FutureWarning: DEPRECATED: RestClient.delete_checkpoint_from_tinker_path_async() is deprecated and will be removed in a future tinker SDK version. Use `await RestClient.delete_checkpoint_from_tinker_path(...)` instead; delete_checkpoint_from_tinker_path() returns an APIFuture that can be awaited.
+  await rc.delete_checkpoint_from_tinker_path_async(p)
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val_chunk00.jsonl] 300 rollouts in 29s; tokens in 417860 (prompt, once per episode) out 10660
+/home/user/WeightGym/weightgym/ckpt.py:30: FutureWarning: DEPRECATED: RestClient.delete_checkpoint_from_tinker_path_async() is deprecated and will be removed in a future tinker SDK version. Use `await RestClient.delete_checkpoint_from_tinker_path(...)` instead; delete_checkpoint_from_tinker_path() returns an APIFuture that can be awaited.
+  await rc.delete_checkpoint_from_tinker_path_async(p)
+[chunk 0] val repair 0.763 [0.708,0.818] clean_ok 0.97 valid 1.00 noop_f 0.08 | best so far: chunk 0 (0.763)
+[chunk 1] start from tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/weights/final
