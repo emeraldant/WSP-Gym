@@ -1,0 +1,22 @@
+{
+ "cmd": "rl",
+ "log_path": "runs/rl_main/chunk00",
+ "model": "thinkingmachines/Inkling-2-Small",
+ "effort": 0.0,
+ "direct": true,
+ "max_tokens": 256,
+ "rank": 32,
+ "lr": 2e-05,
+ "steps": 10,
+ "train_offset": 100000,
+ "val_split": "data/val.jsonl",
+ "n_val": 300,
+ "eval_every": 0,
+ "save_every": 0,
+ "load": "tinker://2e19a1df-0217-5277-9f3a-92cd52dae329:train:0/weights/sft-state-00300",
+ "seed": 0,
+ "group_size": 8,
+ "groups_per_batch": 64,
+ "loss_fn": "importance_sampling",
+ "num_substeps": 1
+}

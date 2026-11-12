@@ -1,0 +1,6 @@
+arm,vs,split,n_faulty,diff,lo,hi
+sft,untrained,test_id,422,0.7014,0.6588,0.7441
+sft,untrained,test_families,403,0.4342,0.3871,0.4839
+sft,untrained,test_faults,407,0.2039,0.1646,0.2432
+sft,untrained,test_larger,416,0.5216,0.4736,0.5697
+sft,untrained,test_trained,403,0.1266,0.0943,0.1613

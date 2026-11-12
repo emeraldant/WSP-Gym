@@ -1,0 +1,52 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/WeightGym/weightgym/final_eval.py", line 148, in <module>
+    asyncio.run(_main())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/weightgym/final_eval.py", line 143, in _main
+    await asyncio.gather(*jobs)
+  File "/home/user/WeightGym/weightgym/final_eval.py", line 48, in eval_arm
+    policy = await LLMPolicy(service, INKLING, model_path, SETTINGS["effort"], SETTINGS["max_tokens"]).start()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/weightgym/llm.py", line 60, in start
+    self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/sdk_method.py", line 125, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/public_interfaces/service_client.py", line 769, in create_sampling_client_async
+    return await self.create_sampling_client(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/sdk_method.py", line 132, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/public_interfaces/service_client.py", line 668, in create_sampling_client
+    self.holder,
+    ^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/public_interfaces/service_client.py", line 191, in holder
+    return self._get_session_holder()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/public_interfaces/service_client.py", line 154, in _get_session_holder
+    self._session_holder = InternalClientHolder(
+                           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/sdk_method.py", line 63, in wrapper
+    return context_without_sdk_method().run(func, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/internal_client_holder.py", line 322, in __init__
+    config_auth = resolve_auth_provider(api_key, enforce_cmd=False)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/WeightGym/.venv/lib/python3.12/site-packages/tinker/lib/_auth_token_provider.py", line 169, in resolve_auth_provider
+    raise TinkerError(MISSING_API_KEY_MESSAGE)
+tinker.TinkerError: The api_key client option must be set by passing api_key to the client, by setting the TINKER_API_KEY environment variable, or by storing a key with `tinker auth login`
