@@ -22,11 +22,11 @@ SERIES = ["#2a78d6", "#eb6834", "#1baf7a"]
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 SPLIT_LABELS = {
     "test_id": "In-distribution\n(primary)",
-    "test_families": "Unseen function\nfamilies",
-    "test_faults": "Unseen fault\ntypes",
+    "test_families": "Unseen\nfamilies",
+    "test_faults": "Unseen\nfault types",
     "test_larger": "Larger\nnetworks",
-    "test_trained": "SGD-trained\nnetworks",
-    "test_external": "Trained by an\nindependent library",
+    "test_trained": "Gradient-trained\n(our code)",
+    "test_external": "Gradient-trained\n(scikit-learn)",
 }
 
 
@@ -77,7 +77,7 @@ def main() -> None:
             r = rule.get(int(round(x)))
             if r is not None and hi < r + 6:  # keep the label clear of the heuristic rule
                 hi = r
-            ax.text(x, hi + 1.8, f"{y:.0f}%", ha="center", va="bottom", color=INK, fontsize=22 if n < 3 else 19, fontweight="bold", zorder=5)
+            ax.text(x, hi + 1.8, f"{y:.0f}%", ha="center", va="bottom", color=INK, fontsize=22 if n < 3 else (19 if len(splits) < 6 else 16), fontweight="bold", zorder=5)
     mx, my = [], []
     for i, s in enumerate(splits):
         r = t.get((a.marker_arm, s))
@@ -95,7 +95,7 @@ def main() -> None:
         ax.hlines(y, i - 0.44, i - 0.44 + width, colors=INK2, linestyles=(0, (3, 2)), linewidth=3.5, zorder=2,
                   label=a.ref_label.format(tok=round(tok, -2)) + f": {y:.0f}%")
     ax.set_xticks(range(len(splits)))
-    ax.set_xticklabels([SPLIT_LABELS[s] for s in splits], color=INK, fontsize=20)
+    ax.set_xticklabels([SPLIT_LABELS[s] for s in splits], color=INK, fontsize=20 if len(splits) < 6 else 18)
     ax.set_ylim(0, 118)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_yticklabels([f"{v}%" for v in (0, 25, 50, 75, 100)], color=INK2)
