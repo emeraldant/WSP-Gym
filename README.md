@@ -299,7 +299,9 @@ networks from the 8 datasets it never saw (`results/table_realworld.csv`):
 iris classifiers are already perfect on the held-out rows. On the third, a Titanic survival model
 (`bernardozschaber/titanic-federated-dp-mlp`, 978 weights), the kept edit raised held-out accuracy from
 68.9% to 73.9% (8 proposals from the real-data proposer; 70.1% with the formula-trained one). That is
-one model, so it is an example, not a measurement.
+one model, so it is an example, not a measurement. The two iris models' weights are not stored in this
+repository because their Hub pages state no licence; their rollout logs are under `runs/final_real`, and
+`WEIGHTGYM_HF_INCLUDE_UNLICENSED=1 python -m weightgym.realworld hf` rebuilds them locally from the Hub.
 
 **Public image classifiers against their claimed benchmarks.** 13 Hugging Face image classifiers (beans,
 CIFAR-10, MNIST, Fashion-MNIST; claimed accuracy 25% to 99.5%). Only the final layer is small enough

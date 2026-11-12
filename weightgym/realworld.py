@@ -878,15 +878,29 @@ def build_hf_items() -> None:
             except Exception as e:  # noqa: BLE001 - the check is informative only
                 extra = {"check_failed": f"{type(e).__name__}: {str(e)[:120]}"}
         lines.append({"repo": r["repo"], "url": f"https://huggingface.co/{r['repo']}", "status": "rejected", "reason": r["reason"], **extra})
+    if os.environ.get("WEIGHTGYM_HF_INCLUDE_UNLICENSED") != "1":
+        lines = [_without_unlicensed_weights(line) for line in lines]
     with open(HF_PATH, "w") as f:
         f.writelines(json.dumps(line) + "\n" for line in lines)
     for line in lines:
         print(json.dumps({k: v for k, v in line.items() if k != "item"}))
 
 
+def _without_unlicensed_weights(line: dict) -> dict:
+    """Models whose Hub page states no licence are described but their weights are not written to the
+    repository file. ``WEIGHTGYM_HF_INCLUDE_UNLICENSED=1 python -m weightgym.realworld hf`` rebuilds the
+    full file locally from the Hub (do not commit it)."""
+    if "item" in line and str(line.get("licence", "")).lower() == "none stated":
+        line = {k: v for k, v in line.items() if k != "item"}
+        line["weights_in_repo"] = False
+        line["rebuild"] = "WEIGHTGYM_HF_INCLUDE_UNLICENSED=1 python -m weightgym.realworld hf"
+    return line
+
+
 def load_hf_items() -> list[RealItem]:
+    """Usable public models whose weights are in the repository file (see ``_without_unlicensed_weights``)."""
     with open(HF_PATH) as f:
-        return [RealItem.from_json(r["item"]) for r in map(json.loads, f) if r.get("status") == "usable"]
+        return [RealItem.from_json(r["item"]) for r in map(json.loads, f) if r.get("status") == "usable" and "item" in r]
 
 
 if __name__ == "__main__":

@@ -21,3 +21,15 @@
 [chunk 1] val_trained: repair 0.686 [0.615,0.757] clean_ok 0.90 noop_f 0.06
 [chunk 1] val repair 0.790 [0.751,0.830] clean_ok 0.94 valid 1.00 noop_f 0.05 | best so far: chunk 0 (0.780)
 [chunk 2] start from tinker://c982f175-4d5f-5ece-ae2c-a0d6705105c8:train:0/weights/final
+[val_chunk02_val.jsonl] 300 rollouts in 26s; tokens in 417860 (prompt, once per episode) out 10823
+[val_chunk02_val_trained.jsonl] 200 rollouts in 10s; tokens in 277978 (prompt, once per episode) out 7287
+[chunk 2] val: repair 0.835 [0.784,0.881] clean_ok 0.98 noop_f 0.06
+[chunk 2] val_trained: repair 0.698 [0.627,0.763] clean_ok 0.94 noop_f 0.12
+[chunk 2] val repair 0.778 [0.736,0.817] clean_ok 0.97 valid 1.00 noop_f 0.08 | best so far: chunk 0 (0.780)
+[chunk 3] start from tinker://09c98f7c-b882-5a39-b999-e39493fbcb7a:train:0/weights/final
+[val_chunk03_val.jsonl] 300 rollouts in 30s; tokens in 417860 (prompt, once per episode) out 11169
+[val_chunk03_val_trained.jsonl] 200 rollouts in 20s; tokens in 277978 (prompt, once per episode) out 7719
+[chunk 3] val: repair 0.856 [0.809,0.898] clean_ok 0.95 noop_f 0.03
+[chunk 3] val_trained: repair 0.675 [0.604,0.746] clean_ok 0.90 noop_f 0.07
+[chunk 3] val repair 0.780 [0.741,0.820] clean_ok 0.94 valid 1.00 noop_f 0.04 | best so far: chunk 0 (0.780)
+[chunk 4] start from tinker://10f42a45-7d13-51e3-8a8c-f54c2ce10770:train:0/weights/final

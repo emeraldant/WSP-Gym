@@ -127,8 +127,9 @@ def test_training_stream_never_uses_a_heldout_dataset():
 @pytest.mark.skipif(not os.path.exists(rw.HF_PATH) or not os.path.isdir(rw.HF_CACHE), reason="Hugging Face case study not built or not cached")
 def test_hf_items_reproduce_their_recorded_accuracy():
     recs = [json.loads(line) for line in open(rw.HF_PATH)]
-    usable = [r for r in recs if r["status"] == "usable"]
+    usable = [r for r in recs if r["status"] == "usable" and "item" in r]  # unlicensed models carry no weights here
     assert usable and all(r.get("reason") for r in recs if r["status"] == "rejected")
+    assert all(r.get("licence") != "none stated" for r in usable)
     for r, it in zip(usable, rw.load_hf_items()):
         assert it.seed >= 64_000_000 and it.source == "hf:" + r["repo"] and it.net.n_weights == r["n_weights"]
         assert it.acc_select == pytest.approx(r["accuracy_select"]) and it.acc_report == pytest.approx(r["accuracy_report"])
