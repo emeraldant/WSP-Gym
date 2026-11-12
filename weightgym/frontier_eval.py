@@ -29,8 +29,10 @@ import httpx
 from .env import load_split, score_answer
 from .eval import record, summarize
 
-URL = "https://openrouter.ai/api/v1/chat/completions"
-HEADERS = {"Authorization": "Bearer proxy-injected", "Content-Type": "application/json"}
+URL = os.environ.get("WEIGHTGYM_BASE_URL", "https://openrouter.ai/api/v1").rstrip("/") + "/chat/completions"
+# Any OpenAI-compatible endpoint works: set WEIGHTGYM_BASE_URL and WEIGHTGYM_API_KEY. In the environment this
+# project was developed in, the key is injected by a network proxy and the placeholder below is overwritten.
+HEADERS = {"Authorization": f"Bearer {os.environ.get('WEIGHTGYM_API_KEY', 'proxy-injected')}", "Content-Type": "application/json"}
 DIRECT_REASONING = ({"enabled": False}, {"effort": "none"}, {"effort": "minimal"}, {"effort": "low"})
 
 
@@ -69,12 +71,21 @@ async def main() -> None:
     ap.add_argument("--start", type=int, default=0)
     ap.add_argument("--max-tokens", type=int, default=None)
     ap.add_argument("--concurrency", type=int, default=8)
+    ap.add_argument("--task", default="repair", choices=["repair", "improve", "decompile"])
     a = ap.parse_args()
     _, eps = load_split(f"data/{a.split}.jsonl")
     eps = eps[a.start : a.start + a.n]
+    if a.task == "improve":
+        from .imperfect import wrap as _wrap
+
+        eps = [_wrap(e) for e in eps]
+    elif a.task == "decompile":
+        from .decompile import wrap as _wrap
+
+        eps = [_wrap(e) for e in eps]
     direct = a.mode == "direct"
     max_tokens = a.max_tokens or (512 if direct else 20000)
-    out = f"runs/final/{a.arm}/{a.split}.jsonl"
+    out = f"runs/{'final' if a.task == 'repair' else 'final_' + a.task}/{a.arm}/{a.split}.jsonl"
     os.makedirs(os.path.dirname(out), exist_ok=True)
     done, recs = set(), []
     if os.path.exists(out):
@@ -109,7 +120,7 @@ async def main() -> None:
             answer = msg.get("content") or ""
             usage = j.get("usage") or {}
             details = usage.get("completion_tokens_details") or {}
-            sc = score_answer(ep, answer)
+            sc = ep.score(answer) if hasattr(ep, "score") else score_answer(ep, answer)
             rec = record(ep, sc, sample=0, tag=a.arm, direct=direct, prompt_hash=ep.prompt_hash(direct),
                          n_in=usage.get("prompt_tokens", 0), n_out=usage.get("completion_tokens", 0),
                          reasoning_tokens=details.get("reasoning_tokens"), cost_usd=usage.get("cost"),
