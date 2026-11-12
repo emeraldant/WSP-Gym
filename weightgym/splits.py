@@ -11,6 +11,14 @@ ground-truth inverse edit). The training split is an unbounded deterministic str
     test_faults    training families, held-out faults (scale_in_row, spurious_direction)
     test_larger    training families and faults at size 2 (larger than anything in training)
     test_trained   SGD-trained networks (training families and faults); training never sees one
+
+Backdoor-audit task (``weightgym/audit.py``; seeds 9,000,000-13,999,999, written by ``write_audit_splits``):
+
+    train_audit      stream: compiled backdoors (detector neuron among decoys), 50% clean
+    val_audit        same distribution, 300 networks
+    test_audit       same distribution, 500 networks
+    test_audit_sgd   500 networks: backdoors learned by SGD from poisoned data, clean SGD-trained controls
+    train_audit_sgd  stream definition only, same distribution as test_audit_sgd
 """
 
 from __future__ import annotations
@@ -19,6 +27,7 @@ import argparse
 import json
 import os
 
+from .audit import AUDIT_FAMILIES, BACKDOOR, AuditConfig, make_audit_episode
 from .env import (
     HELDOUT_FAMILIES, HELDOUT_FAULTS, TRAIN_FAMILIES, TRAIN_FAULTS, Episode, GymConfig, make_episode, save_split,
 )
@@ -36,8 +45,17 @@ SPLITS = {
     # Added 02:25 for the follow-up "mixed-source" arm: a training stream of SGD-trained networks.
     "train_trained": (8_000_000, 0, TRAIN_FAMILIES, TRAIN_FAULTS, (0, 1), "trained"),
     "val_trained": (20_000_000, 200, TRAIN_FAMILIES, TRAIN_FAULTS, (0, 1), "trained"),
+    # Backdoor-audit task (weightgym/audit.py). The only "fault" is a backdoor; half of the networks are clean.
+    # Source "audit" = compiled detector neuron among decoys, "audit_sgd" = backdoor learned from poisoned data.
+    "train_audit": (9_000_000, 0, AUDIT_FAMILIES, (BACKDOOR,), (0, 1), "audit"),
+    "val_audit": (10_000_000, 300, AUDIT_FAMILIES, (BACKDOOR,), (0, 1), "audit"),
+    "test_audit": (11_000_000, 500, AUDIT_FAMILIES, (BACKDOOR,), (0, 1), "audit"),
+    "test_audit_sgd": (12_000_000, 500, AUDIT_FAMILIES, (BACKDOOR,), (0, 1), "audit_sgd"),
+    "train_audit_sgd": (13_000_000, 0, AUDIT_FAMILIES, (BACKDOOR,), (0, 1), "audit_sgd"),
 }
 EVAL_SPLITS = ("val", "test_id", "test_families", "test_faults", "test_larger", "test_trained")
+AUDIT_EVAL_SPLITS = ("val_audit", "test_audit", "test_audit_sgd")
+AUDIT_STREAMS = ("train_audit", "train_audit_sgd")
 MAX_PER_SPLIT = 1_000_000 - 1
 
 
@@ -47,14 +65,54 @@ def seed_range(split: str) -> tuple[int, int]:
     return seed0, seed0 + (99_999 if split == "calib" else MAX_PER_SPLIT)
 
 
-def config_for(split: str, i: int) -> GymConfig:
+def is_audit(split: str) -> bool:
+    return SPLITS[split][5] in ("audit", "audit_sgd")
+
+
+def config_for(split: str, i: int) -> GymConfig | AuditConfig:
     _, _, families, faults, sizes, source = SPLITS[split]
+    if is_audit(split):
+        return AuditConfig(families=families, size=sizes[i % len(sizes)], source="sgd" if source == "audit_sgd" else "compiled")
     return GymConfig(families=families, faults=faults, size=sizes[i % len(sizes)], source=source)
 
 
 def episode_for(split: str, i: int) -> Episode:
     assert 0 <= i <= MAX_PER_SPLIT
+    if is_audit(split):
+        return make_audit_episode(SPLITS[split][0] + i, config_for(split, i))
     return make_episode(SPLITS[split][0] + i, config_for(split, i))
+
+
+def _audit_one(args) -> dict:
+    return episode_for(*args).to_json()
+
+
+def write_audit_splits(out_dir: str = "data", only: tuple[str, ...] = AUDIT_EVAL_SPLITS + AUDIT_STREAMS, workers: int = 1) -> None:
+    """Write the frozen audit splits (``<name>.jsonl``) and the stream definitions (``<name>.json``).
+    Touches no other split. SGD-poisoned episodes take about half a second each; ``workers`` parallelises."""
+    from multiprocessing import Pool
+
+    os.makedirs(out_dir, exist_ok=True)
+    for name in only:
+        seed0, n, families, faults, sizes, source = SPLITS[name]
+        assert is_audit(name), name
+        if n == 0:
+            with open(os.path.join(out_dir, f"{name}.json"), "w") as f:
+                json.dump({"split": name, "seed0": seed0, "families": families, "sizes": sizes, "source": source,
+                           "config": config_for(name, 0).to_json(),
+                           "note": "episode i = make_audit_episode(seed0 + i, AuditConfig(size=sizes[i % 2], source=...)); "
+                                   "see splits.config_for"}, f, indent=1)
+            continue
+        jobs = [(name, i) for i in range(n)]
+        if workers > 1:
+            with Pool(workers) as pool:
+                rows = pool.map(_audit_one, jobs, chunksize=8)
+        else:
+            rows = [_audit_one(j) for j in jobs]
+        eps = [Episode.from_json(r) for r in rows]
+        save_split(os.path.join(out_dir, f"{name}.jsonl"), eps, config_for(name, 0), name)
+        print(f"{name:14s} n={n} clean={sum(e.is_clean for e in eps)} weights median={sorted(e.net.n_weights for e in eps)[n // 2]} "
+              f"max={max(e.net.n_weights for e in eps)}")
 
 
 def write_splits(out_dir: str = "data", only: tuple[str, ...] = EVAL_SPLITS) -> None:
@@ -75,6 +133,11 @@ def write_splits(out_dir: str = "data", only: tuple[str, ...] = EVAL_SPLITS) -> 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data")
-    ap.add_argument("--only", default=",".join(EVAL_SPLITS))
+    ap.add_argument("--only", default=None)
+    ap.add_argument("--audit", action="store_true", help="write the backdoor-audit splits instead (no other file is touched)")
+    ap.add_argument("--workers", type=int, default=1)
     a = ap.parse_args()
-    write_splits(a.out, tuple(a.only.split(",")))
+    if a.audit:
+        write_audit_splits(a.out, tuple(a.only.split(",")) if a.only else AUDIT_EVAL_SPLITS + AUDIT_STREAMS, a.workers)
+    else:
+        write_splits(a.out, tuple((a.only or ",".join(EVAL_SPLITS)).split(",")))

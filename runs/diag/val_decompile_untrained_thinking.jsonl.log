@@ -3,3 +3,14 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
   self.client = await self.service.create_sampling_client_async(base_model=self.base_model)
 /home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
   out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val_decompile_untrained_thinking.jsonl] 60 rollouts in 512s; tokens in 49150 (prompt, once per episode) out 455337
+n=60 repair 0.667 [0.550, 0.783]  clean_ok nan  valid 0.67  noop_on_faulty 0.00  reward 0.333  mean out tokens 7589
+   family=argmax             n=   8 repair 0.00 clean_ok nan valid 0.00 noop_f 0.00
+   family=arith              n=   7 repair 1.00 clean_ok nan valid 1.00 noop_f 0.00
+   family=compare            n=   6 repair 0.83 clean_ok nan valid 0.83 noop_f 0.00
+   family=count              n=   5 repair 0.40 clean_ok nan valid 0.40 noop_f 0.00
+   family=dnf                n=   4 repair 0.75 clean_ok nan valid 0.75 noop_f 0.00
+   family=equality           n=   3 repair 0.67 clean_ok nan valid 0.67 noop_f 0.00
+   family=minmax             n=  11 repair 1.00 clean_ok nan valid 1.00 noop_f 0.00
+   family=parity             n=   7 repair 0.43 clean_ok nan valid 0.43 noop_f 0.00
+   family=threshold          n=   9 repair 0.78 clean_ok nan valid 0.78 noop_f 0.00

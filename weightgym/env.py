@@ -107,6 +107,10 @@ class Episode:
         extras = dict(d.get("extras") or {})
         if extras.get("pad"):
             task = pad_task(task, int(extras["pad"]))
+        if extras.get("reprogram"):  # the target spec of a reprogram episode (weightgym/reprogram.py)
+            from .reprogram import build_target
+
+            task = build_target(d["family"], d["params"], extras["reprogram"])
         return Episode(
             seed=d["seed"], family=d["family"], variant=d["variant"], fault=d["fault"], task=task,
             clean=MLP.from_json(d["clean"]), net=MLP.from_json(d["net"]), acc_clean=d["acc_clean"],
@@ -254,6 +258,10 @@ def render_prompt(ep: Episode, direct: bool = False) -> str:
     """``direct=True`` is the no-reasoning regime: the model must answer at once."""
     if ep.variant == AUDIT_VARIANT:
         return _render_audit_prompt(ep, direct)
+    if ep.variant == "reprogram":
+        from .reprogram import render_reprogram_prompt
+
+        return render_reprogram_prompt(ep, direct)
     task, net = ep.task, ep.net
     s = []
     s.append(

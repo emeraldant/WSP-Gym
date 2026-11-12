@@ -16,3 +16,6 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 [val_chunk01.jsonl] 300 rollouts in 22s; tokens in 417860 (prompt, once per episode) out 10914
 [chunk 1] val repair 0.797 [0.746,0.847] clean_ok 0.95 valid 1.00 noop_f 0.06 | best so far: chunk 1 (0.797)
 [chunk 2] start from tinker://c339bc29-a507-595f-a879-9694d56480bb:train:0/weights/final
+[val_chunk02.jsonl] 300 rollouts in 39s; tokens in 417860 (prompt, once per episode) out 11147
+[chunk 2] val repair 0.763 [0.708,0.818] clean_ok 0.92 valid 1.00 noop_f 0.04 | best so far: chunk 1 (0.797)
+[chunk 3] start from tinker://1795e7e0-27a5-5f6f-945b-8d5a12495aac:train:0/weights/final

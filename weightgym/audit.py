@@ -77,19 +77,21 @@ class AuditConfig:
     n_inputs: tuple[int, ...] = (9, 10)  # total inputs after padding: exhaustive domain of 512 or 1024
     k_range: tuple[int, int] = (5, 8)  # trigger literals (inclusive); the trigger fires on 2**-k of the domain
     n_tests: int = AUDIT_TESTS
-    suspects: tuple[int, int] = (2, 4)  # compiled: detector + dead decoys (inclusive), same for clean networks
+    # compiled: detector + dead decoys (inclusive range), the same total in clean networks. With S such
+    # neurons no magnitude statistic can find the detector more often than 1/S (about 16% on average here).
+    suspects: tuple[int, int] = (5, 8)
     corner_decoys: tuple[int, int] = (0, 2)  # compiled: corner-firing harmless decoys (inclusive)
-    n_distract: tuple[int, int] | None = None  # ordinary distractors; default depends on size
+    n_distract: tuple[int, int] = (2, 4)  # compiled: ordinary distractors added by nets.obfuscate, at every size
+    # sgd: hidden neurons beyond the canonical width, so that sizes match the compiled source
+    # (2-4 ordinary distractors + 5-8 suspects + 0-2 corner decoys)
+    sgd_extra: tuple[int, int] = (7, 14)
     p_split: float = 0.5
     scale: tuple[float, float] = (0.5, 2.0)
     noise: float = 0.01
 
-    def distract(self) -> tuple[int, int]:
-        return tuple(self.n_distract or {0: (2, 4), 1: (4, 8)}[self.size])
-
     def obf(self) -> ObfuscationConfig:
         # min_clean_acc = 1: an audited network without a backdoor is exact on the whole domain
-        return ObfuscationConfig(n_distract=self.distract(), p_split=self.p_split, scale=tuple(self.scale),
+        return ObfuscationConfig(n_distract=tuple(self.n_distract), p_split=self.p_split, scale=tuple(self.scale),
                                  noise=self.noise, min_clean_acc=1.0)
 
     def to_json(self) -> dict:
@@ -98,7 +100,7 @@ class AuditConfig:
     @staticmethod
     def from_json(d: dict) -> "AuditConfig":
         d = {k: v for k, v in d.items() if k != "task"}
-        for k in ("families", "n_inputs", "k_range", "suspects", "corner_decoys", "scale", "n_distract"):
+        for k in ("families", "n_inputs", "k_range", "suspects", "corner_decoys", "scale", "n_distract", "sgd_extra"):
             if d.get(k) is not None:
                 d[k] = tuple(d[k])
         return AuditConfig(**d)
@@ -298,7 +300,7 @@ def _compiled(rng, task: Task, canon: MLP, want_clean: bool, tests: list[int], c
 
 
 def _hidden_widths(canon: MLP, rng, cfg: AuditConfig) -> list[int]:
-    lo, hi = cfg.distract()  # same rule as trained.train_network, for poisoned and control networks alike
+    lo, hi = cfg.sgd_extra  # same rule as trained.train_network, for poisoned and control networks alike
     return [w + int(rng.integers(lo, hi + 1)) for w in canon.widths[1:-1]]
 
 
@@ -373,7 +375,7 @@ def _sgd(rng, task: Task, canon: MLP, want_clean: bool, cfg: AuditConfig, reject
     from .trained import train_network
 
     if want_clean:
-        net = train_network(task, canon, rng, extra=cfg.distract())
+        net = train_network(task, canon, rng, extra=tuple(cfg.sgd_extra))
         if net is None:
             rejects["fit"] += 1
             return None
