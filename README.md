@@ -184,6 +184,9 @@ tokens (`results/table_improve.csv`):
 
 - Eight proposals from the trained model do what about 32 random ones do; one trained proposal is worth
   roughly six random ones.
+- **Second seed.** A shorter repeat (30 RL steps, different training networks) scored +7.4% [6.0, 8.9]
+  with 8 proposals: still above random edits (+5.0%), but well below the first seed. The direction
+  reproduces; the size of the effect is not pinned down by two runs.
 - On function families never used in training: +7.9% [6.4, 9.6] against +5.0% for random edits.
 - Applied for three rounds, re-reading the edited network each time (24 checks): +18.7% [16.3, 21.3]
   against +11.0% for random proposals and +22.0% for random search with four times as many checks. This
