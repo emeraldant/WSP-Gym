@@ -118,12 +118,14 @@ def search_policy(ep: Episode, rng=None) -> str:
     return json.dumps(best)
 
 
-def gradient_repair(ep: Episode, steps: int = 300, lr: float = 0.02, seed: int = 0) -> MLP:
-    """Adam on a random half of the scoring inputs, starting from the shown network.
-    Loss: squared error for binary/regression targets, cross-entropy for classification."""
+def gradient_repair(ep: Episode, steps: int = 300, lr: float = 0.02, seed: int = 0, idx=None) -> MLP:
+    """Adam on a random half of the scoring inputs (or on the inputs ``idx``, when given), starting from
+    the shown network. Loss: squared error for binary/regression targets, cross-entropy for classification."""
     task = ep.task
-    rng = np.random.default_rng(seed)
-    idx = rng.permutation(len(task.X))[: max(8, len(task.X) // 2)]
+    if idx is None:
+        rng = np.random.default_rng(seed)
+        idx = rng.permutation(len(task.X))[: max(8, len(task.X) // 2)]
+    idx = np.asarray(idx)
     X = task.X[idx]
     net = ep.net.copy()
     params = net.Ws + net.bs
