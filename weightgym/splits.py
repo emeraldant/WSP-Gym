@@ -33,6 +33,8 @@ SPLITS = {
     "test_faults": (5_000_000, 500, TRAIN_FAMILIES, HELDOUT_FAULTS, (0, 1), "compiled"),
     "test_larger": (6_000_000, 500, TRAIN_FAMILIES, TRAIN_FAULTS, (2,), "compiled"),
     "test_trained": (7_000_000, 500, TRAIN_FAMILIES, TRAIN_FAULTS, (0, 1), "trained"),
+    # Added 02:25 for the follow-up "mixed-source" arm: a training stream of SGD-trained networks.
+    "train_trained": (8_000_000, 0, TRAIN_FAMILIES, TRAIN_FAULTS, (0, 1), "trained"),
 }
 EVAL_SPLITS = ("val", "test_id", "test_families", "test_faults", "test_larger", "test_trained")
 MAX_PER_SPLIT = 1_000_000 - 1

@@ -9,3 +9,4 @@ runs/**/stdout.log
 runs/**/logs.log
 runs/**/timing_spans.jsonl
 runs/**/code.diff
+cache/

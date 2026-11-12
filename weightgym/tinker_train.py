@@ -113,8 +113,25 @@ async def run_validation(client, a, step: int, out_dir: str, episodes: list[Epis
     return s
 
 
+def train_example(a, g: int, trained_cache: dict) -> Episode:
+    """Training example number ``g`` of an SFT run. With --mix-trained, odd positions are SGD-trained
+    networks from the ``train_trained`` stream and even positions hand-compiled ones."""
+    if not a.mix_trained:
+        return episode_for("train", a.train_offset + g)
+    if g % 2 == 1:
+        k = a.trained_offset + g // 2
+        return trained_cache[k] if k in trained_cache else episode_for("train_trained", k)
+    return episode_for("train", a.train_offset + g // 2)
+
+
 async def run_sft(a) -> None:
     os.makedirs(a.log_path, exist_ok=True)
+    trained_cache: dict = {}
+    if a.mix_trained and a.trained_cache and os.path.exists(a.trained_cache):
+        from .gen_cache import load_cache
+
+        trained_cache = load_cache(a.trained_cache)
+        print(f"[sft] loaded {len(trained_cache)} cached SGD-trained training networks", flush=True)
     json.dump(vars(a), open(os.path.join(a.log_path, "config.json"), "w"), indent=1)
     service = tinker.ServiceClient()
     if a.load:
@@ -141,7 +158,7 @@ async def run_sft(a) -> None:
             mf.write(json.dumps(row) + "\n"); mf.flush()
             print(f"[val @ {step}] repair {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] "
                   f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
-        eps = [episode_for("train", a.train_offset + step * a.batch_size + i) for i in range(a.batch_size)]
+        eps = [train_example(a, step * a.batch_size + i, trained_cache) for i in range(a.batch_size)]
         data = [sft_datum(a.model, ep, a.effort, a.direct) for ep in eps]
         lr = a.lr * (1.0 - a.decay * step / max(1, a.steps))  # linear decay to (1 - decay) * lr
         fb = await tc.forward_backward_async(data, "cross_entropy")
@@ -370,6 +387,9 @@ def main() -> None:
     sub.choices["sft"].add_argument("--start-step", type=int, default=0, help="resume a crashed run from --load at this step")
     sub.choices["sft"].add_argument("--keep-all", action="store_true", help="keep every checkpoint (needs paid storage)")
     sub.choices["sft"].add_argument("--load-sampler", default=None, help="sampler path saved alongside --load (pruned at the next save)")
+    sub.choices["sft"].add_argument("--mix-trained", action="store_true", help="alternate compiled and SGD-trained training networks")
+    sub.choices["sft"].add_argument("--trained-offset", type=int, default=0)
+    sub.choices["sft"].add_argument("--trained-cache", default="cache/train_trained.jsonl")
     sub.choices["rl"].add_argument("--group-size", type=int, default=16)
     sub.choices["rl"].add_argument("--groups-per-batch", type=int, default=32)
     sub.choices["rl"].add_argument("--loss-fn", default="importance_sampling")
