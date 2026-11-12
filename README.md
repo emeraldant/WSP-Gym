@@ -9,7 +9,7 @@ again. Edits are scored only by how the edited network behaves.
 
 We used it to post-train **Inkling 2 Small** on Thinking Machines' **Tinker** API (LoRA: a supervised
 warm-start, then policy-gradient RL with the tinker-cookbook loop) and measured the result on held-out
-networks. Two results:
+networks. Three results:
 
 1. **Repair at a glance.** With no reasoning tokens, the share of broken networks it fixes goes from
    0.2% to 76.5%; trained on a mix that includes SGD-trained networks, it fixes 46% of fresh SGD-trained
@@ -17,6 +17,11 @@ networks. Two results:
 2. **RL alone, no labels.** Pure RL from the untouched base model teaches it to propose edits that
    improve genuinely imperfect trained networks: 8 proposals remove 12% of a network's errors, against
    5% for random edits and 2% for the untrained model.
+
+3. **Real data, honestly.** On small networks trained on real tabular datasets it never saw, one
+   proposal from an RL-trained model is worth about eight random ones, but with eight proposals the edge
+   over random search is small. On 13 public image classifiers, editing the final layer improved none
+   of the well-trained ones.
 
 Frontier closed models still do much better on this gym; see the comparison below.
 
@@ -183,9 +188,10 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
 - **Mixed-source model:** the supervised recipe again from the base model, 300 steps x 64 with every
   other network SGD-trained (`--mix repair,repair_trained`); final checkpoint, no selection.
 - **Cost:** about $90 of Tinker usage for the hand-built repair model including sweeps and evaluations;
-  about $193 for the whole project (`python -m weightgym.cost`, `runs/cost_tally.json`).
+  about $240 for the whole project, estimated from token counts at list prices
+  (`python -m weightgym.cost`, `runs/cost_tally.json`). The account's credit ran out at that point.
 - **Adapters kept on Tinker** (LoRA sampler weights): the final repair model, the mixed-source repair
-  model and the RL-trained proposer; paths are in `NOTES.md`.
+  model and the two RL-trained proposers (formula tasks, real data); paths are in `NOTES.md`.
 
 ## Limitations
 
@@ -242,6 +248,52 @@ edits that improve genuinely trained networks. What it does not show: large gain
 tenth to a fifth of the errors of networks with a few dozen weights, exhaustive search still does better
 when forward passes are free, and gradient descent does better than all of it. A warm start that imitated
 the edits found by search did *not* help (it learned to answer "no edit"), and was dropped.
+
+## Third result: real data and public models
+
+Everything above uses functions with a one-line formula. This section asks whether the improve loop
+does anything on real data (`weightgym/realworld.py`, `weightgym/imagehead.py`). Proposals are verified
+on one set of rows or images and every number is the change on a separate, held-out set.
+
+**Small networks on real tabular datasets.** 24 public datasets, 8 of them held out entirely; networks of
+at most 150 weights, under-trained to 55-90% accuracy. A proposer was trained by pure RL on networks from
+the 16 training datasets (30 steps; the run was cut short by budget). Share of errors removed on the 300
+networks from the 8 datasets it never saw (`results/table_realworld.csv`):
+
+| Proposer | 1 proposal | 8 proposals | Networks improved (8) |
+|---|---|---|---|
+| Untrained Inkling 2 Small | +0.1% | +0.1% | 1% |
+| Random valid edits | +0.9% | +5.2% [4.3, 6.3] | 28% |
+| RL proposer trained on formula tasks only (never saw a dataset) | +2.6% | +6.2% [5.1, 7.3] | 33% |
+| **RL proposer trained on real-data networks** | **+5.0%** [3.8, 6.3] | +6.9% [5.5, 8.4] | 33% |
+| Random edits, 32 / 128 proposals | | +9.3% / +13.3% | 51% / 64% |
+| Gradient descent on the verification rows | | +52.4% | 98% |
+
+- One proposal from the trained model is worth about eight random ones on datasets it never saw.
+- With eight proposals the pre-registered comparison is +6.9% against +5.2%: a small edge whose intervals
+  overlap. The proposer's eight answers are too similar to each other to add much.
+- Gradient descent is in a different league, as expected.
+
+**Public Hugging Face MLPs.** Only three small ReLU MLPs with a reproducible dataset were usable. Two
+iris classifiers are already perfect on the held-out rows. On the third, a Titanic survival model
+(`bernardozschaber/titanic-federated-dp-mlp`, 978 weights), the kept edit raised held-out accuracy from
+68.9% to 73.9% (8 proposals from the real-data proposer; 70.1% with the formula-trained one). That is
+one model, so it is an example, not a measurement.
+
+**Public image classifiers against their claimed benchmarks.** 13 Hugging Face image classifiers (beans,
+CIFAR-10, MNIST, Fashion-MNIST; claimed accuracy 25% to 99.5%). Only the final layer is small enough
+to read, so that is what gets edited; proposals are checked on validation images and scored on the
+official test split (`results/table_imagehead.csv`). Result: **no well-trained model improved beyond
+noise, and none was lifted above its claimed accuracy by an edit.** With the formula-trained proposer,
+9 of 13 were unchanged, 3 moved by one test image or less, and the only clear gain (+4.5 points) was on
+a broken model that scores 6%. Random edits and a bias-only search behave the same way; fine-tuning the
+final layer ranges from +6 points on a weak model to -1 on CIFAR-10 vision transformers. The real-data
+proposer was sampled on only 5 of the 13 before the Tinker account ran out of credit (2 unchanged, 3
+slightly worse).
+
+Taken together: the trained proposer makes better single guesses than chance on real data it has never
+seen, but this is far from "improves real models". Small edits to a network that is already well
+trained find nothing, and where there is slack, ordinary gradient descent finds much more of it.
 
 ## Benchmark your own model
 

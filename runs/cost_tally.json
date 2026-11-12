@@ -1,10 +1,10 @@
 {
  "budget_usd": 250.0,
- "total_usd": 239.16,
- "fraction": 0.957,
+ "total_usd": 240.11,
+ "fraction": 0.96,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 30.53,
+  "eval": 31.48,
   "rl_train": 113.29,
   "sft_train": 95.34
  },
@@ -433,6 +433,13 @@
    "n_out": 7677
   },
   {
+   "file": "final_imagehead/real_rl_proposer/heads.jsonl",
+   "kind": "eval",
+   "usd": 0.02,
+   "n_in": 52794,
+   "n_out": 4260
+  },
+  {
    "file": "final_imagehead/untrained/heads.jsonl",
    "kind": "eval",
    "usd": 0.063,
@@ -501,6 +508,27 @@
    "usd": 0.267,
    "n_in": 416152,
    "n_out": 141740
+  },
+  {
+   "file": "final_real/real_rl_proposer/real_hf_models.jsonl",
+   "kind": "eval",
+   "usd": 0.005,
+   "n_in": 10467,
+   "n_out": 1979
+  },
+  {
+   "file": "final_real/real_rl_proposer/real_test_seen.jsonl",
+   "kind": "eval",
+   "usd": 0.455,
+   "n_in": 635465,
+   "n_out": 264322
+  },
+  {
+   "file": "final_real/real_rl_proposer/real_test_unseen.jsonl",
+   "kind": "eval",
+   "usd": 0.472,
+   "n_in": 698178,
+   "n_out": 262897
   },
   {
    "file": "final_real/untrained/real_hf_models.jsonl",

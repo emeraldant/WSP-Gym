@@ -15,6 +15,8 @@ real_test_seen,random x128,300,0.2008,0.1813,0.2204,0.7133,0.02
 real_test_seen,gradient on select (300 Adam steps),300,0.5675,0.5355,0.5992,0.9667,0.0033
 real_test_seen,formula_rl_proposer x1,300,0.0428,0.0338,0.0524,0.2433,0.0033
 real_test_seen,formula_rl_proposer x8,300,0.0968,0.0832,0.1113,0.4833,0.0167
+real_test_seen,real_rl_proposer x1,300,0.0672,0.0536,0.0817,0.2833,0.0133
+real_test_seen,real_rl_proposer x8,300,0.0967,0.0796,0.1141,0.3933,0.03
 real_test_seen,untrained x1,300,-0.0001,-0.0002,0.0,0.0,0.0
 real_test_seen,untrained x8,300,0.0078,0.0017,0.0151,0.0367,0.0067
 real_test_unseen,random x1,300,0.0088,0.0052,0.0127,0.0567,0.0033
@@ -24,9 +26,13 @@ real_test_unseen,random x128,300,0.1328,0.1177,0.1487,0.6367,0.0167
 real_test_unseen,gradient on select (300 Adam steps),300,0.5239,0.494,0.5542,0.9833,0.0
 real_test_unseen,formula_rl_proposer x1,300,0.0264,0.0185,0.0351,0.1433,0.0167
 real_test_unseen,formula_rl_proposer x8,300,0.0618,0.051,0.0734,0.3333,0.0167
+real_test_unseen,real_rl_proposer x1,300,0.0502,0.0379,0.0631,0.23,0.03
+real_test_unseen,real_rl_proposer x8,300,0.069,0.0547,0.0842,0.3333,0.04
 real_test_unseen,untrained x1,300,0.0012,0.0,0.0032,0.0067,0.0
 real_test_unseen,untrained x8,300,0.0012,-0.0008,0.0034,0.01,0.0033
 real_hf_models,formula_rl_proposer x1,3,0.0,0.0,0.0,0.0,0.0
 real_hf_models,formula_rl_proposer x8,3,0.0131,0.0,0.0392,0.0,0.0
+real_hf_models,real_rl_proposer x1,3,0.0588,0.0,0.1765,0.3333,0.0
+real_hf_models,real_rl_proposer x8,3,0.0539,0.0,0.1618,0.3333,0.0
 real_hf_models,untrained x1,3,0.0,0.0,0.0,0.0,0.0
 real_hf_models,untrained x8,3,0.0,0.0,0.0,0.0,0.0
