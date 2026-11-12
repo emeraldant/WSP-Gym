@@ -1,0 +1,27 @@
+proposer,model,dataset,valid_proposals,accepted,test_before,test_after,change_points,claimed,exceeds_claimed,ops
+formula_rl_proposer,voloshka3/beans-deit-tiny-lab,beans,8,True,92.97,92.97,0.0,92.97,False,"[{'op': 'set', 'tensor': 'b1', 'index': 1, 'value': 0.02}, {'op': 'scale', 'tensor': 'W1', 'axis': 'row', 'index': 1, 'factor': 1.15}]"
+formula_rl_proposer,Konradowsky/beans-deit-tiny,beans,8,True,94.53,94.53,0.0,94.53,True,"[{'op': 'set', 'tensor': 'b1', 'index': 0, 'value': 0.25}, {'op': 'set', 'tensor': 'b1', 'index': 1, 'value': -0.15}]"
+formula_rl_proposer,Bocianelllo/beans-vit-tiny,beans,8,False,96.88,96.88,0.0,96.88,False,
+formula_rl_proposer,Zharasbek/resnet18-bean-disease-classifier,beans,8,False,96.09,96.09,0.0,94.53,True,
+formula_rl_proposer,omaralshareef/beans-image-classifier,beans,8,True,86.72,85.94,-0.78,89.84,False,"[{'op': 'set', 'tensor': 'b1', 'index': 0, 'value': 0.02}, {'op': 'set', 'tensor': 'b1', 'index': 1, 'value': -0.02}, {'op': 'set', 'tensor': 'b1', 'index': 2, 'value': 0.01}]"
+formula_rl_proposer,pfpdostudent/deit-tiny-cifar10-lab,cifar10,8,False,93.84,93.84,0.0,94.35,False,
+formula_rl_proposer,TestingProfile111/cifar10-vit-tiny,cifar10,8,False,96.74,96.74,0.0,96.13,True,
+formula_rl_proposer,fancifulcrow/deit-tiny-patch16-224-finetuned-cifar10,cifar10,8,True,92.28,92.28,0.0,92.62,False,"[{'op': 'set', 'tensor': 'b1', 'index': 5, 'value': 0.05}, {'op': 'set', 'tensor': 'b1', 'index': 3, 'value': -0.05}, {'op': 'set', 'tensor': 'b1', 'index': 7, 'value': -0.02}]"
+formula_rl_proposer,abidlabs/mnist-vit-tiny-1min,mnist,8,False,99.64,99.64,0.0,99.47,True,
+formula_rl_proposer,mmabas77/fashion-mnist-mobilenetv2,fashion_mnist,8,True,94.22,94.2,-0.02,94.22,False,"[{'op': 'set', 'tensor': 'b1', 'index': 6, 'value': 0.05}, {'op': 'set', 'tensor': 'b1', 'index': 0, 'value': -0.05}]"
+formula_rl_proposer,SamAdamDay/resnet18_cifar10,cifar10,8,True,94.16,94.2,0.04,94.73,False,"[{'op': 'set', 'tensor': 'b1', 'index': 6, 'value': 0.295}, {'op': 'set', 'tensor': 'b1', 'index': 3, 'value': 0.367}, {'op': 'set', 'tensor': 'b1', 'index': 5, 'value': 0.144}]"
+formula_rl_proposer,dennishauser/mnist_basic,mnist,8,False,98.92,98.92,0.0,88.09,True,
+formula_rl_proposer,corralesvr/my_test_numbers_model,mnist,8,True,6.42,10.92,4.5,25.0,False,"[{'op': 'set', 'tensor': 'b1', 'index': 5, 'value': -0.5}, {'op': 'set', 'tensor': 'b1', 'index': 7, 'value': 0.3}]"
+untrained,voloshka3/beans-deit-tiny-lab,beans,0,False,92.97,92.97,0.0,92.97,False,
+untrained,Konradowsky/beans-deit-tiny,beans,0,False,94.53,94.53,0.0,94.53,True,
+untrained,Bocianelllo/beans-vit-tiny,beans,1,False,96.88,96.88,0.0,96.88,False,
+untrained,Zharasbek/resnet18-bean-disease-classifier,beans,0,False,96.09,96.09,0.0,94.53,True,
+untrained,omaralshareef/beans-image-classifier,beans,1,False,86.72,86.72,0.0,89.84,False,
+untrained,pfpdostudent/deit-tiny-cifar10-lab,cifar10,0,False,93.84,93.84,0.0,94.35,False,
+untrained,TestingProfile111/cifar10-vit-tiny,cifar10,0,False,96.74,96.74,0.0,96.13,True,
+untrained,fancifulcrow/deit-tiny-patch16-224-finetuned-cifar10,cifar10,0,False,92.28,92.28,0.0,92.62,False,
+untrained,abidlabs/mnist-vit-tiny-1min,mnist,0,False,99.64,99.64,0.0,99.47,True,
+untrained,mmabas77/fashion-mnist-mobilenetv2,fashion_mnist,0,False,94.22,94.22,0.0,94.22,False,
+untrained,SamAdamDay/resnet18_cifar10,cifar10,0,False,94.16,94.16,0.0,94.73,False,
+untrained,dennishauser/mnist_basic,mnist,0,False,98.92,98.92,0.0,88.09,True,
+untrained,corralesvr/my_test_numbers_model,mnist,0,False,6.42,6.42,0.0,25.0,False,
