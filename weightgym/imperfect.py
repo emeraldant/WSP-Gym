@@ -59,8 +59,11 @@ class ImperfectItem:
     is_clean = False
     fault = "imperfect"
 
-    def __init__(self, ep: Episode):
+    def __init__(self, ep: Episode, loop: bool = False):
         self.ep, self.seed, self.family, self.variant, self.task, self.net, self.source = ep, ep.seed, ep.family, ep.variant, ep.task, ep.net, ep.source
+        # loop=True: the answer is one proposal in a propose-and-verify loop. It is checked with forward passes
+        # and discarded if it does not help, so a valid proposal is never scored below zero.
+        self.loop = loop
 
     def prompt(self, direct: bool = False) -> str:
         ep, task, net = self.ep, self.task, self.net
@@ -80,9 +83,14 @@ class ImperfectItem:
             "specification. Each operation changes one row, one column or one scalar. Indices are 0-based. "
             "Allowed operations (examples):\n"
             f"{OPS_HELP}\n"
-            "Your edit is scored by the share of the network's errors it removes, measured on held-out inputs; an edit "
-            "that makes the network worse is penalised, an invalid or over-budget answer more so, and [] leaves it "
-            "unchanged for a score of zero. End your reply with the JSON list and nothing after it."
+            + ("Your edit is a proposal: it will be tested with forward passes and kept only if it makes the network "
+               "more accurate, so propose the change you think is most likely to help. It is scored by the share of the "
+               "network's errors it removes (zero if it does not help); an invalid or over-budget answer is penalised. "
+               if self.loop else
+               "Your edit is scored by the share of the network's errors it removes, measured on held-out inputs; an edit "
+               "that makes the network worse is penalised, an invalid or over-budget answer more so, and [] leaves it "
+               "unchanged for a score of zero. ")
+            + "End your reply with the JSON list and nothing after it."
             + (DIRECT_SUFFIX if direct else "")
         )
         return "\n\n".join(s)
@@ -100,11 +108,13 @@ class ImperfectItem:
         res = score_answer(self.ep, text)  # recovery = share of the gap to 100% that the edit closes
         if res["valid"]:
             res["gain"] = res["acc_after"] - self.ep.acc_faulty
+            if self.loop:
+                res["reward"] = max(0.0, res["reward"])
         return res
 
 
-def wrap(ep) -> ImperfectItem:
-    return ep if isinstance(ep, ImperfectItem) else ImperfectItem(ep)
+def wrap(ep, loop: bool = False) -> ImperfectItem:
+    return ep if isinstance(ep, ImperfectItem) else ImperfectItem(ep, loop)
 
 
 def improve_stats(records: list[dict], n_boot: int = 10000, seed: int = 0) -> dict:
@@ -279,6 +289,100 @@ def build_teacher_cache(start: int, n: int, out: str) -> None:
     with Pool(3) as pool, open(out, "a") as f:
         for i, line in pool.imap(_teach, range(start, start + n), chunksize=8):
             f.write(json.dumps({"index": i}) + "\t" + line + "\n")
+
+
+
+# ----------------------------------------------------------------------------------------------
+# Propose-and-verify: K proposals per network, selected on one half of the inputs, scored on the other
+# ----------------------------------------------------------------------------------------------
+
+
+EXACT = True  # verify on the whole input domain (the specification defines every label exactly)
+
+
+def _halves(ep: Episode) -> tuple[np.ndarray, np.ndarray]:
+    """Inputs used to select a proposal and inputs used to score it. With ``EXACT`` both are the whole
+    domain: the gym knows the target function, so verification is exact and there is nothing to overfit.
+    With ``EXACT = False`` the domain is split in two, which on these tiny domains (often 32-128 inputs)
+    makes every search method, including exhaustive search, overfit the selection half."""
+    idx = np.random.default_rng([int(ep.seed), 271828]).permutation(len(ep.task.X))
+    if EXACT:
+        return idx, idx
+    return idx[: len(idx) // 2], idx[len(idx) // 2 :]
+
+
+def _acc(ep: Episode, net, idx: np.ndarray) -> float:
+    return float(np.mean(ep.task.correct(net)[idx]))
+
+
+def verify_and_score(ep: Episode, proposals: list[list[dict]]) -> dict:
+    """Keep the proposal with the highest accuracy on the selection half, if it beats the unedited network
+    there; report the change on the held-out half. Proposals are validated edits (lists of ops)."""
+    from .edits import EditError, apply_edit, validate_edit
+
+    sel, held = _halves(ep)
+    base_sel, base_held = _acc(ep, ep.net, sel), _acc(ep, ep.net, held)
+    best_net, best_sel = ep.net, base_sel
+    for ops in proposals:
+        try:
+            cand = apply_edit(ep.net, validate_edit(ops, ep.net))
+        except EditError:
+            continue
+        a = _acc(ep, cand, sel)
+        if a > best_sel + 1e-9:
+            best_net, best_sel = cand, a
+    after = _acc(ep, best_net, held)
+    gain = after - base_held
+    return {"gain": gain, "gap": gain / (1 - base_held) if base_held < 1 else 0.0, "accepted": best_net is not ep.net}
+
+
+def loop_stats(rows: list[dict], n_boot: int = 10000) -> dict:
+    gap = np.clip(np.array([r["gap"] for r in rows], dtype=float), -1, 1)
+    boot = gap[np.random.default_rng(0).integers(0, len(gap), size=(n_boot, len(gap)))].mean(1)
+    return {"n": len(rows), "gap_closed": float(gap.mean()), "gap_lo": float(np.quantile(boot, 0.025)),
+            "gap_hi": float(np.quantile(boot, 0.975)), "improved": float(np.mean([r["gain"] >= IMPROVED for r in rows])),
+            "harmed": float(np.mean([r["gain"] <= HARMED for r in rows])), "accepted": float(np.mean([r["accepted"] for r in rows]))}
+
+
+def loop_from_records(items: list[ImperfectItem], records: list[dict], k: int) -> dict:
+    """Propose-and-verify with the first ``k`` sampled answers per network from an evaluation log."""
+    by: dict[int, list] = {}
+    for r in sorted(records, key=lambda r: r.get("sample", 0)):
+        if r.get("ops") is not None and len(by.setdefault(r["seed"], [])) < k and r.get("sample", 0) < k:
+            by[r["seed"]].append(r["ops"])
+    return loop_stats([verify_and_score(it.ep, by.get(it.seed, [])) for it in items])
+
+
+def loop_baselines(items: list[ImperfectItem], ks=(1, 8, 32)) -> dict:
+    """Random proposals, random draws from the teacher's candidate list, and the full teacher search run on
+    the selection half only (so every method sees the same information)."""
+    import json
+
+    from .baselines import random_policy
+
+    out = {}
+    rng = np.random.default_rng(0)
+    for k in ks:
+        out[f"random x{k}"] = loop_stats([verify_and_score(it.ep, [json.loads(random_policy(it.ep, rng)) for _ in range(k)]) for it in items])
+        rows = []
+        for it in items:
+            cands = _candidates(it.ep.net)
+            rows.append(verify_and_score(it.ep, [[cands[i]] for i in rng.choice(len(cands), size=min(k, len(cands)), replace=False)]))
+        out[f"random simple edit x{k}"] = loop_stats(rows)
+    rows = []
+    for it in items:
+        sel, _ = _halves(it.ep)
+        sub = Episode(it.ep.seed, it.ep.family, it.ep.variant, it.ep.fault, _subtask(it.ep.task, sel), it.ep.clean, it.ep.net, 1.0,
+                      _acc(it.ep, it.ep.net, sel), [], {}, [], it.ep.source)
+        rows.append(verify_and_score(it.ep, [search_teacher(sub)[0]]))
+    out["full search (hundreds of forward passes)"] = loop_stats(rows)
+    return out
+
+
+def _subtask(task, idx):
+    from dataclasses import replace
+
+    return replace(task, X=task.X[idx], Y=task.Y[idx])
 
 
 if __name__ == "__main__":

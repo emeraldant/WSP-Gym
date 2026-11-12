@@ -45,18 +45,20 @@ async def _validate(service, sampler_path: str, a, out: str) -> dict:
     _, eps = load_split(a.val_split)
     policy = await LLMPolicy(service, a.model, sampler_path, a.effort, a.max_tokens).start()
     items = eps[: a.n_val]
-    if a.val_task == "improve":
-        from .imperfect import improve_stats, wrap
+    if a.val_task in ("improve", "improve_loop"):
+        from .imperfect import improve_stats, loop_from_records, wrap
 
-        items = [wrap(e) for e in items]
+        items = [wrap(e, loop=a.val_task == "improve_loop") for e in items]
     elif a.val_task == "decompile":
         from .decompile import wrap
 
         items = [wrap(e) for e in items]
-    recs = await evaluate(policy, items, out, 1, 64, tag=os.path.basename(out), direct=a.direct)
+    recs = await evaluate(policy, items, out, a.val_samples, 64, tag=os.path.basename(out), direct=a.direct)
     s = summarize(recs)
-    if a.val_task == "improve":
+    if a.val_task in ("improve", "improve_loop"):
         s["improve"] = improve_stats(recs)
+        s["loop"] = {f"x{k}": loop_from_records(items, recs, k) for k in sorted({1, a.val_samples})}
+        s["loop_gap"] = s["loop"][f"x{a.val_samples}"]["gap_closed"]
     return s
 
 
@@ -81,8 +83,10 @@ async def main() -> None:
     ap.add_argument("--n-val", type=int, default=300)
     ap.add_argument("--keep-all", action="store_true")
     ap.add_argument("--mix", default="repair", help="training streams, passed through to tinker_train rl")
-    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile", "improve"])
-    ap.add_argument("--select", default="repair_rate", choices=["repair_rate", "mean_reward"],
+    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile", "improve", "improve_loop"])
+    ap.add_argument("--val-samples", type=int, default=1, help="answers sampled per validation network")
+    ap.add_argument("--rank", type=int, default=32, help="LoRA rank (a rank-16 state is ~25 GB, rank 32 ~50 GB)")
+    ap.add_argument("--select", default="repair_rate", choices=["repair_rate", "mean_reward", "loop_gap"],
                     help="validation metric used to pick the best checkpoint")
     ap.add_argument("--keep-init", action="store_true", help="never delete the starting state/sampler")
     a = ap.parse_args()
@@ -107,7 +111,7 @@ async def main() -> None:
                "--lr", str(a.lr), "--steps", str(a.chunk_steps), "--group-size", str(a.group_size),
                "--groups-per-batch", str(a.groups_per_batch), "--eval-every", "0", "--save-every", "0",
                "--effort", str(a.effort), "--max-tokens", str(a.max_tokens),
-               "--train-offset", str(a.train_offset + c * a.chunk_steps * a.groups_per_batch), "--mix", a.mix]
+               "--train-offset", str(a.train_offset + c * a.chunk_steps * a.groups_per_batch), "--mix", a.mix, "--rank", str(a.rank)]
         if state:
             cmd += ["--load", state]
         if not a.direct:
@@ -142,6 +146,10 @@ async def main() -> None:
             f.write(json.dumps({"chunk": c, "t": time.time(), "steps_done": (c + 1) * a.chunk_steps, "state_path": state,
                                 "sampler_path": ck["sampler_path"], "sampler_kept": improved or a.keep_all,
                                 "val": s, "best": best}) + "\n")
+        if "loop" in s:
+            for k, st in s["loop"].items():
+                print(f"[chunk {c}] verify loop {k}: gap closed {st['gap_closed']:+.3f} [{st['gap_lo']:+.3f},{st['gap_hi']:+.3f}] "
+                      f"improved {st['improved']:.2f}", flush=True)
         if "improve" in s:
             st = s["improve"]
             print(f"[chunk {c}] improve: gap closed {st['gap_closed']:+.3f} [{st['gap_lo']:+.3f},{st['gap_hi']:+.3f}] improved "

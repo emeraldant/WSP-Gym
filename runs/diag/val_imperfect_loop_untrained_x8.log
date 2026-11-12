@@ -1,0 +1,5 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/llm.py:62: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(base_model=self.base_model)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)

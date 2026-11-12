@@ -128,7 +128,7 @@ async def run_validation(client, a, step: int, out_dir: str, val_sets: list, mf)
               f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
 
 
-MIX_KINDS = ("repair", "repair_trained", "decompile", "decompile_trained", "audit", "improve")
+MIX_KINDS = ("repair", "repair_trained", "decompile", "decompile_trained", "audit", "improve", "improve_loop")
 
 
 def stream_item(kind: str, k: int, a, trained_cache: dict):
@@ -149,6 +149,10 @@ def stream_item(kind: str, k: int, a, trained_cache: dict):
         return wrap(trained(500_000 + a.trained_offset + k))
     if kind == "audit":
         return episode_for("train_audit", a.train_offset + k)
+    if kind == "improve_loop":  # proposals for a propose-and-verify loop: reward is never below zero for a valid edit
+        from .imperfect import imperfect_episode_for, wrap as wrap_imperfect
+
+        return wrap_imperfect(imperfect_episode_for("train_imperfect", a.train_offset + k), loop=True)
     if kind == "improve":  # imperfect SGD-trained networks; the cache (SFT only) carries the search teacher's edit
         from .imperfect import imperfect_episode_for, wrap as wrap_imperfect
 
