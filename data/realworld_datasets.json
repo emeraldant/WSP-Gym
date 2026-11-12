@@ -1,0 +1,1526 @@
+{
+ "note": "Frozen dataset list of weightgym/realworld.py. Sorted alphabetically (case-insensitive); every third dataset is held out. A proposer trained on real-data networks must never see a held-out dataset.",
+ "preprocessing": "numeric columns only (columns with more than 50% missing values dropped, then rows with missing values); the 4 most frequent classes when there are more; at most 20000 rows (fixed-seed sample); rows cut 40/30/30 into fit/select/report pools with a fixed seed; the 8 numeric features with the highest mutual information with the label on the fit pool when there are more; standardised with fit-pool mean and std, rounded to 1 decimal.",
+ "train": [
+  "adult",
+  "banknote-authentication",
+  "credit-default",
+  "eeg-eye-state",
+  "gas-drift",
+  "JapaneseVowels",
+  "MagicTelescope",
+  "mozilla4",
+  "pendigits",
+  "phoneme",
+  "satimage",
+  "segment",
+  "skin-segmentation",
+  "spambase",
+  "texture",
+  "titanic"
+ ],
+ "heldout": [
+  "covertype",
+  "electricity",
+  "letter",
+  "optdigits",
+  "qsar-biodeg",
+  "shuttle",
+  "steel-plates-fault",
+  "wall-robot-navigation"
+ ],
+ "datasets": [
+  {
+   "name": "adult",
+   "source": "openml",
+   "openml_id": 1590,
+   "openml_name": "adult",
+   "version": 2,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1590",
+   "target": "class",
+   "predicts": "Whether a person's income is above 50K dollars a year (1994 US census), from the numeric census fields.",
+   "rows_raw": 48842,
+   "rows_after_filter": 48842,
+   "rows": 20000,
+   "numeric_features_raw": 6,
+   "features": [
+    "age",
+    "fnlwgt",
+    "education-num",
+    "capital-gain",
+    "capital-loss",
+    "hours-per-week"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "<=50K",
+    ">50K"
+   ],
+   "class_share": [
+    0.7697,
+    0.2303
+   ],
+   "mean": [
+    38.5525,
+    187975.45875,
+    10.07375,
+    951.80425,
+    92.08575,
+    40.466875
+   ],
+   "std": [
+    13.573742805505047,
+    102464.73149493462,
+    2.552363794113214,
+    6919.062634828648,
+    412.44232099402404,
+    12.352769031046236
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "767fd9fe4dc7d84d",
+   "reference_accuracy": 0.835,
+   "role": "train"
+  },
+  {
+   "name": "banknote-authentication",
+   "source": "openml",
+   "openml_id": 1462,
+   "openml_name": "banknote-authentication",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1462",
+   "target": "Class",
+   "predicts": "Whether a banknote is genuine or forged (two classes), from wavelet statistics of a photograph of the note.",
+   "rows_raw": 1372,
+   "rows_after_filter": 1372,
+   "rows": 1372,
+   "numeric_features_raw": 4,
+   "features": [
+    "V1",
+    "V2",
+    "V3",
+    "V4"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.5554,
+    0.4446
+   ],
+   "mean": [
+    0.48707194717668495,
+    1.8948740564663025,
+    1.4688309052823316,
+    -1.2021055355191257
+   ],
+   "std": [
+    2.826246351454553,
+    6.036100081626515,
+    4.3443573690609085,
+    2.1547727916832833
+   ],
+   "pool_rows": {
+    "fit": 549,
+    "select": 411,
+    "report": 412
+   },
+   "checksum": "b64229f1b0eb0bc5",
+   "reference_accuracy": 1.0,
+   "role": "train"
+  },
+  {
+   "name": "covertype",
+   "source": "sklearn.datasets.fetch_covtype",
+   "openml_id": null,
+   "openml_name": null,
+   "version": null,
+   "licence": "UCI Covertype: unlimited reuse with retention of the copyright notice (J. A. Blackard, Colorado State University)",
+   "url": "https://archive.ics.uci.edu/dataset/31/covertype",
+   "target": "Cover_Type",
+   "predicts": "The forest cover type of a 30 m x 30 m cell of Roosevelt National Forest, from cartographic variables.",
+   "rows_raw": 581012,
+   "rows_after_filter": 551405,
+   "rows": 20000,
+   "numeric_features_raw": 54,
+   "features": [
+    "Elevation",
+    "Horizontal_Distance_To_Roadways",
+    "Horizontal_Distance_To_Fire_Points",
+    "Wilderness_Area_0",
+    "Wilderness_Area_3",
+    "Soil_Type_9",
+    "Soil_Type_11",
+    "Soil_Type_22"
+   ],
+   "classes_raw": 7,
+   "classes": [
+    "1",
+    "2",
+    "3",
+    "7"
+   ],
+   "class_share": [
+    0.39,
+    0.5083,
+    0.0634,
+    0.0382
+   ],
+   "mean": [
+    2987.482125,
+    2417.414875,
+    2043.585,
+    0.460875,
+    0.042,
+    0.041875,
+    0.055625,
+    0.110625
+   ],
+   "std": [
+    257.3915241038142,
+    1562.2795915756355,
+    1345.701262920192,
+    0.4984668839301162,
+    0.20058913230780973,
+    0.2003034806861828,
+    0.22919611553209185,
+    0.31366719524840336
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "d9796dbc98749570",
+   "reference_accuracy": 0.705,
+   "role": "heldout"
+  },
+  {
+   "name": "credit-default",
+   "source": "openml",
+   "openml_id": 42477,
+   "openml_name": "default-of-credit-card-clients",
+   "version": 1,
+   "licence": "CC0",
+   "url": "https://www.openml.org/d/42477",
+   "target": "y",
+   "predicts": "Whether a credit-card client in Taiwan defaults on next month's payment (1) or not (0).",
+   "rows_raw": 30000,
+   "rows_after_filter": 30000,
+   "rows": 20000,
+   "numeric_features_raw": 23,
+   "features": [
+    "x1",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x20"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "0",
+    "1"
+   ],
+   "class_share": [
+    0.7805,
+    0.2195
+   ],
+   "mean": [
+    169932.0,
+    -0.033,
+    -0.147125,
+    -0.17375,
+    -0.22325,
+    -0.266875,
+    -0.3025,
+    5224.216375
+   ],
+   "std": [
+    131104.2424027537,
+    1.1132883723456382,
+    1.1925725279306914,
+    1.1980446308464472,
+    1.181062842316191,
+    1.1422139617317764,
+    1.1445495838975261,
+    18470.368721199284
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "7bb16c7083e33ed9",
+   "reference_accuracy": 0.7933,
+   "role": "train"
+  },
+  {
+   "name": "eeg-eye-state",
+   "source": "openml",
+   "openml_id": 1471,
+   "openml_name": "eeg-eye-state",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1471",
+   "target": "Class",
+   "predicts": "Whether a person's eyes are open or closed (two classes), from EEG electrode readings.",
+   "rows_raw": 14980,
+   "rows_after_filter": 14980,
+   "rows": 14980,
+   "numeric_features_raw": 14,
+   "features": [
+    "V1",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V10",
+    "V12",
+    "V14"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.5512,
+    0.4488
+   ],
+   "mean": [
+    4301.303786715621,
+    4341.893664886516,
+    4620.60874165554,
+    4166.585442256342,
+    4615.702478304406,
+    4230.578985313752,
+    4279.211286715621,
+    4380.119919893191
+   ],
+   "std": [
+    54.867139111696964,
+    32.38874271862122,
+    48.4904051578782,
+    7273.946133713335,
+    19.248338706846745,
+    36.943226160564976,
+    39.41427869037836,
+    1507.508233127221
+   ],
+   "pool_rows": {
+    "fit": 5992,
+    "select": 4494,
+    "report": 4494
+   },
+   "checksum": "ab791d56cf6865ae",
+   "reference_accuracy": 0.6767,
+   "role": "train"
+  },
+  {
+   "name": "electricity",
+   "source": "openml",
+   "openml_id": 151,
+   "openml_name": "electricity",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/151",
+   "target": "class",
+   "predicts": "Whether the electricity price in New South Wales went UP or DOWN relative to its average over the last 24 hours.",
+   "rows_raw": 45312,
+   "rows_after_filter": 45312,
+   "rows": 20000,
+   "numeric_features_raw": 7,
+   "features": [
+    "date",
+    "period",
+    "nswprice",
+    "nswdemand",
+    "vicprice",
+    "vicdemand",
+    "transfer"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "DOWN",
+    "UP"
+   ],
+   "class_share": [
+    0.5776,
+    0.4224
+   ],
+   "mean": [
+    0.49640921775,
+    0.4970132955,
+    0.057913750624999996,
+    0.424140153625,
+    0.0034072171249999996,
+    0.42193803837500005,
+    0.500122826125
+   ],
+   "std": [
+    0.341758297977125,
+    0.2962545277854234,
+    0.040611390049888556,
+    0.16277598050648864,
+    0.005162679077424989,
+    0.11963580007398246,
+    0.15314388194572331
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "d991844d8fd0112d",
+   "reference_accuracy": 0.7867,
+   "role": "heldout"
+  },
+  {
+   "name": "gas-drift",
+   "source": "openml",
+   "openml_id": 1476,
+   "openml_name": "gas-drift",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1476",
+   "target": "Class",
+   "predicts": "Which gas a chemical sensor array is exposed to, from features of the sensor responses.",
+   "rows_raw": 13910,
+   "rows_after_filter": 10436,
+   "rows": 10436,
+   "numeric_features_raw": 128,
+   "features": [
+    "V9",
+    "V65",
+    "V67",
+    "V68",
+    "V70",
+    "V73",
+    "V76",
+    "V78"
+   ],
+   "classes_raw": 6,
+   "classes": [
+    "1",
+    "2",
+    "4",
+    "5"
+   ],
+   "class_share": [
+    0.2458,
+    0.2804,
+    0.1855,
+    0.2883
+   ],
+   "mean": [
+    66862.56508397221,
+    55661.48708713464,
+    14.329183016770482,
+    20.315117,
+    -9.342190235984667,
+    46817.14038751797,
+    15.971842831336847,
+    -7.6883508342117866
+   ],
+   "std": [
+    69189.07023489242,
+    54895.540079639104,
+    14.404080140317776,
+    20.80854923910538,
+    9.211613685754367,
+    51124.00976379788,
+    18.377429786111932,
+    8.584213790871502
+   ],
+   "pool_rows": {
+    "fit": 4174,
+    "select": 3131,
+    "report": 3131
+   },
+   "checksum": "421af4011fbafcde",
+   "reference_accuracy": 0.875,
+   "role": "train"
+  },
+  {
+   "name": "JapaneseVowels",
+   "source": "openml",
+   "openml_id": 375,
+   "openml_name": "JapaneseVowels",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/375",
+   "target": "speaker",
+   "predicts": "Which speaker uttered a Japanese vowel, from cepstrum coefficients of one frame of the recording.",
+   "rows_raw": 9961,
+   "rows_after_filter": 5353,
+   "rows": 5353,
+   "numeric_features_raw": 12,
+   "features": [
+    "coefficient1",
+    "coefficient2",
+    "coefficient3",
+    "coefficient4",
+    "coefficient6",
+    "coefficient7",
+    "coefficient9",
+    "coefficient12"
+   ],
+   "classes_raw": 9,
+   "classes": [
+    "1",
+    "3",
+    "4",
+    "7"
+   ],
+   "class_share": [
+    0.2047,
+    0.3015,
+    0.2752,
+    0.2186
+   ],
+   "mean": [
+    0.6891957762727697,
+    -0.3514716992059785,
+    0.19642956188696872,
+    -0.33276187342363384,
+    -0.2523098542737039,
+    -0.14867346240074733,
+    -0.1471509794488557,
+    0.10373885801027558
+   ],
+   "std": [
+    0.48975541867952327,
+    0.3456468664949514,
+    0.2838454171877653,
+    0.3110731280185956,
+    0.2164141529510427,
+    0.14391325065561986,
+    0.1788389109708932,
+    0.11537371099247469
+   ],
+   "pool_rows": {
+    "fit": 2141,
+    "select": 1606,
+    "report": 1606
+   },
+   "checksum": "ba952f6491e674b5",
+   "reference_accuracy": 0.9683,
+   "role": "train"
+  },
+  {
+   "name": "letter",
+   "source": "openml",
+   "openml_id": 6,
+   "openml_name": "letter",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/6",
+   "target": "class",
+   "predicts": "Which capital letter an image shows, from statistics of its pixels.",
+   "rows_raw": 20000,
+   "rows_after_filter": 3217,
+   "rows": 3217,
+   "numeric_features_raw": 16,
+   "features": [
+    "y-bar",
+    "x2bar",
+    "y2bar",
+    "x2ybr",
+    "xy2br",
+    "x-ege",
+    "xegvy",
+    "y-ege"
+   ],
+   "classes_raw": 26,
+   "classes": [
+    "D",
+    "P",
+    "T",
+    "U"
+   ],
+   "class_share": [
+    0.2502,
+    0.2496,
+    0.2474,
+    0.2527
+   ],
+   "mean": [
+    8.682206682206683,
+    5.361305361305361,
+    5.493395493395494,
+    7.44988344988345,
+    6.257964257964258,
+    2.738150738150738,
+    8.992229992229992,
+    2.9518259518259518
+   ],
+   "std": [
+    2.629848175134818,
+    3.0306634176949308,
+    1.9084920154084752,
+    2.7006168512485185,
+    2.1185450187313712,
+    1.8199355331437916,
+    1.3362213186920195,
+    2.0133611988479814
+   ],
+   "pool_rows": {
+    "fit": 1287,
+    "select": 965,
+    "report": 965
+   },
+   "checksum": "53532be61a088269",
+   "reference_accuracy": 0.9683,
+   "role": "heldout"
+  },
+  {
+   "name": "MagicTelescope",
+   "source": "openml",
+   "openml_id": 1120,
+   "openml_name": "MagicTelescope",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1120",
+   "target": "class:",
+   "predicts": "Whether a shower image from the MAGIC Cherenkov telescope was caused by a gamma ray (g) or a hadron (h).",
+   "rows_raw": 19020,
+   "rows_after_filter": 19020,
+   "rows": 19020,
+   "numeric_features_raw": 10,
+   "features": [
+    "fLength:",
+    "fWidth:",
+    "fConc:",
+    "fConc1:",
+    "fAsym:",
+    "fM3Long:",
+    "fM3Trans:",
+    "fAlpha:"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "g",
+    "h"
+   ],
+   "class_share": [
+    0.6484,
+    0.3516
+   ],
+   "mean": [
+    53.74183264984227,
+    22.234226813880127,
+    0.3783121845425868,
+    0.21349706887486858,
+    -5.018045215562566,
+    11.091935081493165,
+    0.14485432439537327,
+    27.518282991587803
+   ],
+   "std": [
+    42.683398980155275,
+    18.164931123532583,
+    0.18263923742985977,
+    0.11009752661170087,
+    61.084961368610976,
+    51.27348688935656,
+    20.75675757233566,
+    25.968940235346892
+   ],
+   "pool_rows": {
+    "fit": 7608,
+    "select": 5706,
+    "report": 5706
+   },
+   "checksum": "fe211507f765639d",
+   "reference_accuracy": 0.7867,
+   "role": "train"
+  },
+  {
+   "name": "mozilla4",
+   "source": "openml",
+   "openml_id": 1046,
+   "openml_name": "mozilla4",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1046",
+   "target": "state",
+   "predicts": "The defect state of a Mozilla source-code unit (two classes), from its size and change history.",
+   "rows_raw": 15545,
+   "rows_after_filter": 15545,
+   "rows": 15545,
+   "numeric_features_raw": 4,
+   "features": [
+    "start",
+    "end",
+    "event",
+    "size"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "0",
+    "1"
+   ],
+   "class_share": [
+    0.3286,
+    0.6714
+   ],
+   "mean": [
+    420923.31923448056,
+    670313.7166291412,
+    0.5656159536828562,
+    431.0467996140238
+   ],
+   "std": [
+    509759.71756141935,
+    583804.8203777231,
+    0.4956758483346644,
+    854.8425120391497
+   ],
+   "pool_rows": {
+    "fit": 6218,
+    "select": 4664,
+    "report": 4663
+   },
+   "checksum": "5a69af87fba1fbb6",
+   "reference_accuracy": 0.88,
+   "role": "train"
+  },
+  {
+   "name": "optdigits",
+   "source": "openml",
+   "openml_id": 28,
+   "openml_name": "optdigits",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/28",
+   "target": "class",
+   "predicts": "Which handwritten digit an 8x8 image shows, from the pixel counts of its cells.",
+   "rows_raw": 5620,
+   "rows_after_filter": 2277,
+   "rows": 2277,
+   "numeric_features_raw": 64,
+   "features": [
+    "input3",
+    "input20",
+    "input34",
+    "input35",
+    "input44",
+    "input54",
+    "input61",
+    "input62"
+   ],
+   "classes_raw": 10,
+   "classes": [
+    "1",
+    "3",
+    "4",
+    "7"
+   ],
+   "class_share": [
+    0.2508,
+    0.2512,
+    0.2495,
+    0.2486
+   ],
+   "mean": [
+    4.578485181119649,
+    7.789242590559824,
+    2.557628979143798,
+    8.069154774972558,
+    8.582875960482985,
+    7.099890230515917,
+    9.944017563117454,
+    4.878155872667398
+   ],
+   "std": [
+    4.703752654374432,
+    6.5274506547213065,
+    3.885960047006645,
+    6.460777825375655,
+    6.594869847392244,
+    6.54343840476822,
+    5.8780270381635695,
+    5.644953965355574
+   ],
+   "pool_rows": {
+    "fit": 911,
+    "select": 683,
+    "report": 683
+   },
+   "checksum": "e12fec3ce488a879",
+   "reference_accuracy": 0.9367,
+   "role": "heldout"
+  },
+  {
+   "name": "pendigits",
+   "source": "openml",
+   "openml_id": 32,
+   "openml_name": "pendigits",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/32",
+   "target": "class",
+   "predicts": "Which digit was written, from points sampled along the pen trajectory on a tablet.",
+   "rows_raw": 10992,
+   "rows_after_filter": 4574,
+   "rows": 4574,
+   "numeric_features_raw": 16,
+   "features": [
+    "input2",
+    "input5",
+    "input6",
+    "input8",
+    "input11",
+    "input12",
+    "input14",
+    "input16"
+   ],
+   "classes_raw": 10,
+   "classes": [
+    "0",
+    "1",
+    "2",
+    "4"
+   ],
+   "class_share": [
+    0.2499,
+    0.2499,
+    0.2501,
+    0.2501
+   ],
+   "mean": [
+    81.42349726775956,
+    38.68360655737705,
+    59.02622950819672,
+    42.63442622950819,
+    59.991256830601095,
+    43.0655737704918,
+    36.88688524590164,
+    21.57486338797814
+   ],
+   "std": [
+    18.973562129981442,
+    33.70344640479738,
+    31.171925341551145,
+    30.03342792584287,
+    37.51095912802724,
+    29.68755448563344,
+    34.51034204096862,
+    34.90309178623246
+   ],
+   "pool_rows": {
+    "fit": 1830,
+    "select": 1372,
+    "report": 1372
+   },
+   "checksum": "11215fe13aed5443",
+   "reference_accuracy": 0.9483,
+   "role": "train"
+  },
+  {
+   "name": "phoneme",
+   "source": "openml",
+   "openml_id": 1489,
+   "openml_name": "phoneme",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1489",
+   "target": "Class",
+   "predicts": "Whether a speech sound is a nasal or an oral vowel (two classes), from the amplitudes of its first five harmonics.",
+   "rows_raw": 5404,
+   "rows_after_filter": 5404,
+   "rows": 5404,
+   "numeric_features_raw": 5,
+   "features": [
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.7065,
+    0.2935
+   ],
+   "mean": [
+    0.009515376040703056,
+    -0.006313598057354295,
+    -0.002209759019426458,
+    -0.0028278325624421763,
+    -0.016880641073080477
+   ],
+   "std": [
+    0.9978094835957177,
+    0.993804892725975,
+    1.0017977264404903,
+    0.9874980818931975,
+    0.990018139205731
+   ],
+   "pool_rows": {
+    "fit": 2162,
+    "select": 1621,
+    "report": 1621
+   },
+   "checksum": "6e21609e6c83d82a",
+   "reference_accuracy": 0.8267,
+   "role": "train"
+  },
+  {
+   "name": "qsar-biodeg",
+   "source": "openml",
+   "openml_id": 1494,
+   "openml_name": "qsar-biodeg",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1494",
+   "target": "Class",
+   "predicts": "Whether a chemical is readily biodegradable (two classes), from molecular descriptors.",
+   "rows_raw": 1055,
+   "rows_after_filter": 1055,
+   "rows": 1055,
+   "numeric_features_raw": 41,
+   "features": [
+    "V1",
+    "V11",
+    "V13",
+    "V15",
+    "V27",
+    "V30",
+    "V36",
+    "V39"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.6626,
+    0.3374
+   ],
+   "mean": [
+    4.803502369668246,
+    1.466824644549763,
+    3.483777251184834,
+    9.979030805687204,
+    2.2272156398104266,
+    9.41105450236967,
+    3.9113696682464454,
+    8.631805687203792
+   ],
+   "std": [
+    0.49958851669483156,
+    2.9462143534786858,
+    0.5525219925746847,
+    0.8484439682721865,
+    0.2074070075229242,
+    12.819048303481114,
+    0.980030227713229,
+    1.18109061784039
+   ],
+   "pool_rows": {
+    "fit": 422,
+    "select": 316,
+    "report": 317
+   },
+   "checksum": "d2d3ece938cd9c64",
+   "reference_accuracy": 0.8228,
+   "role": "heldout"
+  },
+  {
+   "name": "satimage",
+   "source": "openml",
+   "openml_id": 182,
+   "openml_name": "satimage",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/182",
+   "target": "class",
+   "predicts": "The soil type at the centre of a 3x3 patch of a Landsat satellite image, from its spectral values.",
+   "rows_raw": 6430,
+   "rows_after_filter": 5102,
+   "rows": 5102,
+   "numeric_features_raw": 36,
+   "features": [
+    "Eattr",
+    "A7attr",
+    "E11attr",
+    "F12attr",
+    "B14attr",
+    "C15attr",
+    "D16attr",
+    "E23attr"
+   ],
+   "classes_raw": 6,
+   "classes": [
+    "1.",
+    "3.",
+    "5.",
+    "7."
+   ],
+   "class_share": [
+    0.3001,
+    0.2658,
+    0.1386,
+    0.2956
+   ],
+   "mean": [
+    0.12787204654581089,
+    0.11388472317491424,
+    0.13451744292013718,
+    0.21803124301812835,
+    -0.2173211391474767,
+    0.14204289514943658,
+    0.22242635178833903,
+    0.13385529005389518
+   ],
+   "std": [
+    0.9050879772356609,
+    0.8938876420498193,
+    0.900033816214998,
+    0.7932386505389782,
+    0.7393023549550479,
+    0.9052608056981967,
+    0.8046700880077289,
+    0.897963607913595
+   ],
+   "pool_rows": {
+    "fit": 2041,
+    "select": 1530,
+    "report": 1531
+   },
+   "checksum": "a2f8e828a466a875",
+   "reference_accuracy": 0.9367,
+   "role": "train"
+  },
+  {
+   "name": "segment",
+   "source": "openml",
+   "openml_id": 40984,
+   "openml_name": "segment",
+   "version": 3,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/40984",
+   "target": "class",
+   "predicts": "Which kind of surface an outdoor image region shows, from colour and edge statistics of the region.",
+   "rows_raw": 2310,
+   "rows_after_filter": 1320,
+   "rows": 1320,
+   "numeric_features_raw": 18,
+   "features": [
+    "intensity.mean",
+    "rawred.mean",
+    "rawblue.mean",
+    "rawgreen.mean",
+    "exblue.mean",
+    "exgreen.mean",
+    "value.mean",
+    "hue.mean"
+   ],
+   "classes_raw": 7,
+   "classes": [
+    "brickface",
+    "cement",
+    "foliage",
+    "grass"
+   ],
+   "class_share": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+   ],
+   "mean": [
+    20.505471517045457,
+    17.91729787121212,
+    24.764310583333334,
+    18.834807344696973,
+    12.776515314393938,
+    -5.011996011363636,
+    26.336279882575756,
+    -0.8911971306818182
+   ],
+   "std": [
+    17.70664565734251,
+    16.057768899130387,
+    21.7789117829578,
+    16.070682128564354,
+    15.354599940877979,
+    12.227384417985226,
+    21.15793391645927,
+    1.8044468726399276
+   ],
+   "pool_rows": {
+    "fit": 528,
+    "select": 396,
+    "report": 396
+   },
+   "checksum": "5af5186938005656",
+   "reference_accuracy": 0.9773,
+   "role": "train"
+  },
+  {
+   "name": "shuttle",
+   "source": "openml",
+   "openml_id": 40685,
+   "openml_name": "shuttle",
+   "version": 1,
+   "licence": "public",
+   "url": "https://www.openml.org/d/40685",
+   "target": "class",
+   "predicts": "The operating state of the Space Shuttle's radiator subsystem, from sensor readings.",
+   "rows_raw": 58000,
+   "rows_after_filter": 57927,
+   "rows": 20000,
+   "numeric_features_raw": 9,
+   "features": [
+    "A1",
+    "A2",
+    "A3",
+    "A5",
+    "A6",
+    "A7",
+    "A8",
+    "A9"
+   ],
+   "classes_raw": 7,
+   "classes": [
+    "1",
+    "3",
+    "4",
+    "5"
+   ],
+   "class_share": [
+    0.7814,
+    0.0029,
+    0.1565,
+    0.0593
+   ],
+   "mean": [
+    48.501625,
+    1.161125,
+    85.411,
+    34.636,
+    1.222875,
+    36.883125,
+    50.8735,
+    14.12675
+   ],
+   "std": [
+    12.386686294541208,
+    72.98515885941728,
+    8.868657113678484,
+    21.74937939344477,
+    201.83713781594898,
+    13.315825743617067,
+    21.51906126553851,
+    26.240073064637226
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "1014f078c78466c9",
+   "reference_accuracy": 0.9983,
+   "role": "heldout"
+  },
+  {
+   "name": "skin-segmentation",
+   "source": "openml",
+   "openml_id": 1502,
+   "openml_name": "skin-segmentation",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1502",
+   "target": "Class",
+   "predicts": "Whether a pixel shows skin (two classes), from its blue, green and red values.",
+   "rows_raw": 245057,
+   "rows_after_filter": 245057,
+   "rows": 20000,
+   "numeric_features_raw": 3,
+   "features": [
+    "V1",
+    "V2",
+    "V3"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.2066,
+    0.7934
+   ],
+   "mean": [
+    125.04925,
+    132.447125,
+    122.607375
+   ],
+   "std": [
+    62.660293044618776,
+    60.22929689307667,
+    72.844838325096
+   ],
+   "pool_rows": {
+    "fit": 8000,
+    "select": 6000,
+    "report": 6000
+   },
+   "checksum": "bb0ca0d0deb70f8f",
+   "reference_accuracy": 0.9917,
+   "role": "train"
+  },
+  {
+   "name": "spambase",
+   "source": "openml",
+   "openml_id": 44,
+   "openml_name": "spambase",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/44",
+   "target": "class",
+   "predicts": "Whether an e-mail is spam (1) or not (0), from word and character frequencies.",
+   "rows_raw": 4601,
+   "rows_after_filter": 4601,
+   "rows": 4601,
+   "numeric_features_raw": 57,
+   "features": [
+    "word_freq_remove",
+    "word_freq_free",
+    "word_freq_you",
+    "word_freq_your",
+    "char_freq_%21",
+    "char_freq_%24",
+    "capital_run_length_average",
+    "capital_run_length_longest"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "0",
+    "1"
+   ],
+   "class_share": [
+    0.606,
+    0.394
+   ],
+   "mean": [
+    0.11496195652173913,
+    0.22160869565217392,
+    1.6472500000000003,
+    0.8067880434782608,
+    0.28401902173913046,
+    0.07302826086956522,
+    4.883076086956522,
+    55.591847826086955
+   ],
+   "std": [
+    0.4050814446670735,
+    0.6031772930746875,
+    1.8235245800432027,
+    1.2038154734862265,
+    1.0660468457603374,
+    0.20456930967814507,
+    25.935317731385258,
+    262.4166849954035
+   ],
+   "pool_rows": {
+    "fit": 1840,
+    "select": 1381,
+    "report": 1380
+   },
+   "checksum": "8f2c2fc21e5e120e",
+   "reference_accuracy": 0.895,
+   "role": "train"
+  },
+  {
+   "name": "steel-plates-fault",
+   "source": "openml",
+   "openml_id": 1504,
+   "openml_name": "steel-plates-fault",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1504",
+   "target": "Class",
+   "predicts": "The fault class of a steel plate (two classes), from geometric and luminosity measurements of the fault.",
+   "rows_raw": 1941,
+   "rows_after_filter": 1941,
+   "rows": 1941,
+   "numeric_features_raw": 33,
+   "features": [
+    "V1",
+    "V2",
+    "V5",
+    "V11",
+    "V18",
+    "V22",
+    "V30",
+    "V33"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "1",
+    "2"
+   ],
+   "class_share": [
+    0.6533,
+    0.3467
+   ],
+   "mean": [
+    564.6185567010309,
+    609.9497422680413,
+    1848.2525773195875,
+    1463.8865979381444,
+    0.032213530927835056,
+    2.497694329896907,
+    0.19845360824742267,
+    0.20231958762886598
+   ],
+   "std": [
+    517.573592920503,
+    494.153036001626,
+    3928.5896079049435,
+    146.63330034081054,
+    0.053173750984090974,
+    0.7889801818907136,
+    0.39883552201502964,
+    0.4017292273292442
+   ],
+   "pool_rows": {
+    "fit": 776,
+    "select": 583,
+    "report": 582
+   },
+   "checksum": "91cefa00fd684eca",
+   "reference_accuracy": 0.8422,
+   "role": "heldout"
+  },
+  {
+   "name": "texture",
+   "source": "openml",
+   "openml_id": 40499,
+   "openml_name": "texture",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/40499",
+   "target": "Class",
+   "predicts": "Which texture an image patch shows, from statistical moments of the patch.",
+   "rows_raw": 5500,
+   "rows_after_filter": 2000,
+   "rows": 2000,
+   "numeric_features_raw": 40,
+   "features": [
+    "V3",
+    "V13",
+    "V18",
+    "V19",
+    "V20",
+    "V33",
+    "V39",
+    "V40"
+   ],
+   "classes_raw": 11,
+   "classes": [
+    "1",
+    "10",
+    "11",
+    "2"
+   ],
+   "class_share": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+   ],
+   "mean": [
+    -0.6581475,
+    -0.4461525,
+    -0.5396725,
+    -0.51119125,
+    -0.55161625,
+    -0.49484625,
+    -0.542475,
+    -0.6133012499999999
+   ],
+   "std": [
+    0.32152989090246337,
+    0.326330138423882,
+    0.21616762649330729,
+    0.2108550857186933,
+    0.30329454575698767,
+    0.33328337058865914,
+    0.20488468555507022,
+    0.28915622593753276
+   ],
+   "pool_rows": {
+    "fit": 800,
+    "select": 600,
+    "report": 600
+   },
+   "checksum": "5032636ba2519056",
+   "reference_accuracy": 0.9167,
+   "role": "train"
+  },
+  {
+   "name": "titanic",
+   "source": "openml",
+   "openml_id": 40945,
+   "openml_name": "Titanic",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/40945",
+   "target": "survived",
+   "predicts": "Whether a passenger of the Titanic survived (1) or not (0), from the numeric passenger fields.",
+   "rows_raw": 1309,
+   "rows_after_filter": 1045,
+   "rows": 1045,
+   "numeric_features_raw": 5,
+   "features": [
+    "pclass",
+    "age",
+    "sibsp",
+    "parch",
+    "fare"
+   ],
+   "classes_raw": 2,
+   "classes": [
+    "0",
+    "1"
+   ],
+   "class_share": [
+    0.5914,
+    0.4086
+   ],
+   "mean": [
+    2.2344497607655502,
+    29.851076555023923,
+    0.48086124401913877,
+    0.3349282296650718,
+    33.83465909090909
+   ],
+   "std": [
+    0.8401183606589078,
+    14.111640275034869,
+    0.8916772137236942,
+    0.7688773395477796,
+    53.69915255449062
+   ],
+   "pool_rows": {
+    "fit": 418,
+    "select": 314,
+    "report": 313
+   },
+   "checksum": "c6252369287c8070",
+   "reference_accuracy": 0.6847,
+   "role": "train"
+  },
+  {
+   "name": "wall-robot-navigation",
+   "source": "openml",
+   "openml_id": 1497,
+   "openml_name": "wall-robot-navigation",
+   "version": 1,
+   "licence": "Public",
+   "url": "https://www.openml.org/d/1497",
+   "target": "Class",
+   "predicts": "Which move a wall-following robot makes next, from its ultrasound sensor readings.",
+   "rows_raw": 5456,
+   "rows_after_filter": 5456,
+   "rows": 5456,
+   "numeric_features_raw": 24,
+   "features": [
+    "V6",
+    "V13",
+    "V14",
+    "V15",
+    "V18",
+    "V19",
+    "V20",
+    "V23"
+   ],
+   "classes_raw": 4,
+   "classes": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "class_share": [
+    0.4041,
+    0.3843,
+    0.0601,
+    0.1514
+   ],
+   "mean": [
+    2.910860219981668,
+    2.1503538038496792,
+    2.199283684692942,
+    2.2181264894592116,
+    0.9239110907424382,
+    1.0742465627864344,
+    1.0899042163153072,
+    1.5517373968835928
+   ],
+   "std": [
+    1.2845243967805458,
+    1.4055893448817833,
+    1.569635338239438,
+    1.7216090025862245,
+    0.9127647947108901,
+    1.1650656707314686,
+    1.1538208921790183,
+    1.2921545218032189
+   ],
+   "pool_rows": {
+    "fit": 2182,
+    "select": 1637,
+    "report": 1637
+   },
+   "checksum": "c0492d0ee2c06d7d",
+   "reference_accuracy": 0.8683,
+   "role": "heldout"
+  }
+ ],
+ "rejected_candidates": [
+  {
+   "name": "yeast",
+   "reason": "a fully trained 8-wide network reaches only 0.61 on select (< 0.65)"
+  },
+  {
+   "name": "wine-quality-white",
+   "reason": "a fully trained 8-wide network reaches only 0.51 on select (< 0.65)"
+  },
+  {
+   "name": "higgs",
+   "reason": "a fully trained 8-wide network reaches only 0.63 on select (< 0.65)"
+  },
+  {
+   "name": "page-blocks",
+   "reason": "not needed: 24 datasets with higher priority passed"
+  },
+  {
+   "name": "jungle-chess",
+   "reason": "not needed: 24 datasets with higher priority passed"
+  },
+  {
+   "name": "nomao",
+   "reason": "not needed: 24 datasets with higher priority passed"
+  }
+ ]
+}

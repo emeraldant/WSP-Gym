@@ -42,6 +42,16 @@ def _count_lines(path: str) -> int:
 
 
 async def _validate(service, sampler_path: str, a, out: str) -> dict:
+    if a.val_task == "real":  # real-data improve loop: verified on select rows, scored on report rows
+        from .realworld import load_real_split, loop_from_records as real_loop
+
+        items = load_real_split("real_val", a.n_val)
+        policy = await LLMPolicy(service, a.model, sampler_path, a.effort, a.max_tokens).start()
+        recs = await evaluate(policy, items, out, a.val_samples, 64, tag=os.path.basename(out), direct=a.direct)
+        s = summarize(recs)
+        s["loop"] = {f"x{k}": real_loop(items, recs, k) for k in sorted({1, a.val_samples})}
+        s["loop_gap"] = s["loop"][f"x{a.val_samples}"]["gap_closed"]
+        return s
     _, eps = load_split(a.val_split)
     policy = await LLMPolicy(service, a.model, sampler_path, a.effort, a.max_tokens).start()
     items = eps[: a.n_val]
@@ -83,7 +93,7 @@ async def main() -> None:
     ap.add_argument("--n-val", type=int, default=300)
     ap.add_argument("--keep-all", action="store_true")
     ap.add_argument("--mix", default="repair", help="training streams, passed through to tinker_train rl")
-    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile", "improve", "improve_loop"])
+    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile", "improve", "improve_loop", "real"])
     ap.add_argument("--val-samples", type=int, default=1, help="answers sampled per validation network")
     ap.add_argument("--rank", type=int, default=32, help="LoRA rank (a rank-16 state is ~25 GB, rank 32 ~50 GB)")
     ap.add_argument("--select", default="repair_rate", choices=["repair_rate", "mean_reward", "loop_gap"],

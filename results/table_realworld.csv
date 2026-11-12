@@ -1,0 +1,32 @@
+split,proposer,n,gap_closed,gap_lo,gap_hi,improved,harmed
+real_val,random x1,200,0.0299,0.0175,0.0442,0.16,0.015
+real_val,random x8,200,0.0974,0.08,0.1156,0.45,0.01
+real_val,random x32,200,0.1626,0.1402,0.1855,0.67,0.03
+real_val,random x128,200,0.1932,0.1705,0.2166,0.715,0.015
+real_val,gradient on select (300 Adam steps),200,0.5649,0.5256,0.604,0.98,0.0
+real_val,formula_rl_proposer x1,200,0.0434,0.0309,0.0575,0.235,0.02
+real_val,formula_rl_proposer x8,200,0.0901,0.0732,0.1076,0.465,0.025
+real_val,untrained x1,200,0.001,-0.0005,0.0032,0.01,0.0
+real_val,untrained x8,200,0.008,0.0027,0.0144,0.04,0.005
+real_test_seen,random x1,300,0.0189,0.0109,0.028,0.08,0.01
+real_test_seen,random x8,300,0.0825,0.0691,0.0963,0.4067,0.0233
+real_test_seen,random x32,300,0.146,0.1292,0.163,0.6367,0.0433
+real_test_seen,random x128,300,0.2008,0.1813,0.2204,0.7133,0.02
+real_test_seen,gradient on select (300 Adam steps),300,0.5675,0.5355,0.5992,0.9667,0.0033
+real_test_seen,formula_rl_proposer x1,300,0.0428,0.0338,0.0524,0.2433,0.0033
+real_test_seen,formula_rl_proposer x8,300,0.0968,0.0832,0.1113,0.4833,0.0167
+real_test_seen,untrained x1,300,-0.0001,-0.0002,0.0,0.0,0.0
+real_test_seen,untrained x8,300,0.0078,0.0017,0.0151,0.0367,0.0067
+real_test_unseen,random x1,300,0.0088,0.0052,0.0127,0.0567,0.0033
+real_test_unseen,random x8,300,0.0524,0.0425,0.0629,0.28,0.02
+real_test_unseen,random x32,300,0.0932,0.081,0.1056,0.5067,0.01
+real_test_unseen,random x128,300,0.1328,0.1177,0.1487,0.6367,0.0167
+real_test_unseen,gradient on select (300 Adam steps),300,0.5239,0.494,0.5542,0.9833,0.0
+real_test_unseen,formula_rl_proposer x1,300,0.0264,0.0185,0.0351,0.1433,0.0167
+real_test_unseen,formula_rl_proposer x8,300,0.0618,0.051,0.0734,0.3333,0.0167
+real_test_unseen,untrained x1,300,0.0012,0.0,0.0032,0.0067,0.0
+real_test_unseen,untrained x8,300,0.0012,-0.0008,0.0034,0.01,0.0033
+real_hf_models,formula_rl_proposer x1,3,0.0,0.0,0.0,0.0,0.0
+real_hf_models,formula_rl_proposer x8,3,0.0131,0.0,0.0392,0.0,0.0
+real_hf_models,untrained x1,3,0.0,0.0,0.0,0.0,0.0
+real_hf_models,untrained x8,3,0.0,0.0,0.0,0.0,0.0

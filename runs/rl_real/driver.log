@@ -1,0 +1,4 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/rl_chunks.py:106: FutureWarning: DEPRECATED: ServiceClient.create_rest_client() is deprecated and will be removed in a future tinker SDK version. Construct tinker.RestClient() directly instead; it takes the same base_url and api_key and needs no ServiceClient.
+  rest = service.create_rest_client()
+[chunk 0] start from the base model
