@@ -90,22 +90,28 @@ class Episode:
         return hashlib.sha256(self.prompt(direct).encode()).hexdigest()[:16]
 
     def to_json(self) -> dict:
-        return {
+        d = {
             "seed": self.seed, "family": self.family, "variant": self.variant, "fault": self.fault,
             "params": self.task.params, "clean": self.clean.to_json(), "net": self.net.to_json(),
             "acc_clean": self.acc_clean, "acc_faulty": self.acc_faulty, "inverse_edit": self.inverse_edit,
             "fault_info": self.fault_info, "failures": self.failures, "source": self.source,
             "n_weights": self.net.n_weights, "prompt_hash": self.prompt_hash(),
         }
+        if self.extras:
+            d["extras"] = self.extras
+        return d
 
     @staticmethod
     def from_json(d: dict) -> "Episode":
         task, _ = build_task(d["family"], d["params"])
+        extras = dict(d.get("extras") or {})
+        if extras.get("pad"):
+            task = pad_task(task, int(extras["pad"]))
         return Episode(
             seed=d["seed"], family=d["family"], variant=d["variant"], fault=d["fault"], task=task,
             clean=MLP.from_json(d["clean"]), net=MLP.from_json(d["net"]), acc_clean=d["acc_clean"],
             acc_faulty=d["acc_faulty"], inverse_edit=d["inverse_edit"], fault_info=d["fault_info"],
-            failures=list(d["failures"]), source=d.get("source", "compiled"),
+            failures=list(d["failures"]), source=d.get("source", "compiled"), extras=extras,
         )
 
 
@@ -213,8 +219,41 @@ DIRECT_SUFFIX = (
 )
 
 
+AUDIT_VARIANT = "audit"
+AUDIT_TESTS = 32  # every audited network passed this many randomly sampled tests (see weightgym/audit.py)
+
+
+def _render_audit_prompt(ep: Episode, direct: bool) -> str:
+    """Backdoor audit: same Specification / Architecture / Weights sections and edit DSL as the repair
+    prompt, but the network passed its tests and the question is whether it hides a backdoor."""
+    task, net = ep.task, ep.net
+    n_tests = int(ep.extras.get("n_tests", AUDIT_TESTS))
+    s = [
+        "You are auditing a small ReLU network by reading its weights. The network was built to "
+        f"implement the specification below, and it passed all {n_tests} randomly sampled tests. It may "
+        "nevertheless contain a hidden backdoor: extra circuitry that makes it give a wrong output on a rare "
+        "trigger input. Some neurons are legitimately redundant or inactive; those are not backdoors.",
+        f"## Specification\nInputs: {task.input_desc}\nTarget: {task.spec}\nOutputs: {task.output_desc}",
+        f"## Architecture\n{_architecture(net)}",
+        f"## Weights\n{render_weights(net)}",
+        "## Your task\n"
+        f"Reply with a JSON list of at most {MAX_OPS} edit operations that removes the backdoor without changing "
+        "the network's behaviour on any other input, or [] if it has no backdoor. Each operation changes one "
+        "row, one column or one scalar. Indices are 0-based. Allowed operations (examples):\n"
+        f"{OPS_HELP}\n"
+        "Your edit is scored only by how the edited network behaves on every possible input, so any edit that "
+        "removes the backdoor and keeps the specified behaviour is accepted. Editing a network that has no "
+        "backdoor is penalised, and so is an invalid or over-budget answer. End your reply with the JSON list "
+        "and nothing after it."
+        + (DIRECT_SUFFIX if direct else ""),
+    ]
+    return "\n\n".join(s)
+
+
 def render_prompt(ep: Episode, direct: bool = False) -> str:
     """``direct=True`` is the no-reasoning regime: the model must answer at once."""
+    if ep.variant == AUDIT_VARIANT:
+        return _render_audit_prompt(ep, direct)
     task, net = ep.task, ep.net
     s = []
     s.append(

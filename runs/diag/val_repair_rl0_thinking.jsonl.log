@@ -1,0 +1,9 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val_repair_rl0_thinking.jsonl] 100 rollouts in 17s; tokens in 132095 (prompt, once per episode) out 3598
+n=100 repair 0.215 [0.127, 0.316]  clean_ok 0.62  valid 0.39  noop_on_faulty 0.03  reward -0.309  mean out tokens 36
+   variant=weights            n=  51 repair 0.19 clean_ok 0.12 valid 0.25 noop_f 0.05
+   variant=weights+failures   n=  49 repair 0.25 clean_ok 0.92 valid 0.53 noop_f 0.00

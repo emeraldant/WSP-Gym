@@ -1,0 +1,524 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000137: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000139: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000148: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000140: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000155: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000160: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000158: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000166: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000163: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000161: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000156: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000159: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000165: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000153: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000167: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000162: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000168: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000172: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000169: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000174: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000170: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000175: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000171: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000173: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000177: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000179: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000180: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000178: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000183: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000181: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000184: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000186: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000188: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000190: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000195: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000194: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000193: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000192: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000200: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000191: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000201: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000210: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000213: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000203: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000207: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000202: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000206: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000214: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000211: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000209: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000212: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000216: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000218: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000220: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000222: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000219: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000226: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000225: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000223: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+
+[warn] seed 2000224: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000227: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000228: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000230: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000231: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000233: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000235: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000237: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000236: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000239: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000240: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000242: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000241: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000238: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000246: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000247: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000248: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000245: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000253: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000249: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000259: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000252: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000255: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000251: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000257: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000256: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000262: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000263: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000264: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000266: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000267: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000269: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000268: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000265: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000271: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000270: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000272: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000273: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000274: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000275: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000276: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000277: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000278: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000280: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000284: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000282: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000281: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000283: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000287: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000289: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000292: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000293: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000296: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000297: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000294: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+Request failed with non-retryable error: NotFoundError: Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}
+[warn] seed 2000298: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[warn] seed 2000295: sampling failed: NotFoundError("Error code: 404 - {'detail': 'Weights not found for model_path tinker://746d918a-484d-5887-b453-d9185e74596d:train:0/sampler_weights/final'}")
+[val_decompile_rl0_direct.jsonl] 184 rollouts in 45s; tokens in 159997 (prompt, once per episode) out 6951
+n=184 repair 0.033 [0.011, 0.060]  clean_ok nan  valid 0.45  noop_on_faulty 0.00  reward -0.368  mean out tokens 38
+   family=argmax             n=  27 repair 0.07 clean_ok nan valid 0.81 noop_f 0.00
+   family=arith              n=  16 repair 0.00 clean_ok nan valid 0.19 noop_f 0.00
+   family=compare            n=  17 repair 0.18 clean_ok nan valid 0.41 noop_f 0.00
+   family=count              n=  23 repair 0.00 clean_ok nan valid 0.96 noop_f 0.00
+   family=dnf                n=  18 repair 0.06 clean_ok nan valid 0.22 noop_f 0.00
+   family=equality           n=  16 repair 0.00 clean_ok nan valid 0.19 noop_f 0.00
+   family=minmax             n=  24 repair 0.00 clean_ok nan valid 0.25 noop_f 0.00
+   family=parity             n=  24 repair 0.00 clean_ok nan valid 0.42 noop_f 0.00
+   family=threshold          n=  19 repair 0.00 clean_ok nan valid 0.32 noop_f 0.00

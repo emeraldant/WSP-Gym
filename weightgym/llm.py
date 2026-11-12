@@ -173,6 +173,7 @@ async def _main():
     ap.add_argument("--by", default="variant,fault,family")
     ap.add_argument("--direct", action="store_true", help="no-reasoning regime: prompt asks for an immediate answer")
     ap.add_argument("--temperature", type=float, default=1.0)
+    ap.add_argument("--task", default="repair", choices=["repair", "decompile"])
     a = ap.parse_args()
     if a.split:
         _, episodes = load_split(a.split)
@@ -180,6 +181,10 @@ async def _main():
     else:
         cfg = GymConfig(size=a.size)
         episodes = [make_episode(a.seed0 + i, cfg) for i in range(a.n)]
+    if a.task == "decompile":
+        from .decompile import wrap
+
+        episodes = [wrap(e) for e in episodes]
     policy = await LLMPolicy(tinker.ServiceClient(), a.model, a.model_path, a.effort, a.max_tokens, a.temperature).start()
     recs = await evaluate(policy, episodes, a.out, a.samples, a.concurrency, a.tag or os.path.basename(a.out), direct=a.direct)
     print(describe(recs, by=tuple(k for k in a.by.split(",") if k)))
