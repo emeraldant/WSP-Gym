@@ -1,12 +1,12 @@
 {
  "budget_usd": 250.0,
- "total_usd": 88.88,
- "fraction": 0.356,
+ "total_usd": 117.12,
+ "fraction": 0.468,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 11.88,
-  "rl_train": 31.15,
-  "sft_train": 45.85
+  "eval": 14.3,
+  "rl_train": 48.65,
+  "sft_train": 54.16
  },
  "runs": [
   {
@@ -125,11 +125,25 @@
    "n_out": 455337
   },
   {
+   "file": "diag/val_imperfect_loop_untrained_x8.jsonl",
+   "kind": "eval",
+   "usd": 0.639,
+   "n_in": 360891,
+   "n_out": 531072
+  },
+  {
    "file": "diag/val_imperfect_repairmodel_x8.jsonl",
    "kind": "eval",
    "usd": 0.21,
    "n_in": 356391,
    "n_out": 102622
+  },
+  {
+   "file": "diag/val_imperfect_sftimprove50_x8.jsonl",
+   "kind": "eval",
+   "usd": 0.195,
+   "n_in": 356391,
+   "n_out": 88280
   },
   {
    "file": "diag/val_imperfect_untrained.jsonl",
@@ -272,6 +286,54 @@
    "n_out": 1079676
   },
   {
+   "file": "rl_improve/chunk00/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 6.052
+  },
+  {
+   "file": "rl_improve/chunk01/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 5.05
+  },
+  {
+   "file": "rl_improve/chunk02/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.374
+  },
+  {
+   "file": "rl_improve/chunk03/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.025
+  },
+  {
+   "file": "rl_improve/val_chunk00.jsonl",
+   "kind": "eval",
+   "usd": 0.233,
+   "n_in": 360891,
+   "n_out": 124523
+  },
+  {
+   "file": "rl_improve/val_chunk01.jsonl",
+   "kind": "eval",
+   "usd": 0.346,
+   "n_in": 360891,
+   "n_out": 237547
+  },
+  {
+   "file": "rl_improve/val_chunk02.jsonl",
+   "kind": "eval",
+   "usd": 0.391,
+   "n_in": 360891,
+   "n_out": 282895
+  },
+  {
+   "file": "rl_improve/val_chunk03.jsonl",
+   "kind": "eval",
+   "usd": 0.352,
+   "n_in": 360891,
+   "n_out": 244017
+  },
+  {
    "file": "rl_main/chunk00/metrics.jsonl",
    "kind": "rl_train",
    "usd": 5.591
@@ -346,7 +408,7 @@
   {
    "file": "sft_improve/metrics.jsonl",
    "kind": "sft_train",
-   "usd": 0.465
+   "usd": 8.778
   },
   {
    "file": "sft_improve/val_step00000_improve_val_imperfect.jsonl",
@@ -354,6 +416,27 @@
    "usd": 0.12,
    "n_in": 356391,
    "n_out": 13148
+  },
+  {
+   "file": "sft_improve/val_step00025_improve_val_imperfect.jsonl",
+   "kind": "eval",
+   "usd": 0.119,
+   "n_in": 356391,
+   "n_out": 11781
+  },
+  {
+   "file": "sft_improve/val_step00050_improve_val_imperfect.jsonl",
+   "kind": "eval",
+   "usd": 0.118,
+   "n_in": 356391,
+   "n_out": 10704
+  },
+  {
+   "file": "sft_improve/val_step00075_improve_val_imperfect.jsonl",
+   "kind": "eval",
+   "usd": 0.028,
+   "n_in": 82555,
+   "n_out": 3019
   },
   {
    "file": "sft_main/metrics.jsonl",

@@ -12,3 +12,23 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 [chunk 0] improve: gap closed -0.453 [-0.472,-0.435] improved 0.08 harmed 0.67 noop 0.00 mean reward +0.022
 [chunk 0] val repair 0.001 [0.000,0.002] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 0 (0.089)
 [chunk 1] start from tinker://dad3a2ca-86d9-5793-b9fe-8b5edd1dd55f:train:0/weights/final
+/home/user/WeightGym/weightgym/ckpt.py:30: FutureWarning: DEPRECATED: RestClient.delete_checkpoint_from_tinker_path_async() is deprecated and will be removed in a future tinker SDK version. Use `await RestClient.delete_checkpoint_from_tinker_path(...)` instead; delete_checkpoint_from_tinker_path() returns an APIFuture that can be awaited.
+  await rc.delete_checkpoint_from_tinker_path_async(p)
+[val_chunk01.jsonl] 2400 rollouts in 30s; tokens in 360891 (prompt, once per episode) out 237547
+[chunk 1] verify loop x1: gap closed +0.056 [+0.037,+0.076] improved 0.13
+[chunk 1] verify loop x8: gap closed +0.133 [+0.106,+0.162] improved 0.32
+[chunk 1] improve: gap closed -0.377 [-0.397,-0.357] improved 0.13 harmed 0.59 noop 0.00 mean reward +0.048
+[chunk 1] val repair 0.003 [0.001,0.006] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 1 (0.133)
+[chunk 2] start from tinker://d06765d0-0bcf-5c2e-b5c3-9f7adb571970:train:0/weights/final
+[val_chunk02.jsonl] 2400 rollouts in 40s; tokens in 360891 (prompt, once per episode) out 282895
+[chunk 2] verify loop x1: gap closed +0.072 [+0.049,+0.097] improved 0.13
+[chunk 2] verify loop x8: gap closed +0.094 [+0.069,+0.122] improved 0.19
+[chunk 2] improve: gap closed -0.495 [-0.518,-0.472] improved 0.13 harmed 0.69 noop 0.00 mean reward +0.061
+[chunk 2] val repair 0.018 [0.013,0.024] clean_ok nan valid 0.99 noop_f 0.00 | best so far: chunk 1 (0.133)
+[chunk 3] start from tinker://17bcc6ac-aeda-567f-8976-7bf230871a4e:train:0/weights/final
+[val_chunk03.jsonl] 2400 rollouts in 62s; tokens in 360891 (prompt, once per episode) out 244017
+[chunk 3] verify loop x1: gap closed +0.078 [+0.055,+0.103] improved 0.15
+[chunk 3] verify loop x8: gap closed +0.109 [+0.082,+0.137] improved 0.23
+[chunk 3] improve: gap closed -0.463 [-0.485,-0.440] improved 0.15 harmed 0.67 noop 0.00 mean reward +0.072
+[chunk 3] val repair 0.014 [0.009,0.019] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 1 (0.133)
+[chunk 4] start from tinker://a85bafc9-a817-5d61-ac2c-7c3459033bd4:train:0/weights/final
