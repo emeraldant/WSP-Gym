@@ -9,7 +9,16 @@ again. Edits are scored only by how the edited network behaves.
 
 We used it to post-train **Inkling 2 Small** on Thinking Machines' **Tinker** API (LoRA: a supervised
 warm-start, then policy-gradient RL with the tinker-cookbook loop) and measured the result on held-out
-networks.
+networks. Two results:
+
+1. **Repair at a glance.** With no reasoning tokens, the share of broken networks it fixes goes from
+   0.2% to 76.5%; trained on a mix that includes SGD-trained networks, it fixes 46% of fresh SGD-trained
+   ones and 36% of networks from an optimiser it never saw.
+2. **RL alone, no labels.** Pure RL from the untouched base model teaches it to propose edits that
+   improve genuinely imperfect trained networks: 8 proposals remove 12% of a network's errors, against
+   5% for random edits and 2% for the untrained model.
+
+Frontier closed models still do much better on this gym; see the comparison below.
 
 ![Repair rate by test split](results/repair_rate.png)
 
@@ -88,9 +97,10 @@ For scale, on the same in-distribution test networks:
 - **Most of the gain is supervised.** The warm-start trains on synthetic faults whose inverse edit is
   known because we planted it. RL on top added 6 points in-distribution and 8-9 points on unseen
   families and larger networks, and taught the model to leave healthy networks alone (86% -> 99%).
-- **Pure RL from the base model failed.** At all but the lowest learning rate it learned the answer
-  format in 1-2 steps and then collapsed to always answering "no edit": when ~2% of guesses succeed,
-  doing nothing beats guessing.
+- **Pure RL from the base model failed on this task.** At all but the lowest learning rate it learned
+  the answer format in 1-2 steps and then collapsed to always answering "no edit": when ~2% of guesses
+  succeed, doing nothing beats guessing. (It works in the propose-and-verify setting of the second
+  result below, where a wrong proposal is simply rejected.)
 - **The adapter is a specialist.** Asked to reason, the trained model does not: it still answers in ~36
   tokens. Nothing here shows it became a better weight-space *reasoner*.
 - After RL, sampled answers (temperature 1.0, the pre-registered setting) and greedy answers score the
