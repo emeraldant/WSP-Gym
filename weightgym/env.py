@@ -116,7 +116,7 @@ def make_episode(seed: int, cfg: GymConfig, max_tries: int = 200) -> Episode:
         if cfg.source == "trained":
             from .trained import train_network
 
-            clean = train_network(task, canon, rng)
+            clean = train_network(task, canon, rng, extra=cfg.obf().n_distract)  # match compiled sizes per level
             if clean is None:
                 continue
         else:

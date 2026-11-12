@@ -91,13 +91,14 @@ def _fit(task: Task, widths: list[int], rng: np.random.Generator, *, steps: int 
     return MLP(Ws, bs)
 
 
-def train_network(task: Task, canon: MLP, rng: np.random.Generator) -> MLP | None:
+def train_network(task: Task, canon: MLP, rng: np.random.Generator, extra: tuple[int, int] = EXTRA_NEURONS) -> MLP | None:
     """Train a ReLU MLP with ``canon``'s depth and slightly larger hidden widths on ``task``.
 
-    Returns the network rounded to ``nets.DECIMALS`` if the rounded network is at least
-    ``MIN_ACC`` accurate on ``task.X``; otherwise ``None`` (the caller resamples the task).
+    Each hidden layer gets ``canon``'s width plus a number of neurons drawn from the inclusive
+    range ``extra``. Returns the network rounded to ``nets.DECIMALS`` if the rounded network is
+    at least ``MIN_ACC`` accurate on ``task.X``; otherwise ``None`` (the caller resamples the task).
     """
-    lo, hi = EXTRA_NEURONS
+    lo, hi = extra
     hidden = [w + int(rng.integers(lo, hi + 1)) for w in canon.widths[1:-1]]
     seed = int(rng.integers(1 << 62))
     widths = [task.n_in] + hidden + [task.n_out]

@@ -66,6 +66,12 @@ def test_trained_networks_are_accurate_rounded_and_sized(family):
     assert n >= 1
 
 
+def test_extra_sets_the_added_hidden_width():
+    task, canon, rng = _task("threshold", 1)
+    net = train_network(task, canon, rng, extra=(6, 6))
+    assert net is not None and net.widths[1:-1] == [w + 6 for w in canon.widths[1:-1]]
+
+
 def test_returns_none_when_the_task_cannot_be_fit():
     task, canon, rng = _task("dnf", 0)
     start = rng.bit_generator.state
