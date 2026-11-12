@@ -1,0 +1,7 @@
+{"step": 0, "kind": "val", "n": 16, "n_faulty": 11, "n_clean": 5, "repair_rate": 0.0, "repair_lo": 0.0, "repair_hi": 0.0, "clean_ok": 0.2, "clean_lo": 0.0, "clean_hi": 0.6, "valid": 1.0, "noop_faulty": 0.5454545454545454, "mean_reward": -0.25584845890410957, "n_in": 19827, "n_out": 754}
+{"step": 0, "kind": "train", "nll": 0.6690273284912109, "lr": 0.0002, "tokens": 10106, "trained_tokens": 10106, "usd_train": 0.00444664, "elapsed": 30.479193687438965}
+{"step": 1, "kind": "train", "nll": 0.3611737787723541, "lr": 0.000155, "tokens": 10801, "trained_tokens": 20907, "usd_train": 0.00919908, "elapsed": 34.256152391433716}
+{"step": 2, "kind": "val", "n": 16, "n_faulty": 11, "n_clean": 5, "repair_rate": 0.0, "repair_lo": 0.0, "repair_hi": 0.0, "clean_ok": 0.0, "clean_lo": 0.0, "clean_hi": 0.0, "valid": 0.9375, "noop_faulty": 0.0, "mean_reward": -0.31270312499999997, "n_in": 19827, "n_out": 553}
+{"step": 2, "kind": "train", "nll": 0.331735223531723, "lr": 0.00011000000000000002, "tokens": 11663, "trained_tokens": 32570, "usd_train": 0.0143308, "elapsed": 43.81141710281372}
+{"step": 3, "kind": "train", "nll": 0.25202319025993347, "lr": 6.5e-05, "tokens": 9514, "trained_tokens": 42084, "usd_train": 0.01851696, "elapsed": 47.952908992767334}
+{"step": 4, "kind": "val", "n": 16, "n_faulty": 11, "n_clean": 5, "repair_rate": 0.0, "repair_lo": 0.0, "repair_hi": 0.0, "clean_ok": 0.0, "clean_lo": 0.0, "clean_hi": 0.0, "valid": 0.875, "noop_faulty": 0.0, "mean_reward": -0.3717530136268344, "n_in": 19827, "n_out": 520}

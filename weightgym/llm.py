@@ -27,6 +27,12 @@ from .eval import breakdown, record, summarize
 INKLING = "thinkingmachines/Inkling-2-Small"
 
 
+def renderer_name_for(model_name: str) -> str:
+    """Cookbook-recommended renderer; WEIGHTGYM_RENDERER overrides it (used only for loop debugging on a
+    cheap non-Inkling model, e.g. qwen3_disable_thinking)."""
+    return os.environ.get("WEIGHTGYM_RENDERER") or model_info.get_recommended_renderer_name(model_name)
+
+
 def split_content(content) -> tuple[str, str]:
     """Return (final_answer_text, thinking_text) from a parsed assistant message."""
     if isinstance(content, str):
@@ -45,7 +51,7 @@ class LLMPolicy:
                  effort: float | None = None, max_tokens: int = 4096, temperature: float = 1.0):
         self.service, self.base_model, self.model_path = service, base_model, model_path
         self.effort, self.max_tokens, self.temperature = effort, max_tokens, temperature
-        self.renderer_name = model_info.get_recommended_renderer_name(base_model)
+        self.renderer_name = renderer_name_for(base_model)
         self.renderer = get_renderer(self.renderer_name, get_tokenizer(base_model))
         self.client = None
 
@@ -58,8 +64,8 @@ class LLMPolicy:
 
     def build_prompt(self, text: str):
         msgs = [Message(role="user", content=text)]
-        if self.effort is None:
-            return self.renderer.build_generation_prompt(msgs)
+        if self.effort is None or not self.base_model.startswith("thinkingmachines/"):
+            return self.renderer.build_generation_prompt(msgs)  # only Inkling renderers take an effort
         return self.renderer.build_generation_prompt(msgs, effort=self.effort)
 
     def settings(self) -> dict:

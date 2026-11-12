@@ -1,0 +1,152 @@
+{
+ "budget_usd": 250.0,
+ "total_usd": 1.99,
+ "fraction": 0.008,
+ "stop_at_usd": 212.5,
+ "by_kind": {
+  "eval": 1.91,
+  "rl_train": 0.06,
+  "sft_train": 0.02
+ },
+ "runs": [
+  {
+   "file": "calib/probe_s0_e0.2.jsonl",
+   "kind": "eval",
+   "usd": 0.147,
+   "n_in": 31860,
+   "n_out": 137524
+  },
+  {
+   "file": "calib/s0_direct_e0.0.jsonl",
+   "kind": "eval",
+   "usd": 0.094,
+   "n_in": 186961,
+   "n_out": 38017
+  },
+  {
+   "file": "calib/s0_e0.0.jsonl",
+   "kind": "eval",
+   "usd": 0.336,
+   "n_in": 124703,
+   "n_out": 298540
+  },
+  {
+   "file": "calib/s0_e0.1.jsonl",
+   "kind": "eval",
+   "usd": 0.331,
+   "n_in": 124903,
+   "n_out": 293294
+  },
+  {
+   "file": "calib/s0_e0.1_max20k.jsonl",
+   "kind": "eval",
+   "usd": 0.419,
+   "n_in": 50924,
+   "n_out": 403983
+  },
+  {
+   "file": "debug_rl_qwen/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 0.049
+  },
+  {
+   "file": "debug_rl_qwen/val_eval000.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 582
+  },
+  {
+   "file": "debug_rl_qwen/val_eval001.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 528
+  },
+  {
+   "file": "debug_rl_qwen/val_eval002.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 539
+  },
+  {
+   "file": "debug_sft_qwen/metrics.jsonl",
+   "kind": "sft_train",
+   "usd": 0.019
+  },
+  {
+   "file": "debug_sft_qwen/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 754
+  },
+  {
+   "file": "debug_sft_qwen/val_step00002.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 553
+  },
+  {
+   "file": "debug_sft_qwen/val_step00004.jsonl",
+   "kind": "eval",
+   "usd": 0.004,
+   "n_in": 19827,
+   "n_out": 520
+  },
+  {
+   "file": "sweep/rl_lr2e-4/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 0.006
+  },
+  {
+   "file": "sweep/rl_lr2e-4/val_eval000.jsonl",
+   "kind": "eval",
+   "usd": 0.093,
+   "n_in": 206135,
+   "n_out": 31224
+  },
+  {
+   "file": "sweep/rl_lr2e-5/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 0.006
+  },
+  {
+   "file": "sweep/rl_lr2e-5/val_eval000.jsonl",
+   "kind": "eval",
+   "usd": 0.093,
+   "n_in": 206135,
+   "n_out": 30941
+  },
+  {
+   "file": "sweep/rl_lr6e-5/val_eval000.jsonl",
+   "kind": "eval",
+   "usd": 0.094,
+   "n_in": 206135,
+   "n_out": 32180
+  },
+  {
+   "file": "sweep/sft_lr1e-3/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.094,
+   "n_in": 206135,
+   "n_out": 32282
+  },
+  {
+   "file": "sweep/sft_lr1e-4/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.094,
+   "n_in": 206135,
+   "n_out": 31989
+  },
+  {
+   "file": "sweep/sft_lr3e-4/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.093,
+   "n_in": 206135,
+   "n_out": 31232
+  }
+ ]
+}

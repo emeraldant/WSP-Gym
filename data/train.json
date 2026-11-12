@@ -1,0 +1,30 @@
+{
+ "split": "train",
+ "seed0": 1000000,
+ "families": [
+  "dnf",
+  "parity",
+  "threshold",
+  "compare",
+  "minmax",
+  "arith",
+  "argmax",
+  "count",
+  "equality"
+ ],
+ "faults": [
+  "sign_flip_out",
+  "sign_flip_in",
+  "swap_out_cols",
+  "scale_out_col",
+  "bias_shift",
+  "weight_corrupt",
+  "label_swap"
+ ],
+ "sizes": [
+  0,
+  1
+ ],
+ "source": "compiled",
+ "note": "episode i = make_episode(seed0 + i, GymConfig(size=sizes[i % 2]))"
+}

@@ -1,0 +1,22 @@
+{
+ "cmd": "rl",
+ "log_path": "runs/sweep/rl_lr6e-5",
+ "model": "thinkingmachines/Inkling-2-Small",
+ "effort": 0.0,
+ "direct": true,
+ "max_tokens": 256,
+ "rank": 32,
+ "lr": 6e-05,
+ "steps": 8,
+ "train_offset": 501000,
+ "val_split": "data/val.jsonl",
+ "n_val": 150,
+ "eval_every": 4,
+ "save_every": 8,
+ "load": null,
+ "seed": 0,
+ "group_size": 16,
+ "groups_per_batch": 12,
+ "loss_fn": "importance_sampling",
+ "num_substeps": 1
+}
