@@ -4,3 +4,8 @@ __pycache__/
 .pytest_cache/
 .env
 *.egg-info/
+runs/**/iteration_*/
+runs/**/stdout.log
+runs/**/logs.log
+runs/**/timing_spans.jsonl
+runs/**/code.diff

@@ -7,3 +7,5 @@
 {"step": 5, "kind": "train", "nll": 0.20390260219573975, "lr": 0.0001, "tokens": 44743, "trained_tokens": 273506, "usd_train": 0.410259, "elapsed": 278.786425113678}
 {"step": 6, "kind": "train", "nll": 0.1646081805229187, "lr": 0.0001, "tokens": 45378, "trained_tokens": 318884, "usd_train": 0.478326, "elapsed": 289.565931558609}
 {"step": 7, "kind": "train", "nll": 0.1783643215894699, "lr": 0.0001, "tokens": 45468, "trained_tokens": 364352, "usd_train": 0.546528, "elapsed": 299.44655299186707}
+{"step": 8, "kind": "train", "nll": 0.14283372461795807, "lr": 0.0001, "tokens": 46165, "trained_tokens": 410517, "usd_train": 0.6157755, "elapsed": 309.337021112442}
+{"step": 9, "kind": "train", "nll": 0.16663366556167603, "lr": 0.0001, "tokens": 44665, "trained_tokens": 455182, "usd_train": 0.682773, "elapsed": 322.4575400352478}
