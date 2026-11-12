@@ -1,19 +1,19 @@
 {
  "budget_usd": 250.0,
- "total_usd": 240.11,
- "fraction": 0.96,
+ "total_usd": 244.49,
+ "fraction": 0.978,
  "stop_at_usd": 212.5,
  "scale_up": {
   "budget_usd": 300.0,
-  "total_usd": 0,
-  "fraction": 0.0,
+  "total_usd": 94.64,
+  "fraction": 0.315,
   "stop_at_usd": 255.0
  },
- "grand_total_usd": 240.11,
+ "grand_total_usd": 339.13,
  "by_kind": {
-  "eval": 31.48,
+  "eval": 37.55,
   "rl_train": 113.29,
-  "sft_train": 95.34
+  "sft_train": 188.29
  },
  "runs": [
   {
@@ -487,9 +487,9 @@
   {
    "file": "final/untrained_thinking/test_id.jsonl",
    "kind": "eval",
-   "usd": 1.121,
-   "n_in": 138136,
-   "n_out": 1079676,
+   "usd": 5.502,
+   "n_in": 678473,
+   "n_out": 5298074,
    "phase": "main"
   },
   {
@@ -1189,6 +1189,124 @@
    "n_in": 277978,
    "n_out": 7916,
    "phase": "main"
+  },
+  {
+   "file": "sft_scale/metrics.jsonl",
+   "kind": "sft_train",
+   "usd": 92.954,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.189,
+   "n_in": 417860,
+   "n_out": 63959,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00000_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.126,
+   "n_in": 277978,
+   "n_out": 42793,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00100.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 11024,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00100_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.092,
+   "n_in": 277978,
+   "n_out": 8161,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00200.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10875,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00200_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7528,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00300.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11562,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00300_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7537,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00400.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11943,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00400_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.092,
+   "n_in": 277978,
+   "n_out": 8299,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00500.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11165,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00500_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 8027,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00600.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11445,
+   "phase": "scale_up"
+  },
+  {
+   "file": "sft_scale/val_step00600_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.092,
+   "n_in": 277978,
+   "n_out": 8263,
+   "phase": "scale_up"
   },
   {
    "file": "sweep/rl_lr2e-4/metrics.jsonl",

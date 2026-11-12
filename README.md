@@ -73,7 +73,7 @@ For scale, on the same in-distribution test networks:
 
 | Reference | Repair rate | Tokens generated per network |
 |---|---|---|
-| Untrained Inkling 2 Small, free to reason (20K-token cap, first 100 networks) | 77.3% [68.2, 85.2] | ~10,800 |
+| Untrained Inkling 2 Small, free to reason (20K-token cap) | 75.6% [71.3, 79.6] | ~10,600 |
 | **Trained Inkling 2 Small, no reasoning** | **76.5%** | **~40** |
 | GPT-6.1 Sol, lowest reasoning setting (n=86)\* | 90.8% | ~200 (171 reasoning) |
 | GPT-6 Astra, lowest reasoning setting (n=95)\* | 96.4% | ~140 (113 reasoning) |
@@ -89,9 +89,10 @@ For scale, on the same in-distribution test networks:
 ### What this does and does not show
 
 - **An open-weights model can be trained to do weight-space repair.** Before training, Inkling 2 Small
-  can do the task only by reasoning for about 10,800 tokens, and still runs out of room on 22% of
+  can do the task only by reasoning for about 10,600 tokens, and still runs out of room on 22% of
   networks. After post-training it matches that accuracy in ~40 tokens, with no reasoning, no tools and
-  no forward passes. As far as we know this is the first *trained* weight-space programmer working from
+  no forward passes (paired on the same 422 faulty networks: +0.9 points [-4.3, +6.4],
+  `results/table_vs_reasoning.csv`). As far as we know this is the first *trained* weight-space programmer working from
   weights as text; published results so far use closed frontier models off the shelf.
 - **It carries over to unseen function families (54%) and larger networks (61%)**, so it is not simply
   memorising the training circuits. A statistics-only heuristic repairs 2-8% on these splits.
@@ -332,7 +333,7 @@ export TINKER_API_KEY=...                          # never committed
 uv run python -m weightgym.tinker_train sft --log-path runs/sft --lr 3e-4 --decay 0.8 --steps 300 --batch-size 64
 uv run python -m weightgym.rl_chunks --log-path runs/rl --load tinker://<sft state> --init-sampler tinker://<sft sampler> \
     --init-val 0.754 --lr 2e-5 --chunks 6 --chunk-steps 10 --group-size 8 --groups-per-batch 64
-uv run python -m weightgym.final_eval --arm untrained --arm sft_rl=tinker://<sampler> --baselines --thinking-ref 100
+uv run python -m weightgym.final_eval --arm untrained --arm sft_rl=tinker://<sampler> --baselines --thinking-ref 500
 uv run python -m weightgym.tinker_train sft --log-path runs/sft_mixed --lr 3e-4 --decay 0.8 --steps 300 --batch-size 64 \
     --mix repair,repair_trained --val-sets "repair:data/val.jsonl,repair:data/val_trained.jsonl"
 uv run python -m weightgym.rl_chunks --log-path runs/rl_improve --init-val 0.0 --lr 6e-5 --rank 16 --chunks 8 --group-size 16 \
