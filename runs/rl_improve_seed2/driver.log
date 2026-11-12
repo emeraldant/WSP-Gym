@@ -2,3 +2,13 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 /home/user/WeightGym/weightgym/rl_chunks.py:96: FutureWarning: DEPRECATED: ServiceClient.create_rest_client() is deprecated and will be removed in a future tinker SDK version. Construct tinker.RestClient() directly instead; it takes the same base_url and api_key and needs no ServiceClient.
   rest = service.create_rest_client()
 [chunk 0] start from the base model
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val_chunk00.jsonl] 2400 rollouts in 55s; tokens in 360891 (prompt, once per episode) out 131069
+[chunk 0] verify loop x1: gap closed +0.015 [+0.009,+0.023] improved 0.06
+[chunk 0] verify loop x8: gap closed +0.094 [+0.073,+0.116] improved 0.27
+[chunk 0] improve: gap closed -0.400 [-0.418,-0.381] improved 0.09 harmed 0.60 noop 0.00 mean reward +0.025
+[chunk 0] val repair 0.003 [0.001,0.006] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 0 (0.094)
+[chunk 1] start from tinker://be15c0b2-b67c-5839-8dc7-1171196596c7:train:0/weights/final

@@ -17,3 +17,4 @@ sft_rl,untrained,test_families,403,0.5285,0.4813,0.5757
 sft_rl,untrained,test_faults,407,0.2236,0.1843,0.2654
 sft_rl,untrained,test_larger,416,0.6058,0.5577,0.6538
 sft_rl,untrained,test_trained,403,0.1365,0.1042,0.1712
+sft_rl,untrained,test_external,415,0.0771,0.0482,0.1084

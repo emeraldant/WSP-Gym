@@ -23,7 +23,7 @@ from .env import load_split
 from .eval import breakdown, load_jsonl, paired_diff_ci, run_policy, summarize, write_csv
 from .llm import INKLING, LLMPolicy, evaluate
 
-TEST_SPLITS = ("test_id", "test_families", "test_faults", "test_larger", "test_trained")
+TEST_SPLITS = ("test_id", "test_families", "test_faults", "test_larger", "test_trained", "test_external")
 BASELINES = ("noop", "random", "outlier", "search", "gradient")
 SETTINGS = {"effort": 0.0, "max_tokens": 256, "direct": True, "temperature": 1.0, "samples": 1}
 OUT = "runs/final"

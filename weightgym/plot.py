@@ -26,6 +26,7 @@ SPLIT_LABELS = {
     "test_faults": "Unseen fault\ntypes",
     "test_larger": "Larger\nnetworks",
     "test_trained": "SGD-trained\nnetworks",
+    "test_external": "Trained by an\nindependent library",
 }
 
 

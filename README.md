@@ -26,6 +26,7 @@ the accuracy the fault destroyed. 95% bootstrap intervals in brackets.
 | Function families never trained on | 0.7% | 44.2% | 53.6% [48.6, 58.3] |
 | Fault types never trained on | 0.5% | 20.9% | 22.9% [18.9, 27.0] |
 | SGD-trained networks (training used only hand-built ones) | 0.3% | 12.9% | 13.9% [10.4, 17.4] |
+| Networks trained by an independent library (scikit-learn, L-BFGS) | 1.7% | — | 9.4% [6.8, 12.3] |
 
 Paired difference, final vs untrained, on the primary split: **+76.3 points** [+72.3, +80.3].
 Healthy control networks correctly left unedited: 15% untrained, 86% after the supervised stage, 99% after RL.
@@ -56,8 +57,11 @@ For scale, on the same in-distribution test networks:
   weights as text; published results so far use closed frontier models off the shelf.
 - **It carries over to unseen function families (54%) and larger networks (61%)**, so it is not simply
   memorising the training circuits. A statistics-only heuristic repairs 2-8% on these splits.
-- **It does not carry over to networks produced by gradient descent: 14%.** Training saw only
-  hand-built circuits hidden behind symmetries. This is the most important limitation.
+- **It does not carry over to networks produced by an optimiser: 14% on our own SGD-trained networks
+  and 9% on networks fitted by scikit-learn** (`data/test_external.jsonl`, added after training; the
+  supervised checkpoint no longer existed, hence the dash). Training saw only hand-built circuits hidden
+  behind symmetries. This is the most important limitation. No public benchmark of small ReLU networks
+  with exactly checkable tasks was found to test on; the nearest, WSPBench, would need conversion.
 - **Frontier models are far ahead.** GPT-6 Astra and GPT-6.1 Sol repair 91-100% of the same networks
   with a few hundred reasoning tokens, and about 90% of the SGD-trained ones. This gym, at this size, is
   near ceiling for them. The open/closed gap on this skill is large; post-training closes part of it.
@@ -128,6 +132,7 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
 | `test_faults` | 2 held-out fault types (mis-scaled incoming row, spurious direction) |
 | `test_larger` | networks larger than any seen in training |
 | `test_trained` | SGD-trained networks; repair training never sees one |
+| `test_external` | networks fitted by scikit-learn (a different optimiser and initialisation), then faulted |
 
 ## Training on Tinker
 
