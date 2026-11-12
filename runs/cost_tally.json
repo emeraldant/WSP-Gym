@@ -1,10 +1,10 @@
 {
  "budget_usd": 250.0,
- "total_usd": 193.46,
- "fraction": 0.774,
+ "total_usd": 196.42,
+ "fraction": 0.786,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 23.56,
+  "eval": 26.52,
   "rl_train": 74.56,
   "sft_train": 95.34
  },
@@ -251,6 +251,48 @@
    "n_out": 19634
   },
   {
+   "file": "final/sft_mixed_greedy/test_external.jsonl",
+   "kind": "eval",
+   "usd": 0.215,
+   "n_in": 645540,
+   "n_out": 20925
+  },
+  {
+   "file": "final/sft_mixed_greedy/test_families.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 688289,
+   "n_out": 19866
+  },
+  {
+   "file": "final/sft_mixed_greedy/test_faults.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 691088,
+   "n_out": 18699
+  },
+  {
+   "file": "final/sft_mixed_greedy/test_id.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 689973,
+   "n_out": 19459
+  },
+  {
+   "file": "final/sft_mixed_greedy/test_larger.jsonl",
+   "kind": "eval",
+   "usd": 0.361,
+   "n_in": 1135673,
+   "n_out": 20638
+  },
+  {
+   "file": "final/sft_mixed_greedy/test_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.231,
+   "n_in": 703464,
+   "n_out": 20189
+  },
+  {
    "file": "final/sft_rl/test_external.jsonl",
    "kind": "eval",
    "usd": 0.213,
@@ -291,6 +333,48 @@
    "usd": 0.23,
    "n_in": 703464,
    "n_out": 19361
+  },
+  {
+   "file": "final/sft_rl_greedy/test_external.jsonl",
+   "kind": "eval",
+   "usd": 0.213,
+   "n_in": 645540,
+   "n_out": 19496
+  },
+  {
+   "file": "final/sft_rl_greedy/test_families.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 688289,
+   "n_out": 19039
+  },
+  {
+   "file": "final/sft_rl_greedy/test_faults.jsonl",
+   "kind": "eval",
+   "usd": 0.225,
+   "n_in": 691088,
+   "n_out": 17893
+  },
+  {
+   "file": "final/sft_rl_greedy/test_id.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 689973,
+   "n_out": 18593
+  },
+  {
+   "file": "final/sft_rl_greedy/test_larger.jsonl",
+   "kind": "eval",
+   "usd": 0.359,
+   "n_in": 1135673,
+   "n_out": 18487
+  },
+  {
+   "file": "final/sft_rl_greedy/test_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.23,
+   "n_in": 703464,
+   "n_out": 19333
   },
   {
    "file": "final/untrained/test_external.jsonl",

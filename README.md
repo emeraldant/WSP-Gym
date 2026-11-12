@@ -55,6 +55,12 @@ stage), on the same test splits:
 
 It saw half as many hand-built networks and had no RL, which is why those rows are lower.
 
+*Secondary, not pre-registered:* with greedy decoding instead of sampling at temperature 1.0, the
+mixed-source model scores 55.8% [50.9, 60.6] on fresh SGD-trained networks, 44.6% [39.8, 49.4] on the
+scikit-learn networks and 62.8% in-distribution. The RL-finished model is unchanged by greedy decoding
+(76.3% in-distribution), because RL had already concentrated it on its best guess. All headline numbers
+in this README use the pre-registered temperature of 1.0.
+
 Paired difference, final vs untrained, on the primary split: **+76.3 points** [+72.3, +80.3].
 Healthy control networks correctly left unedited: 15% untrained, 86% after the supervised stage, 99% after RL.
 

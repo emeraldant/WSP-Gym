@@ -33,7 +33,8 @@ def _records(path: str) -> list[dict]:
     return [r for r in load_jsonl(path) if not r.get("header")] if os.path.exists(path) else []
 
 
-async def eval_arm(service, name: str, model_path: str | None, splits, data_dir: str, concurrency: int) -> None:
+async def eval_arm(service, name: str, model_path: str | None, splits, data_dir: str, concurrency: int,
+                   temperature: float = 1.0) -> None:
     policy = None
     for split in splits:
         path = os.path.join(data_dir, f"{split}.jsonl")
@@ -45,7 +46,7 @@ async def eval_arm(service, name: str, model_path: str | None, splits, data_dir:
         if len(_records(out)) >= len(eps):
             continue
         if policy is None:
-            policy = await LLMPolicy(service, INKLING, model_path, SETTINGS["effort"], SETTINGS["max_tokens"]).start()
+            policy = await LLMPolicy(service, INKLING, model_path, SETTINGS["effort"], SETTINGS["max_tokens"], temperature).start()
         await evaluate(policy, eps, out, SETTINGS["samples"], concurrency, tag=f"{name}/{split}", direct=True)
 
 
@@ -128,6 +129,8 @@ async def _main() -> None:
     ap.add_argument("--thinking-max-tokens", type=int, default=20000)
     ap.add_argument("--concurrency", type=int, default=64)
     ap.add_argument("--tables-only", action="store_true")
+    ap.add_argument("--temperature", type=float, default=1.0,
+                    help="1.0 is the pre-registered setting; use 0 only for arms named *_greedy (secondary)")
     a = ap.parse_args()
     splits = tuple(a.splits.split(","))
     if not a.tables_only:
@@ -137,7 +140,7 @@ async def _main() -> None:
         jobs = []
         for spec in a.arm:
             name, _, path = spec.partition("=")
-            jobs.append(eval_arm(service, name, path or None, splits, a.data, a.concurrency))
+            jobs.append(eval_arm(service, name, path or None, splits, a.data, a.concurrency, a.temperature))
         if a.thinking_ref:
             jobs.append(eval_thinking_ref(service, a.thinking_ref, a.data, a.thinking_effort, a.thinking_max_tokens))
         await asyncio.gather(*jobs)
