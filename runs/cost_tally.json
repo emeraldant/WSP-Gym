@@ -1,11 +1,11 @@
 {
  "budget_usd": 250.0,
- "total_usd": 227.64,
- "fraction": 0.911,
+ "total_usd": 239.16,
+ "fraction": 0.957,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 30.32,
-  "rl_train": 101.98,
+  "eval": 30.53,
+  "rl_train": 113.29,
   "sft_train": 95.34
  },
  "runs": [
@@ -745,6 +745,11 @@
    "usd": 13.135
   },
   {
+   "file": "rl_real/chunk02/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 11.314
+  },
+  {
    "file": "rl_real/val_chunk00.jsonl",
    "kind": "eval",
    "usd": 0.21,
@@ -757,6 +762,13 @@
    "usd": 0.302,
    "n_in": 416152,
    "n_out": 177309
+  },
+  {
+   "file": "rl_real/val_chunk02.jsonl",
+   "kind": "eval",
+   "usd": 0.211,
+   "n_in": 416152,
+   "n_out": 86603
   },
   {
    "file": "sft_improve/metrics.jsonl",
