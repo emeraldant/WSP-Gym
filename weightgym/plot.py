@@ -58,6 +58,7 @@ def main() -> None:
     n = len(arms)
     width = 0.8 / n
     gap = 0.03
+    rule = {i: 100 * float(t[(a.marker_arm, s)]["repair_rate"]) for i, s in enumerate(splits) if (a.marker_arm, s) in t}
     for k, (arm, label) in enumerate(zip(arms, labels)):
         xs, ys, los, his = [], [], [], []
         for i, s in enumerate(splits):
@@ -72,15 +73,18 @@ def main() -> None:
         ax.errorbar(xs, ys, yerr=[[y - lo for y, lo in zip(ys, los)], [hi - y for y, hi in zip(ys, his)]],
                     fmt="none", ecolor=INK, elinewidth=2, capsize=6, capthick=2, zorder=4)
         for x, y, hi in zip(xs, ys, his):
-            ax.text(x, hi + 1.8, f"{y:.0f}%", ha="center", va="bottom", color=INK, fontsize=22, fontweight="bold", zorder=5)
+            r = rule.get(int(round(x)))
+            if r is not None and hi < r + 6:  # keep the label clear of the heuristic rule
+                hi = r
+            ax.text(x, hi + 1.8, f"{y:.0f}%", ha="center", va="bottom", color=INK, fontsize=22 if n < 3 else 19, fontweight="bold", zorder=5)
     mx, my = [], []
     for i, s in enumerate(splits):
         r = t.get((a.marker_arm, s))
         if r:
             mx.append(i)
             my.append(100 * float(r["repair_rate"]))
-    if mx:
-        ax.scatter(mx, my, marker="D", s=150, color=INK, zorder=6, label=a.marker_label, edgecolors=SURFACE, linewidths=2)
+    if mx:  # a short rule across each group: readable next to three bars, never hidden behind one
+        ax.hlines(my, [x - 0.43 for x in mx], [x + 0.43 for x in mx], colors=INK, linewidth=2.5, zorder=6, label=a.marker_label)
     ref = t.get((a.ref_arm, "test_id"))
     if ref and "test_id" in splits:
         y = 100 * float(ref["repair_rate"])

@@ -1,12 +1,12 @@
 {
  "budget_usd": 250.0,
- "total_usd": 67.01,
- "fraction": 0.268,
+ "total_usd": 88.88,
+ "fraction": 0.356,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 8.6,
-  "rl_train": 13.04,
-  "sft_train": 45.38
+  "eval": 11.88,
+  "rl_train": 31.15,
+  "sft_train": 45.85
  },
  "runs": [
   {
@@ -104,11 +104,60 @@
    "n_out": 18364
   },
   {
+   "file": "diag/val_decompile_rl0_direct.jsonl",
+   "kind": "eval",
+   "usd": 0.055,
+   "n_in": 159997,
+   "n_out": 6951
+  },
+  {
+   "file": "diag/val_decompile_untrained_direct.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 262471,
+   "n_out": 57514
+  },
+  {
+   "file": "diag/val_decompile_untrained_thinking.jsonl",
+   "kind": "eval",
+   "usd": 0.47,
+   "n_in": 49150,
+   "n_out": 455337
+  },
+  {
+   "file": "diag/val_imperfect_repairmodel_x8.jsonl",
+   "kind": "eval",
+   "usd": 0.21,
+   "n_in": 356391,
+   "n_out": 102622
+  },
+  {
+   "file": "diag/val_imperfect_untrained.jsonl",
+   "kind": "eval",
+   "usd": 0.171,
+   "n_in": 356391,
+   "n_out": 64315
+  },
+  {
+   "file": "diag/val_repair_rl0_thinking.jsonl",
+   "kind": "eval",
+   "usd": 0.043,
+   "n_in": 132095,
+   "n_out": 3598
+  },
+  {
    "file": "diag/val_sft150_T0.jsonl",
    "kind": "eval",
    "usd": 0.138,
    "n_in": 417860,
    "n_out": 12301
+  },
+  {
+   "file": "diag/val_sft_rl_T0.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10872
   },
   {
    "file": "final/sft/test_families.jsonl",
@@ -144,6 +193,41 @@
    "usd": 0.231,
    "n_in": 703464,
    "n_out": 20409
+  },
+  {
+   "file": "final/sft_rl/test_families.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 688289,
+   "n_out": 19031
+  },
+  {
+   "file": "final/sft_rl/test_faults.jsonl",
+   "kind": "eval",
+   "usd": 0.225,
+   "n_in": 691088,
+   "n_out": 17942
+  },
+  {
+   "file": "final/sft_rl/test_id.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 689973,
+   "n_out": 18580
+  },
+  {
+   "file": "final/sft_rl/test_larger.jsonl",
+   "kind": "eval",
+   "usd": 0.359,
+   "n_in": 1135673,
+   "n_out": 18447
+  },
+  {
+   "file": "final/sft_rl/test_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.23,
+   "n_in": 703464,
+   "n_out": 19361
   },
   {
    "file": "final/untrained/test_families.jsonl",
@@ -193,11 +277,83 @@
    "usd": 5.591
   },
   {
+   "file": "rl_main/chunk01/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 4.343
+  },
+  {
+   "file": "rl_main/chunk02/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.707
+  },
+  {
+   "file": "rl_main/chunk03/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.432
+  },
+  {
+   "file": "rl_main/chunk04/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.161
+  },
+  {
+   "file": "rl_main/chunk05/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 3.469
+  },
+  {
    "file": "rl_main/val_chunk00.jsonl",
    "kind": "eval",
    "usd": 0.136,
    "n_in": 417860,
    "n_out": 10660
+  },
+  {
+   "file": "rl_main/val_chunk01.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10914
+  },
+  {
+   "file": "rl_main/val_chunk02.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11147
+  },
+  {
+   "file": "rl_main/val_chunk03.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10988
+  },
+  {
+   "file": "rl_main/val_chunk04.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10957
+  },
+  {
+   "file": "rl_main/val_chunk05.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10770
+  },
+  {
+   "file": "sft_improve/metrics.jsonl",
+   "kind": "sft_train",
+   "usd": 0.465
+  },
+  {
+   "file": "sft_improve/val_step00000_improve_val_imperfect.jsonl",
+   "kind": "eval",
+   "usd": 0.12,
+   "n_in": 356391,
+   "n_out": 13148
   },
   {
    "file": "sft_main/metrics.jsonl",
