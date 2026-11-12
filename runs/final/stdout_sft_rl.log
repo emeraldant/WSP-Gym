@@ -1,0 +1,79 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/llm.py:60: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(model_path=self.model_path)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[sft_rl/test_id] 500 rollouts in 47s; tokens in 689973 (prompt, once per episode) out 18580
+[sft_rl/test_families] 500 rollouts in 30s; tokens in 688289 (prompt, once per episode) out 19031
+[sft_rl/test_faults] 500 rollouts in 28s; tokens in 691088 (prompt, once per episode) out 17942
+[sft_rl/test_larger] 500 rollouts in 31s; tokens in 1135673 (prompt, once per episode) out 18447
+[sft_rl/test_trained] 500 rollouts in 29s; tokens in 703464 (prompt, once per episode) out 19361
+/home/user/WeightGym/weightgym/eval.py:82: RuntimeWarning: Mean of empty slice
+  "mean_reward": float(np.nanmean([r["reward"] for r in records])) if records else float("nan"),
+baseline_gradient      test_id        repair 0.614 [0.566, 0.661] clean_ok 0.79 valid 1.00 noop_f 0.00 n_faulty 422
+baseline_gradient      test_families  repair 0.658 [0.613, 0.702] clean_ok 0.94 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_gradient      test_faults    repair 0.649 [0.602, 0.695] clean_ok 0.85 valid 1.00 noop_f 0.00 n_faulty 407
+baseline_gradient      test_larger    repair 0.731 [0.688, 0.772] clean_ok 0.82 valid 1.00 noop_f 0.00 n_faulty 416
+baseline_gradient      test_trained   repair 0.715 [0.670, 0.757] clean_ok 0.96 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_noop          test_id        repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 422
+baseline_noop          test_families  repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 403
+baseline_noop          test_faults    repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 407
+baseline_noop          test_larger    repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 416
+baseline_noop          test_trained   repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 403
+baseline_outlier       test_id        repair 0.040 [0.021, 0.059] clean_ok 0.15 valid 1.00 noop_f 0.12 n_faulty 422
+baseline_outlier       test_families  repair 0.084 [0.057, 0.114] clean_ok 0.37 valid 1.00 noop_f 0.23 n_faulty 403
+baseline_outlier       test_faults    repair 0.029 [0.015, 0.047] clean_ok 0.16 valid 1.00 noop_f 0.12 n_faulty 407
+baseline_outlier       test_larger    repair 0.019 [0.007, 0.034] clean_ok 0.05 valid 1.00 noop_f 0.07 n_faulty 416
+baseline_outlier       test_trained   repair 0.015 [0.005, 0.027] clean_ok 0.04 valid 1.00 noop_f 0.08 n_faulty 403
+baseline_random        test_id        repair 0.007 [0.000, 0.017] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 422
+baseline_random        test_families  repair 0.010 [0.003, 0.020] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_random        test_faults    repair 0.015 [0.005, 0.027] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 407
+baseline_random        test_larger    repair 0.007 [0.000, 0.017] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 416
+baseline_random        test_trained   repair 0.012 [0.003, 0.025] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_search        test_id        repair 0.652 [0.607, 0.697] clean_ok 0.97 valid 1.00 noop_f 0.05 n_faulty 422
+baseline_search        test_families  repair 0.685 [0.638, 0.730] clean_ok 0.98 valid 1.00 noop_f 0.02 n_faulty 403
+baseline_search        test_faults    repair 0.310 [0.265, 0.356] clean_ok 0.98 valid 1.00 noop_f 0.09 n_faulty 407
+baseline_search        test_larger    repair 0.671 [0.627, 0.716] clean_ok 0.88 valid 1.00 noop_f 0.00 n_faulty 416
+baseline_search        test_trained   repair 0.635 [0.588, 0.682] clean_ok 1.00 valid 1.00 noop_f 0.04 n_faulty 403
+frontier_astra_direct  test_id        repair 0.964 [0.917, 1.000] clean_ok 0.91 valid 0.96 noop_f 0.00 n_faulty 84
+frontier_astra_reasoning test_id        repair 1.000 [1.000, 1.000] clean_ok 0.83 valid 1.00 noop_f 0.00 n_faulty 48
+frontier_astra_reasoning test_larger    repair 1.000 [1.000, 1.000] clean_ok 0.88 valid 1.00 noop_f 0.00 n_faulty 35
+frontier_astra_reasoning test_trained   repair 0.880 [0.760, 1.000] clean_ok 1.00 valid 1.00 noop_f 0.00 n_faulty 25
+frontier_sol_direct    test_id        repair 0.908 [0.842, 0.961] clean_ok 1.00 valid 0.92 noop_f 0.00 n_faulty 76
+frontier_sol_reasoning test_id        repair 1.000 [1.000, 1.000] clean_ok 1.00 valid 1.00 noop_f 0.00 n_faulty 48
+frontier_sol_reasoning test_larger    repair 1.000 [1.000, 1.000] clean_ok 1.00 valid 1.00 noop_f 0.00 n_faulty 30
+frontier_sol_reasoning test_trained   repair 0.913 [0.783, 1.000] clean_ok 1.00 valid 1.00 noop_f 0.00 n_faulty 23
+sft                    test_id        repair 0.704 [0.661, 0.746] clean_ok 0.86 valid 1.00 noop_f 0.03 n_faulty 422
+sft                    test_families  repair 0.442 [0.395, 0.491] clean_ok 0.62 valid 1.00 noop_f 0.05 n_faulty 403
+sft                    test_faults    repair 0.209 [0.170, 0.251] clean_ok 0.89 valid 1.00 noop_f 0.04 n_faulty 407
+sft                    test_larger    repair 0.522 [0.474, 0.570] clean_ok 0.80 valid 1.00 noop_f 0.05 n_faulty 416
+sft                    test_trained   repair 0.129 [0.097, 0.164] clean_ok 0.49 valid 1.00 noop_f 0.01 n_faulty 403
+sft_rl                 test_id        repair 0.765 [0.725, 0.806] clean_ok 0.99 valid 1.00 noop_f 0.07 n_faulty 422
+sft_rl                 test_families  repair 0.536 [0.486, 0.583] clean_ok 0.69 valid 1.00 noop_f 0.04 n_faulty 403
+sft_rl                 test_faults    repair 0.229 [0.189, 0.270] clean_ok 0.99 valid 1.00 noop_f 0.05 n_faulty 407
+sft_rl                 test_larger    repair 0.606 [0.558, 0.651] clean_ok 0.92 valid 0.99 noop_f 0.07 n_faulty 416
+sft_rl                 test_trained   repair 0.139 [0.104, 0.174] clean_ok 0.56 valid 1.00 noop_f 0.00 n_faulty 403
+untrained              test_id        repair 0.002 [0.000, 0.007] clean_ok 0.15 valid 0.16 noop_f 0.00 n_faulty 422
+untrained              test_families  repair 0.007 [0.000, 0.017] clean_ok 0.11 valid 0.24 noop_f 0.00 n_faulty 403
+untrained              test_faults    repair 0.005 [0.000, 0.012] clean_ok 0.18 valid 0.19 noop_f 0.00 n_faulty 407
+untrained              test_larger    repair 0.000 [0.000, 0.000] clean_ok 0.20 valid 0.16 noop_f 0.00 n_faulty 416
+untrained              test_trained   repair 0.003 [0.000, 0.007] clean_ok 0.26 valid 0.16 noop_f 0.00 n_faulty 403
+untrained_thinking     test_id        repair 0.773 [0.682, 0.852] clean_ok 0.58 valid 0.78 noop_f 0.00 n_faulty 88
+diff frontier_astra_direct - untrained on test_id: +0.964 [+0.917, +1.000]
+diff frontier_astra_reasoning - untrained on test_id: +1.000 [+1.000, +1.000]
+diff frontier_astra_reasoning - untrained on test_larger: +1.000 [+1.000, +1.000]
+diff frontier_astra_reasoning - untrained on test_trained: +0.880 [+0.720, +1.000]
+diff frontier_sol_direct - untrained on test_id: +0.908 [+0.842, +0.974]
+diff frontier_sol_reasoning - untrained on test_id: +1.000 [+1.000, +1.000]
+diff frontier_sol_reasoning - untrained on test_larger: +1.000 [+1.000, +1.000]
+diff frontier_sol_reasoning - untrained on test_trained: +0.913 [+0.783, +1.000]
+diff sft - untrained on test_id: +0.701 [+0.659, +0.744]
+diff sft - untrained on test_families: +0.434 [+0.387, +0.484]
+diff sft - untrained on test_faults: +0.204 [+0.165, +0.243]
+diff sft - untrained on test_larger: +0.522 [+0.474, +0.570]
+diff sft - untrained on test_trained: +0.127 [+0.094, +0.161]
+diff sft_rl - untrained on test_id: +0.763 [+0.723, +0.803]
+diff sft_rl - untrained on test_families: +0.528 [+0.481, +0.576]
+diff sft_rl - untrained on test_faults: +0.224 [+0.184, +0.265]
+diff sft_rl - untrained on test_larger: +0.606 [+0.558, +0.654]
+diff sft_rl - untrained on test_trained: +0.137 [+0.104, +0.171]

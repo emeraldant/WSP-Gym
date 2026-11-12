@@ -116,12 +116,19 @@ async def run_validation(client, a, step: int, out_dir: str, val_sets: list, mf)
         s = summarize(recs)
         row = {"step": step, "kind": "val", "val_set": name, **s, "n_in": sum(r["n_in"] for r in recs),
                "n_out": sum(r["n_out"] for r in recs)}
+        if name.startswith("improve"):
+            from .imperfect import improve_stats
+
+            st = improve_stats(recs)
+            row["improve"] = st
+            print(f"[val @ {step}] {name}: gap closed {st['gap_closed']:+.3f} [{st['gap_lo']:+.3f},{st['gap_hi']:+.3f}] "
+                  f"improved {st['improved']:.2f} harmed {st['harmed']:.2f} noop {st['noop']:.2f}", flush=True)
         mf.write(json.dumps(row) + "\n"); mf.flush()
         print(f"[val @ {step}] {name}: {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] "
               f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
 
 
-MIX_KINDS = ("repair", "repair_trained", "decompile", "decompile_trained", "audit")
+MIX_KINDS = ("repair", "repair_trained", "decompile", "decompile_trained", "audit", "improve")
 
 
 def stream_item(kind: str, k: int, a, trained_cache: dict):
@@ -142,6 +149,12 @@ def stream_item(kind: str, k: int, a, trained_cache: dict):
         return wrap(trained(500_000 + a.trained_offset + k))
     if kind == "audit":
         return episode_for("train_audit", a.train_offset + k)
+    if kind == "improve":  # imperfect SGD-trained networks; the cache (SFT only) carries the search teacher's edit
+        from .imperfect import imperfect_episode_for, wrap as wrap_imperfect
+
+        i = a.train_offset + k
+        key = ("improve", i)
+        return wrap_imperfect(trained_cache[key] if key in trained_cache else imperfect_episode_for("train_imperfect", i))
     raise KeyError(kind)
 
 
@@ -161,6 +174,10 @@ def load_val_sets(spec: str, n_val: int) -> list[tuple[str, list]]:
         _, eps = load_split(path)
         eps = eps[:n_val]
         name = f"{task}@{os.path.basename(path).replace('.jsonl', '')}"
+        if task == "improve":
+            from .imperfect import wrap as wrap_imperfect
+
+            eps = [wrap_imperfect(e) for e in eps]
         out.append((name, [wrap(e) for e in eps] if task == "decompile" else eps))
     return out
 
@@ -173,6 +190,11 @@ async def run_sft(a) -> None:
 
         trained_cache = load_cache(a.trained_cache)
         print(f"[sft] loaded {len(trained_cache)} cached SGD-trained training networks", flush=True)
+    if "improve" in a.mix and os.path.exists(a.improve_cache):
+        from .gen_cache import load_cache
+
+        trained_cache.update({("improve", i): ep for i, ep in load_cache(a.improve_cache).items()})
+        print(f"[sft] loaded teacher-labelled imperfect networks; cache now holds {len(trained_cache)} items", flush=True)
     json.dump(vars(a), open(os.path.join(a.log_path, "config.json"), "w"), indent=1)
     service = tinker.ServiceClient()
     if a.load:
@@ -248,8 +270,10 @@ def _log_rollout(log_path: str, rec: dict) -> None:
 class RepairEnv(Env):
     """Single turn: read the weights, emit an edit, get the behavioural reward."""
 
-    def __init__(self, ep: Episode, model_name: str, effort: float | None, direct: bool, log_path: str, index: int):
+    def __init__(self, ep: Episode, model_name: str, effort: float | None, direct: bool, log_path: str, index: int,
+                 trunc_reward: float | None = None):
         self.ep, self.model_name, self.effort, self.direct, self.log_path, self.index = ep, model_name, effort, direct, log_path, index
+        self.trunc_reward = trunc_reward
         self.n_in = 0
 
     @property
@@ -265,6 +289,9 @@ class RepairEnv(Env):
         answer, raw, finished = answer_from_tokens(self.model_name, action)
         ep = self.ep
         res = ep.score(answer) if hasattr(ep, "score") else score_answer(ep, answer)
+        if not finished and self.trunc_reward is not None:
+            # Reasoning-budget regime: running out of tokens is "no answer", scored like doing nothing.
+            res = {**res, "reward": float(self.trunc_reward)}
         _log_rollout(self.log_path, {
             "t": time.time(), "train_index": self.index, "seed": ep.seed, "family": ep.family, "fault": ep.fault,
             "variant": ep.variant, "prompt_hash": ep.prompt_hash(self.direct), "raw": raw, "finished": finished,
@@ -298,11 +325,13 @@ class RepairGroupBuilder(EnvGroupBuilder):
     effort: float | None
     direct: bool
     log_path: str
+    trunc_reward: float | None = None
 
     async def make_envs(self) -> Sequence[Env]:
         kinds = self.mix.split(",")
         ep = stream_item(kinds[self.index % len(kinds)], self.index // len(kinds), _StreamArgs(self.train_offset), {})
-        return [RepairEnv(ep, self.model_name, self.effort, self.direct, self.log_path, self.index) for _ in range(self.group_size)]
+        return [RepairEnv(ep, self.model_name, self.effort, self.direct, self.log_path, self.index, self.trunc_reward)
+                for _ in range(self.group_size)]
 
     def logging_tags(self) -> list[str]:
         return ["weightgym"]
@@ -318,12 +347,13 @@ class RepairRLDataset(RLDataset):
     def get_batch(self, index: int) -> Sequence[EnvGroupBuilder]:
         b = self.b
         lo = index * b.groups_per_batch
-        return [RepairGroupBuilder(lo + i, b.mix, b.train_offset, b.group_size, b.model_name, b.effort, b.direct, b.log_path)
-                for i in range(b.groups_per_batch)]
+        return [RepairGroupBuilder(lo + i, b.mix, b.train_offset, b.group_size, b.model_name, b.effort, b.direct, b.log_path,
+                                   b.trunc_reward) for i in range(b.groups_per_batch)]
 
 
 @chz.chz
 class RepairDatasetBuilder(RLDatasetBuilder):
+    trunc_reward: float | None = None
     mix: str
     model_name: str
     groups_per_batch: int
@@ -387,7 +417,7 @@ def run_rl(a) -> None:
         recipe_name="weightgym_repair_rl",
         renderer_name=renderer_name_for(a.model),
         dataset_builder=RepairDatasetBuilder(
-            mix=a.mix, model_name=a.model, groups_per_batch=a.groups_per_batch, group_size=a.group_size, n_batches=a.steps,
+            trunc_reward=a.truncation_reward, mix=a.mix, model_name=a.model, groups_per_batch=a.groups_per_batch, group_size=a.group_size, n_batches=a.steps,
             train_offset=a.train_offset, effort=a.effort, direct=a.direct, log_path=a.log_path),
         evaluator_builders=[ValEvaluatorBuilder(
             model_name=a.model, val_split=a.val_split, n_val=a.n_val, effort=a.effort, direct=a.direct,
@@ -434,6 +464,7 @@ def main() -> None:
     sub.choices["sft"].add_argument("--start-step", type=int, default=0, help="resume a crashed run from --load at this step")
     sub.choices["sft"].add_argument("--keep-all", action="store_true", help="keep every checkpoint (needs paid storage)")
     sub.choices["sft"].add_argument("--load-sampler", default=None, help="sampler path saved alongside --load (pruned at the next save)")
+    sub.choices["sft"].add_argument("--improve-cache", default="cache/train_imperfect_teacher.jsonl")
     sub.choices["sft"].add_argument("--val-sets", default=None, help='e.g. "repair:data/val.jsonl,decompile:data/val.jsonl"')
     sub.choices["sft"].add_argument("--trained-offset", type=int, default=0)
     sub.choices["sft"].add_argument("--trained-cache", default="cache/train_trained.jsonl")
@@ -441,6 +472,8 @@ def main() -> None:
     sub.choices["rl"].add_argument("--groups-per-batch", type=int, default=32)
     sub.choices["rl"].add_argument("--loss-fn", default="importance_sampling")
     sub.choices["rl"].add_argument("--num-substeps", type=int, default=1)
+    sub.choices["rl"].add_argument("--truncation-reward", type=float, default=None,
+                                   help="reward when the generation runs out of tokens (default: invalid answer, -1)")
     a = ap.parse_args()
     if a.cmd == "sft":
         asyncio.run(run_sft(a))

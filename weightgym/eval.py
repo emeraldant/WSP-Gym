@@ -26,7 +26,7 @@ def record(ep: Episode, res: dict, **extra) -> dict:
     return {
         "seed": ep.seed, "family": ep.family, "fault": ep.fault, "variant": ep.variant, "clean": ep.is_clean,
         "n_weights": ep.net.n_weights, "reward": res["reward"], "valid": res["valid"], "success": res["success"],
-        "recovery": res["recovery"], "noop": res["noop"], "n_ops": res["n_ops"], **extra,
+        "recovery": res["recovery"], "noop": res["noop"], "n_ops": res["n_ops"], "gain": res.get("gain"), **extra,
     }
 
 

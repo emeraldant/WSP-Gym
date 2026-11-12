@@ -44,15 +44,29 @@ def _count_lines(path: str) -> int:
 async def _validate(service, sampler_path: str, a, out: str) -> dict:
     _, eps = load_split(a.val_split)
     policy = await LLMPolicy(service, a.model, sampler_path, a.effort, a.max_tokens).start()
-    recs = await evaluate(policy, eps[: a.n_val], out, 1, 64, tag=os.path.basename(out), direct=True)
-    return summarize(recs)
+    items = eps[: a.n_val]
+    if a.val_task == "improve":
+        from .imperfect import improve_stats, wrap
+
+        items = [wrap(e) for e in items]
+    elif a.val_task == "decompile":
+        from .decompile import wrap
+
+        items = [wrap(e) for e in items]
+    recs = await evaluate(policy, items, out, 1, 64, tag=os.path.basename(out), direct=a.direct)
+    s = summarize(recs)
+    if a.val_task == "improve":
+        s["improve"] = improve_stats(recs)
+    return s
 
 
 async def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--log-path", required=True)
-    ap.add_argument("--load", required=True, help="tinker:// state path to start from (e.g. the SFT final state)")
-    ap.add_argument("--init-sampler", required=True, help="sampler path of the starting weights")
+    ap.add_argument("--load", default=None, help="tinker:// state path to start from; omit to start from the base model")
+    ap.add_argument("--init-sampler", default=None, help="sampler path of the starting weights (none for the base model)")
+    ap.add_argument("--no-direct", dest="direct", action="store_false", help="reasoning-allowed prompt")
+    ap.add_argument("--truncation-reward", type=float, default=None)
     ap.add_argument("--init-val", type=float, required=True, help="validation repair rate of the starting weights")
     ap.add_argument("--model", default=INKLING)
     ap.add_argument("--lr", type=float, required=True)
@@ -67,7 +81,9 @@ async def main() -> None:
     ap.add_argument("--n-val", type=int, default=300)
     ap.add_argument("--keep-all", action="store_true")
     ap.add_argument("--mix", default="repair", help="training streams, passed through to tinker_train rl")
-    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile"])
+    ap.add_argument("--val-task", default="repair", choices=["repair", "decompile", "improve"])
+    ap.add_argument("--select", default="repair_rate", choices=["repair_rate", "mean_reward"],
+                    help="validation metric used to pick the best checkpoint")
     ap.add_argument("--keep-init", action="store_true", help="never delete the starting state/sampler")
     a = ap.parse_args()
     os.makedirs(a.log_path, exist_ok=True)
@@ -90,15 +106,21 @@ async def main() -> None:
         cmd = [sys.executable, "-m", "weightgym.tinker_train", "rl", "--log-path", log, "--model", a.model,
                "--lr", str(a.lr), "--steps", str(a.chunk_steps), "--group-size", str(a.group_size),
                "--groups-per-batch", str(a.groups_per_batch), "--eval-every", "0", "--save-every", "0",
-               "--load", state, "--effort", str(a.effort), "--max-tokens", str(a.max_tokens),
+               "--effort", str(a.effort), "--max-tokens", str(a.max_tokens),
                "--train-offset", str(a.train_offset + c * a.chunk_steps * a.groups_per_batch), "--mix", a.mix]
-        print(f"[chunk {c}] start from {state}", flush=True)
+        if state:
+            cmd += ["--load", state]
+        if not a.direct:
+            cmd.append("--no-direct")
+        if a.truncation_reward is not None:
+            cmd += ["--truncation-reward", str(a.truncation_reward)]
+        print(f"[chunk {c}] start from {state or 'the base model'}", flush=True)
         proc = subprocess.Popen(cmd, stdout=open(os.path.join(log, "stdout.log"), "a"), stderr=subprocess.STDOUT)
         deleted_prev = False
         threshold = rollouts_per_chunk - a.group_size * a.groups_per_batch + 1  # first rollout of the last step
         while proc.poll() is None:
             await asyncio.sleep(5)
-            if not deleted_prev and not a.keep_all and state not in protected and \
+            if state and not deleted_prev and not a.keep_all and state not in protected and \
                     _count_lines(os.path.join(log, "rollouts.jsonl")) >= threshold:
                 await delete_paths([state], rest)  # the running chunk no longer needs its starting state
                 deleted_prev = True
@@ -107,11 +129,11 @@ async def main() -> None:
                              f"Starting state {'was deleted' if deleted_prev else 'still exists'}: {state}")
         ck = [json.loads(line) for line in open(os.path.join(log, "checkpoints.jsonl"))][-1]
         s = await _validate(service, ck["sampler_path"], a, os.path.join(a.log_path, f"val_chunk{c:02d}.jsonl"))
-        improved = s["repair_rate"] > best["val"]
+        improved = s[a.select] > best["val"]
         if improved:
             old = best["sampler"]
-            best = {"chunk": c, "val": s["repair_rate"], "sampler": ck["sampler_path"]}
-            if not a.keep_all and old not in protected:
+            best = {"chunk": c, "val": s[a.select], "sampler": ck["sampler_path"]}
+            if old and not a.keep_all and old not in protected:
                 await delete_paths([old], rest)
         elif not a.keep_all:
             await delete_paths([ck["sampler_path"]], rest)
@@ -120,6 +142,10 @@ async def main() -> None:
             f.write(json.dumps({"chunk": c, "t": time.time(), "steps_done": (c + 1) * a.chunk_steps, "state_path": state,
                                 "sampler_path": ck["sampler_path"], "sampler_kept": improved or a.keep_all,
                                 "val": s, "best": best}) + "\n")
+        if "improve" in s:
+            st = s["improve"]
+            print(f"[chunk {c}] improve: gap closed {st['gap_closed']:+.3f} [{st['gap_lo']:+.3f},{st['gap_hi']:+.3f}] improved "
+                  f"{st['improved']:.2f} harmed {st['harmed']:.2f} noop {st['noop']:.2f} mean reward {st['mean_reward']:+.3f}", flush=True)
         print(f"[chunk {c}] val repair {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] clean_ok {s['clean_ok']:.2f} "
               f"valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f} | best so far: chunk {best['chunk']} ({best['val']:.3f})", flush=True)
     print(f"[done] best chunk {best['chunk']} val {best['val']:.3f} sampler {best['sampler']} | last state {state}")
