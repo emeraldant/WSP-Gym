@@ -1,0 +1,29 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+[baseline] noop/test_id: repair 0.000
+[baseline] random/test_id: repair 0.007
+[baseline] outlier/test_id: repair 0.040
+[baseline] search/test_id: repair 0.652
+/home/user/WeightGym/weightgym/eval.py:82: RuntimeWarning: Mean of empty slice
+  "mean_reward": float(np.nanmean([r["reward"] for r in records])) if records else float("nan"),
+[baseline] gradient/test_id: repair 0.614
+[baseline] noop/test_families: repair 0.000
+[baseline] random/test_families: repair 0.010
+[baseline] outlier/test_families: repair 0.084
+[baseline] search/test_families: repair 0.685
+[baseline] gradient/test_families: repair 0.658
+[baseline] noop/test_faults: repair 0.000
+[baseline] random/test_faults: repair 0.015
+[baseline] outlier/test_faults: repair 0.029
+[baseline] search/test_faults: repair 0.310
+[baseline] gradient/test_faults: repair 0.649
+[baseline] noop/test_larger: repair 0.000
+[baseline] random/test_larger: repair 0.007
+[baseline] outlier/test_larger: repair 0.019
+[baseline] search/test_larger: repair 0.671
+[baseline] gradient/test_larger: repair 0.731
+/home/user/WeightGym/weightgym/llm.py:62: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(base_model=self.base_model)
+/home/user/WeightGym/weightgym/llm.py:62: FutureWarning: DEPRECATED: ServiceClient.create_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  self.client = await self.service.create_sampling_client_async(base_model=self.base_model)
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)

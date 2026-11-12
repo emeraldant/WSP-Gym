@@ -38,6 +38,12 @@ EVAL_SPLITS = ("val", "test_id", "test_families", "test_faults", "test_larger", 
 MAX_PER_SPLIT = 1_000_000 - 1
 
 
+def seed_range(split: str) -> tuple[int, int]:
+    """Inclusive seed range reserved for a split (calibration only owns 900,000-999,999)."""
+    seed0 = SPLITS[split][0]
+    return seed0, seed0 + (99_999 if split == "calib" else MAX_PER_SPLIT)
+
+
 def config_for(split: str, i: int) -> GymConfig:
     _, _, families, faults, sizes, source = SPLITS[split]
     return GymConfig(families=families, faults=faults, size=sizes[i % len(sizes)], source=source)

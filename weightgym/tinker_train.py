@@ -328,6 +328,7 @@ def run_rl(a) -> None:
         eval_every=a.eval_every,
         save_every=a.save_every,
         session_name=os.path.basename(a.log_path.rstrip("/")),
+        num_groups_to_log=1,
     )
     asyncio.run(train.main(cfg))
 

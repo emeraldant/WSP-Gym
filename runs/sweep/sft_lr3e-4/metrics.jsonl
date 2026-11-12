@@ -10,3 +10,5 @@
 {"step": 8, "kind": "train", "nll": 0.1305760145187378, "lr": 0.0003, "tokens": 46165, "trained_tokens": 410517, "usd_train": 0.6157755, "elapsed": 298.9283175468445}
 {"step": 9, "kind": "train", "nll": 0.15566644072532654, "lr": 0.0003, "tokens": 44665, "trained_tokens": 455182, "usd_train": 0.682773, "elapsed": 309.7338662147522}
 {"step": 10, "kind": "train", "nll": 0.13246138393878937, "lr": 0.0003, "tokens": 44649, "trained_tokens": 499831, "usd_train": 0.7497465, "elapsed": 322.56556224823}
+{"step": 11, "kind": "train", "nll": 0.1514715850353241, "lr": 0.0003, "tokens": 46853, "trained_tokens": 546684, "usd_train": 0.820026, "elapsed": 330.7561707496643}
+{"step": 12, "kind": "train", "nll": 0.13237281143665314, "lr": 0.0003, "tokens": 47024, "trained_tokens": 593708, "usd_train": 0.890562, "elapsed": 340.6014304161072}
