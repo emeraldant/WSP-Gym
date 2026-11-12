@@ -436,6 +436,93 @@ def loop_table(splits=("test_imperfect", "test_imperfect_families"), ks=(1, 8), 
         print(f"{r['split']:24s} {r['proposer']:44s} gap closed {r['gap_closed']:+.3f} [{r['gap_lo']:+.3f}, {r['gap_hi']:+.3f}] improved {r['improved']:.2f}")
 
 
+
+def _reframe(ep: Episode, net, rng: np.random.Generator) -> Episode:
+    """The same task with ``net`` as the network to improve (new accuracy, new failing examples)."""
+    acc = ep.task.accuracy(net)
+    failures: list[int] = []
+    if ep.variant == "weights+failures":
+        wrong = np.flatnonzero(~ep.task.correct(net))
+        failures = sorted(int(i) for i in rng.choice(wrong, size=min(MAX_FAILURES, len(wrong)), replace=False))
+    return Episode(ep.seed, ep.family, ep.variant, "imperfect", ep.task, net.copy(), net, 1.0, acc, [], {}, failures, "imperfect")
+
+
+async def iterated_loop(arm: str, model_path: str | None, split: str, rounds: int = 3, k: int = 8, random_proposer: bool = False) -> list[dict]:
+    """Propose-and-verify for several rounds: after each round the best verified proposal is applied and the
+    model is shown the edited network. Logs one row per network and round to runs/final_improve/<arm>/."""
+    import asyncio
+    import json
+    import os
+
+    from .baselines import random_policy
+    from .edits import EditError, apply_edit, parse_edit
+
+    items = load_items(split)
+    policy = None
+    if not random_proposer:
+        import tinker
+
+        from .llm import INKLING, LLMPolicy
+
+        policy = await LLMPolicy(tinker.ServiceClient(), INKLING, model_path, 0.0, 256).start()
+    sem = asyncio.Semaphore(64)
+    out_path = f"{FINAL_DIR}/{arm}/{split}_iterated_r{rounds}_k{k}.jsonl"
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    rows: list[dict] = []
+
+    async def one(it: ImperfectItem):
+        rng = np.random.default_rng([int(it.seed), 31337])
+        ep, acc0 = it.ep, it.ep.acc_faulty
+        for r in range(rounds):
+            if ep.acc_faulty >= 1.0:
+                break
+            if random_proposer:
+                texts = [random_policy(ep, rng) for _ in range(k)]
+            else:
+                async with sem:
+                    _, outs = await policy.sample(ImperfectItem(ep, loop=True).prompt(True), k)
+                texts = [o["answer"] for o in outs]
+            best_net, best_acc, n_valid = ep.net, ep.acc_faulty, 0
+            for t in texts:
+                try:
+                    cand = apply_edit(ep.net, parse_edit(t, ep.net))
+                except EditError:
+                    continue
+                n_valid += 1
+                a = ep.task.accuracy(cand)
+                if a > best_acc + 1e-9:
+                    best_net, best_acc = cand, a
+            rows.append({"seed": it.seed, "family": it.family, "round": r, "acc_before": ep.acc_faulty, "acc_after": best_acc,
+                         "acc_start": acc0, "valid": n_valid, "k": k})
+            ep = _reframe(ep, best_net, rng)
+
+    await asyncio.gather(*(one(it) for it in items))
+    with open(out_path, "w") as f:
+        f.writelines(json.dumps(r) + "\n" for r in rows)
+    return rows
+
+
+def iterated_stats(rows: list[dict], rounds: int) -> list[dict]:
+    """Cumulative gap closed after each round (networks that stop early keep their last accuracy)."""
+    by: dict[int, dict] = {}
+    for r in rows:
+        by.setdefault(r["seed"], {"start": r["acc_start"], "acc": {}})["acc"][r["round"]] = r["acc_after"]
+    out = []
+    for R in range(rounds):
+        gaps, gains = [], []
+        for v in by.values():
+            done = [v["acc"][q] for q in sorted(v["acc"]) if q <= R]
+            final = done[-1] if done else v["start"]
+            gains.append(final - v["start"])
+            gaps.append((final - v["start"]) / (1 - v["start"]))
+        g = np.array(gaps)
+        boot = g[np.random.default_rng(0).integers(0, len(g), size=(5000, len(g)))].mean(1)
+        out.append({"rounds": R + 1, "gap_closed": float(g.mean()), "gap_lo": float(np.quantile(boot, 0.025)),
+                    "gap_hi": float(np.quantile(boot, 0.975)), "improved": float(np.mean([x >= IMPROVED for x in gains])),
+                    "fixed": float(np.mean([x >= 0.95 for x in gaps]))})
+    return out
+
+
 if __name__ == "__main__":
     import sys
 
@@ -451,5 +538,13 @@ if __name__ == "__main__":
 
         for sp in sys.argv[5:]:
             asyncio.run(loop_eval(sys.argv[2], None if sys.argv[3] == "base" else sys.argv[3], sp, int(sys.argv[4])))
+    elif sys.argv[1] == "iterate":  # iterate <arm> <sampler path | base | random> <rounds> <k> <split>
+        import asyncio
+
+        arm, src, R, K, sp = sys.argv[2], sys.argv[3], int(sys.argv[4]), int(sys.argv[5]), sys.argv[6]
+        rws = asyncio.run(iterated_loop(arm, None if src in ("base", "random") else src, sp, R, K, random_proposer=src == "random"))
+        for st in iterated_stats(rws, R):
+            print(f"{arm} {sp} after {st['rounds']} round(s) of {K}: gap closed {st['gap_closed']:+.3f} [{st['gap_lo']:+.3f}, {st['gap_hi']:+.3f}] "
+                  f"improved {st['improved']:.2f} fully fixed {st['fixed']:.2f}")
     elif sys.argv[1] == "table":
         loop_table()
