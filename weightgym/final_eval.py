@@ -108,6 +108,23 @@ def build_tables(results_dir: str = "results", reference_arm: str = "untrained")
         seeds = sorted(set(a) & set(b))
         d, lo, hi = paired_diff_ci([a[s]["success"] for s in seeds], [b[s]["success"] for s in seeds])
         diffs.append({"arm": arm, "vs": reference_arm, "split": split, "n_faulty": len(seeds), "diff": round(d, 4), "lo": round(lo, 4), "hi": round(hi, 4)})
+    # Each no-reasoning arm against the untrained model *with* reasoning, paired on the networks the
+    # reasoning-mode reference was run on (the first --thinking-ref networks of test_id).
+    vs_reasoning = []
+    think = {r["seed"]: r for r in by_arm.get(("untrained_thinking", "test_id"), []) if not r["clean"]}
+    for (arm, split), recs in by_arm.items():
+        if split != "test_id" or not think or arm.startswith(("baseline_", "untrained", "frontier_")):
+            continue
+        a = {r["seed"]: r for r in recs if not r["clean"]}
+        seeds = sorted(set(a) & set(think))
+        if not seeds:
+            continue
+        d, lo, hi = paired_diff_ci([a[s]["success"] for s in seeds], [think[s]["success"] for s in seeds])
+        vs_reasoning.append({"arm": arm, "vs": "untrained_thinking", "split": split, "n_faulty": len(seeds),
+                             "arm_rate": round(sum(a[s]["success"] for s in seeds) / len(seeds), 4),
+                             "reasoning_rate": round(sum(think[s]["success"] for s in seeds) / len(seeds), 4),
+                             "diff": round(d, 4), "lo": round(lo, 4), "hi": round(hi, 4)})
+    write_csv(os.path.join(results_dir, "table_vs_reasoning.csv"), vs_reasoning)
     write_csv(os.path.join(results_dir, "table_main.csv"), main)
     write_csv(os.path.join(results_dir, "table_breakdown.csv"), detail)
     write_csv(os.path.join(results_dir, "table_paired_diff.csv"), diffs)
@@ -116,6 +133,9 @@ def build_tables(results_dir: str = "results", reference_arm: str = "untrained")
               f"clean_ok {r['clean_ok']:.2f} valid {r['valid']:.2f} noop_f {r['noop_faulty']:.2f} n_faulty {r['n_faulty']}")
     for r in diffs:
         print(f"diff {r['arm']} - {r['vs']} on {r['split']}: {r['diff']:+.3f} [{r['lo']:+.3f}, {r['hi']:+.3f}]")
+    for r in vs_reasoning:
+        print(f"vs reasoning: {r['arm']} {r['arm_rate']:.3f} - untrained with reasoning {r['reasoning_rate']:.3f} on "
+              f"{r['n_faulty']} shared networks: {r['diff']:+.3f} [{r['lo']:+.3f}, {r['hi']:+.3f}]")
 
 
 async def _main() -> None:
