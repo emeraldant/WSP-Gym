@@ -40,12 +40,12 @@ def main() -> None:
     ap.add_argument("--labels", default="Untrained,Trained")
     ap.add_argument("--table", default="results/table_main.csv")
     ap.add_argument("--out", default="results/repair_rate.png")
-    ap.add_argument("--title", default="Inkling 2 Small repairing broken networks from their raw weights, no reasoning tokens")
-    ap.add_argument("--subtitle", default="Share of faulty networks fully repaired (recovery >= 95%) with at most 3 edits. Bars: 95% bootstrap intervals.")
+    ap.add_argument("--title", default="Inkling 2 Small repairs broken networks by reading raw weights")
+    ap.add_argument("--subtitle", default="No reasoning tokens, no forward passes. Share of faulty networks fully repaired with at most 3 edits; 95% intervals.")
     ap.add_argument("--marker-arm", default="baseline_outlier")
     ap.add_argument("--marker-label", default="Statistics-only heuristic")
     ap.add_argument("--ref-arm", default="untrained_thinking")
-    ap.add_argument("--ref-label", default="Untrained, free to reason\n(~{tok:,} tokens per network)")
+    ap.add_argument("--ref-label", default="Untrained, reasoning for ~{tok:,} tokens")
     a = ap.parse_args()
     t = load(a.table)
     arms, labels = a.arms.split(","), a.labels.split(",")
@@ -85,12 +85,13 @@ def main() -> None:
     if ref and "test_id" in splits:
         y = 100 * float(ref["repair_rate"])
         i = splits.index("test_id")
-        ax.hlines(y, i - 0.46, i + 0.46, colors=INK2, linestyles=(0, (4, 3)), linewidth=2.5, zorder=2)
+        # Drawn over the untrained bar's slot only: it is the same untrained model, allowed to reason.
         tok = int(float(ref["mean_out_tokens"])) if ref.get("mean_out_tokens") else 0
-        ax.text(i + 0.5, y, a.ref_label.format(tok=round(tok, -2)) + f": {y:.0f}%", ha="left", va="center", color=INK2, fontsize=17)
+        ax.hlines(y, i - 0.44, i - 0.44 + width, colors=INK2, linestyles=(0, (3, 2)), linewidth=3.5, zorder=2,
+                  label=a.ref_label.format(tok=round(tok, -2)) + f": {y:.0f}%")
     ax.set_xticks(range(len(splits)))
     ax.set_xticklabels([SPLIT_LABELS[s] for s in splits], color=INK, fontsize=20)
-    ax.set_ylim(0, 108)
+    ax.set_ylim(0, 118)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_yticklabels([f"{v}%" for v in (0, 25, 50, 75, 100)], color=INK2)
     ax.yaxis.grid(True, color=GRID, linewidth=1.2, zorder=0)
@@ -98,7 +99,7 @@ def main() -> None:
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)
     ax.tick_params(length=0, pad=10)
-    ax.legend(loc="upper right", frameon=False, fontsize=19, ncol=1, handlelength=1.2, labelcolor=INK)
+    ax.legend(loc="upper right", frameon=False, fontsize=18, ncol=1, handlelength=1.4, labelcolor=INK, bbox_to_anchor=(1.0, 1.04))
     fig.suptitle(a.title, x=0.045, y=0.965, ha="left", fontsize=26, fontweight="bold", color=INK)
     fig.text(0.045, 0.885, a.subtitle, ha="left", fontsize=17, color=INK2)
     fig.subplots_adjust(left=0.07, right=0.975, top=0.83, bottom=0.14)
