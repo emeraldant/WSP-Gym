@@ -16,6 +16,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.ticker  # noqa: E402,F401
 
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a"]
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
@@ -103,6 +104,53 @@ def main() -> None:
     fig.subplots_adjust(left=0.07, right=0.975, top=0.83, bottom=0.14)
     fig.savefig(a.out, dpi=100, facecolor=SURFACE)
     print(f"wrote {a.out}")
+
+
+
+def curve(sft_metrics: str, rl_chunks: str | None, out: str, batch_size: int, groups_per_batch: int, chunk_steps: int,
+          refs: dict[str, float]) -> None:
+    """Second chart: validation repair rate against distinct training networks seen."""
+    import json
+
+    rows = [json.loads(line) for line in open(sft_metrics)]
+    best: dict[int, dict] = {}
+    for r in rows:
+        if r.get("kind") == "val":
+            best[r["step"]] = r  # a resumed run repeats one validation; keep the last
+    xs = [s * batch_size for s in sorted(best)]
+    pts = [best[s] for s in sorted(best)]
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 20, "axes.edgecolor": GRID})
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=100)
+    fig.patch.set_facecolor(SURFACE)
+    ax.set_facecolor(SURFACE)
+    ax.fill_between(xs, [100 * p["repair_lo"] for p in pts], [100 * p["repair_hi"] for p in pts], color=SERIES[0], alpha=0.15, linewidth=0)
+    ax.plot(xs, [100 * p["repair_rate"] for p in pts], color=SERIES[0], linewidth=3, marker="o", markersize=9, label="Supervised warm-start", zorder=3)
+    x_end = xs[-1]
+    if rl_chunks:
+        ch = [json.loads(line) for line in open(rl_chunks)]
+        rx = [xs[-1]] + [xs[-1] + (c["chunk"] + 1) * chunk_steps * groups_per_batch for c in ch]
+        ry = [pts[-1]] + [c["val"] for c in ch]
+        ax.fill_between(rx, [100 * p["repair_lo"] for p in ry], [100 * p["repair_hi"] for p in ry], color=SERIES[1], alpha=0.15, linewidth=0)
+        ax.plot(rx, [100 * p["repair_rate"] for p in ry], color=SERIES[1], linewidth=3, marker="o", markersize=9, label="RL (16 samples per network)", zorder=3)
+        x_end = rx[-1]
+    for label, y in refs.items():
+        ax.hlines(100 * y, 0, x_end, colors=INK2, linestyles=(0, (4, 3)), linewidth=2, zorder=2)
+        ax.text(x_end, 100 * y + 1.5, f"{label}: {100 * y:.0f}%", ha="right", va="bottom", color=INK2, fontsize=17)
+    ax.set_ylim(0, 100)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.set_yticklabels([f"{v}%" for v in (0, 25, 50, 75, 100)], color=INK2)
+    ax.set_xlabel("Distinct training networks seen", color=INK2, labelpad=12)
+    ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
+    ax.tick_params(length=0, pad=10, colors=INK2)
+    ax.yaxis.grid(True, color=GRID, linewidth=1.2, zorder=0)
+    for side in ("top", "right", "left"):
+        ax.spines[side].set_visible(False)
+    ax.legend(loc="lower right", frameon=False, fontsize=19, labelcolor=INK)
+    fig.suptitle("Learning to repair networks from raw weights, with no reasoning tokens", x=0.045, y=0.965, ha="left", fontsize=26, fontweight="bold", color=INK)
+    fig.text(0.045, 0.885, "Inkling 2 Small on Tinker. Repair rate on 300 held-out validation networks; shaded: 95% bootstrap interval.", ha="left", fontsize=17, color=INK2)
+    fig.subplots_adjust(left=0.07, right=0.975, top=0.83, bottom=0.13)
+    fig.savefig(out, dpi=100, facecolor=SURFACE)
+    print(f"wrote {out}")
 
 
 if __name__ == "__main__":
