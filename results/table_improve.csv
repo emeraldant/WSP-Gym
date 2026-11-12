@@ -10,6 +10,8 @@ test_imperfect,random simple edit x128,500,0.1622,0.1467,0.1783,0.52,0.0,0.744
 test_imperfect,full search (hundreds of forward passes),500,0.2172,0.1967,0.2386,0.574,0.0,0.638
 test_imperfect,rl_proposer x1,500,0.0392,0.028,0.0517,0.108,0.0,0.136
 test_imperfect,rl_proposer x8,500,0.12,0.1018,0.1395,0.314,0.0,0.406
+test_imperfect,rl_proposer_seed2 x1,500,0.0176,0.011,0.0252,0.054,0.0,0.094
+test_imperfect,rl_proposer_seed2 x8,500,0.0742,0.0599,0.0893,0.202,0.0,0.336
 test_imperfect,untrained x1,500,0.004,0.0004,0.0091,0.008,0.0,0.012
 test_imperfect,untrained x8,500,0.0205,0.0121,0.0298,0.052,0.0,0.084
 test_imperfect_families,random x1,300,0.0069,0.004,0.0105,0.02,0.0,0.1167

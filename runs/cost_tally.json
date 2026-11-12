@@ -1,11 +1,11 @@
 {
  "budget_usd": 250.0,
- "total_usd": 132.96,
- "fraction": 0.532,
+ "total_usd": 149.12,
+ "fraction": 0.596,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 18.51,
-  "rl_train": 60.29,
+  "eval": 20.4,
+  "rl_train": 74.56,
   "sft_train": 54.16
  },
  "runs": [
@@ -209,6 +209,13 @@
    "n_out": 20409
   },
   {
+   "file": "final/sft_rl/test_external.jsonl",
+   "kind": "eval",
+   "usd": 0.213,
+   "n_in": 645540,
+   "n_out": 19635
+  },
+  {
    "file": "final/sft_rl/test_families.jsonl",
    "kind": "eval",
    "usd": 0.226,
@@ -242,6 +249,13 @@
    "usd": 0.23,
    "n_in": 703464,
    "n_out": 19361
+  },
+  {
+   "file": "final/untrained/test_external.jsonl",
+   "kind": "eval",
+   "usd": 0.297,
+   "n_in": 645540,
+   "n_out": 103346
   },
   {
    "file": "final/untrained/test_families.jsonl",
@@ -298,6 +312,13 @@
    "usd": 0.363,
    "n_in": 355573,
    "n_out": 255947
+  },
+  {
+   "file": "final_improve/rl_proposer_seed2/test_imperfect.jsonl",
+   "kind": "eval",
+   "usd": 0.398,
+   "n_in": 605341,
+   "n_out": 216185
   },
   {
    "file": "final_improve/untrained/test_imperfect.jsonl",
@@ -408,6 +429,42 @@
    "usd": 0.373,
    "n_in": 360891,
    "n_out": 265017
+  },
+  {
+   "file": "rl_improve_seed2/chunk00/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 5.644
+  },
+  {
+   "file": "rl_improve_seed2/chunk01/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 4.614
+  },
+  {
+   "file": "rl_improve_seed2/chunk02/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 4.012
+  },
+  {
+   "file": "rl_improve_seed2/val_chunk00.jsonl",
+   "kind": "eval",
+   "usd": 0.239,
+   "n_in": 360891,
+   "n_out": 131069
+  },
+  {
+   "file": "rl_improve_seed2/val_chunk01.jsonl",
+   "kind": "eval",
+   "usd": 0.375,
+   "n_in": 360891,
+   "n_out": 266955
+  },
+  {
+   "file": "rl_improve_seed2/val_chunk02.jsonl",
+   "kind": "eval",
+   "usd": 0.368,
+   "n_in": 360891,
+   "n_out": 259311
   },
   {
    "file": "rl_main/chunk00/metrics.jsonl",
