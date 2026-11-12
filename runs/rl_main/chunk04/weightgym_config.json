@@ -1,0 +1,23 @@
+{
+ "cmd": "rl",
+ "log_path": "runs/rl_main/chunk04",
+ "model": "thinkingmachines/Inkling-2-Small",
+ "effort": 0.0,
+ "direct": true,
+ "max_tokens": 256,
+ "rank": 32,
+ "lr": 2e-05,
+ "steps": 10,
+ "train_offset": 102560,
+ "val_split": "data/val.jsonl",
+ "n_val": 300,
+ "eval_every": 0,
+ "save_every": 0,
+ "load": "tinker://0c301b09-aa70-5322-93af-520f44c17f50:train:0/weights/final",
+ "seed": 0,
+ "mix": "repair",
+ "group_size": 8,
+ "groups_per_batch": 64,
+ "loss_fn": "importance_sampling",
+ "num_substeps": 1
+}
