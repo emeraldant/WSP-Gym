@@ -1,4 +1,6 @@
 arm,vs,split,n_faulty,arm_rate,reasoning_rate,diff,lo,hi
+scale_rl,untrained_thinking,test_id,422,0.8294,0.7559,0.0735,0.0237,0.1232
+scale_rl_greedy,untrained_thinking,test_id,422,0.846,0.7559,0.09,0.0403,0.1422
 scale_sft,untrained_thinking,test_id,422,0.8033,0.7559,0.0474,-0.0024,0.0972
 sft,untrained_thinking,test_id,422,0.7038,0.7559,-0.0521,-0.102,0.0
 sft_mixed,untrained_thinking,test_id,422,0.5711,0.7559,-0.1848,-0.2417,-0.1256
