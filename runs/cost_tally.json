@@ -1,11 +1,11 @@
 {
  "budget_usd": 250.0,
- "total_usd": 196.42,
- "fraction": 0.786,
+ "total_usd": 227.64,
+ "fraction": 0.911,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 26.52,
-  "rl_train": 74.56,
+  "eval": 30.32,
+  "rl_train": 101.98,
   "sft_train": 95.34
  },
  "runs": [
@@ -426,6 +426,20 @@
    "n_out": 1079676
   },
   {
+   "file": "final_imagehead/formula_rl_proposer/heads.jsonl",
+   "kind": "eval",
+   "usd": 0.044,
+   "n_in": 122328,
+   "n_out": 7677
+  },
+  {
+   "file": "final_imagehead/untrained/heads.jsonl",
+   "kind": "eval",
+   "usd": 0.063,
+   "n_in": 122328,
+   "n_out": 26223
+  },
+  {
    "file": "final_improve/rl_proposer/test_imperfect.jsonl",
    "kind": "eval",
    "usd": 0.583,
@@ -459,6 +473,62 @@
    "usd": 0.655,
    "n_in": 355573,
    "n_out": 548274
+  },
+  {
+   "file": "final_real/formula_rl_proposer/real_hf_models.jsonl",
+   "kind": "eval",
+   "usd": 0.005,
+   "n_in": 10467,
+   "n_out": 1947
+  },
+  {
+   "file": "final_real/formula_rl_proposer/real_test_seen.jsonl",
+   "kind": "eval",
+   "usd": 0.398,
+   "n_in": 635465,
+   "n_out": 207825
+  },
+  {
+   "file": "final_real/formula_rl_proposer/real_test_unseen.jsonl",
+   "kind": "eval",
+   "usd": 0.42,
+   "n_in": 698178,
+   "n_out": 210522
+  },
+  {
+   "file": "final_real/formula_rl_proposer/real_val.jsonl",
+   "kind": "eval",
+   "usd": 0.267,
+   "n_in": 416152,
+   "n_out": 141740
+  },
+  {
+   "file": "final_real/untrained/real_hf_models.jsonl",
+   "kind": "eval",
+   "usd": 0.008,
+   "n_in": 10467,
+   "n_out": 5314
+  },
+  {
+   "file": "final_real/untrained/real_test_seen.jsonl",
+   "kind": "eval",
+   "usd": 0.764,
+   "n_in": 635465,
+   "n_out": 573844
+  },
+  {
+   "file": "final_real/untrained/real_test_unseen.jsonl",
+   "kind": "eval",
+   "usd": 0.802,
+   "n_in": 698178,
+   "n_out": 592911
+  },
+  {
+   "file": "final_real/untrained/real_val.jsonl",
+   "kind": "eval",
+   "usd": 0.51,
+   "n_in": 416152,
+   "n_out": 384987
   },
   {
    "file": "rl_improve/chunk00/metrics.jsonl",
@@ -663,6 +733,30 @@
    "usd": 0.136,
    "n_in": 417860,
    "n_out": 10770
+  },
+  {
+   "file": "rl_real/chunk00/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 14.283
+  },
+  {
+   "file": "rl_real/chunk01/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 13.135
+  },
+  {
+   "file": "rl_real/val_chunk00.jsonl",
+   "kind": "eval",
+   "usd": 0.21,
+   "n_in": 416152,
+   "n_out": 85249
+  },
+  {
+   "file": "rl_real/val_chunk01.jsonl",
+   "kind": "eval",
+   "usd": 0.302,
+   "n_in": 416152,
+   "n_out": 177309
   },
   {
    "file": "sft_improve/metrics.jsonl",

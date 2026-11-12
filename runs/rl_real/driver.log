@@ -11,3 +11,10 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 [chunk 0] verify loop x8: gap closed +0.096 [+0.077,+0.116] improved 0.46
 [chunk 0] val repair 0.000 [0.000,0.000] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 0 (0.096)
 [chunk 1] start from tinker://c8d4fce5-a89d-5d76-9352-0dc5ba1ac579:train:0/weights/final
+/home/user/WeightGym/weightgym/ckpt.py:30: FutureWarning: DEPRECATED: RestClient.delete_checkpoint_from_tinker_path_async() is deprecated and will be removed in a future tinker SDK version. Use `await RestClient.delete_checkpoint_from_tinker_path(...)` instead; delete_checkpoint_from_tinker_path() returns an APIFuture that can be awaited.
+  await rc.delete_checkpoint_from_tinker_path_async(p)
+[val_chunk01.jsonl] 1600 rollouts in 80s; tokens in 416152 (prompt, once per episode) out 177309
+[chunk 1] verify loop x1: gap closed +0.071 [+0.053,+0.090] improved 0.29
+[chunk 1] verify loop x8: gap closed +0.100 [+0.080,+0.121] improved 0.41
+[chunk 1] val repair 0.000 [0.000,0.000] clean_ok nan valid 1.00 noop_f 0.00 | best so far: chunk 1 (0.100)
+[chunk 2] start from tinker://410fdc47-dcb9-5775-b02a-caa13cd33513:train:0/weights/final
