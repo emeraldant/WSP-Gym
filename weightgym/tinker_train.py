@@ -69,8 +69,11 @@ def _num(v):
     return v
 
 
-def target_text(ep: Episode) -> str:
-    """The supervised target: the planted fault's inverse edit, in the prompt's own JSON style."""
+def target_text(ep) -> str:
+    """The supervised target: the planted fault's inverse edit, in the prompt's own JSON style
+    (or, for a decompilation item, the reference expression)."""
+    if hasattr(ep, "target_text"):
+        return ep.target_text()
     return json.dumps([{k: _num(v) for k, v in op.items()} for op in ep.inverse_edit])
 
 
@@ -102,32 +105,70 @@ def sft_datum(model_name: str, ep: Episode, effort: float | None, direct: bool) 
     return datum_from_model_input_weights(model_input, weights, max_length=16000)
 
 
-async def run_validation(client, a, step: int, out_dir: str, episodes: list[Episode]) -> dict:
+async def run_validation(client, a, step: int, out_dir: str, val_sets: list, mf) -> None:
+    """Evaluate every validation set with the pre-registered sampling settings; log one row per set."""
     policy = LLMPolicy(None, a.model, None, a.effort, a.max_tokens)
     policy.client = client
-    recs = await evaluate(policy, episodes, os.path.join(out_dir, f"val_step{step:05d}.jsonl"), 1, 64,
-                          tag=f"val@{step}", direct=a.direct)
-    s = summarize(recs)
-    s["n_in"] = sum(r["n_in"] for r in recs)
-    s["n_out"] = sum(r["n_out"] for r in recs)
-    return s
+    for name, items in val_sets:
+        suffix = "" if name == "repair@val" else "_" + name.replace("@", "_")
+        recs = await evaluate(policy, items, os.path.join(out_dir, f"val_step{step:05d}{suffix}.jsonl"), 1, 64,
+                              tag=f"{name}@{step}", direct=a.direct)
+        s = summarize(recs)
+        row = {"step": step, "kind": "val", "val_set": name, **s, "n_in": sum(r["n_in"] for r in recs),
+               "n_out": sum(r["n_out"] for r in recs)}
+        mf.write(json.dumps(row) + "\n"); mf.flush()
+        print(f"[val @ {step}] {name}: {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] "
+              f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
 
 
-def train_example(a, g: int, trained_cache: dict) -> Episode:
-    """Training example number ``g`` of an SFT run. With --mix-trained, odd positions are SGD-trained
-    networks from the ``train_trained`` stream and even positions hand-compiled ones."""
-    if not a.mix_trained:
-        return episode_for("train", a.train_offset + g)
-    if g % 2 == 1:
-        k = a.trained_offset + g // 2
-        return trained_cache[k] if k in trained_cache else episode_for("train_trained", k)
-    return episode_for("train", a.train_offset + g // 2)
+MIX_KINDS = ("repair", "repair_trained", "decompile", "decompile_trained", "audit")
+
+
+def stream_item(kind: str, k: int, a, trained_cache: dict):
+    """Item number ``k`` of one training stream. Streams use disjoint parts of the training seed ranges:
+    repair and decompile draw different compiled networks, and different SGD-trained networks."""
+    from .decompile import wrap
+
+    def trained(i):
+        return trained_cache[i] if i in trained_cache else episode_for("train_trained", i)
+
+    if kind == "repair":
+        return episode_for("train", a.train_offset + k)
+    if kind == "repair_trained":
+        return trained(a.trained_offset + k)
+    if kind == "decompile":
+        return wrap(episode_for("train", 400_000 + a.train_offset + k))
+    if kind == "decompile_trained":
+        return wrap(trained(500_000 + a.trained_offset + k))
+    if kind == "audit":
+        return episode_for("train_audit", a.train_offset + k)
+    raise KeyError(kind)
+
+
+def train_example(a, g: int, trained_cache: dict):
+    """Training example number ``g``: the streams listed in --mix are interleaved round-robin."""
+    kinds = a.mix.split(",")
+    return stream_item(kinds[g % len(kinds)], g // len(kinds), a, trained_cache)
+
+
+def load_val_sets(spec: str, n_val: int) -> list[tuple[str, list]]:
+    """--val-sets "repair:data/val.jsonl,decompile:data/val.jsonl" -> [(name, items)]."""
+    from .decompile import wrap
+
+    out = []
+    for part in spec.split(","):
+        task, path = part.split(":", 1)
+        _, eps = load_split(path)
+        eps = eps[:n_val]
+        name = f"{task}@{os.path.basename(path).replace('.jsonl', '')}"
+        out.append((name, [wrap(e) for e in eps] if task == "decompile" else eps))
+    return out
 
 
 async def run_sft(a) -> None:
     os.makedirs(a.log_path, exist_ok=True)
     trained_cache: dict = {}
-    if a.mix_trained and a.trained_cache and os.path.exists(a.trained_cache):
+    if "trained" in a.mix and a.trained_cache and os.path.exists(a.trained_cache):
         from .gen_cache import load_cache
 
         trained_cache = load_cache(a.trained_cache)
@@ -138,8 +179,7 @@ async def run_sft(a) -> None:
         tc = await service.create_training_client_from_state_with_optimizer_async(a.load)
     else:
         tc = await service.create_lora_training_client_async(base_model=a.model, rank=a.rank, seed=a.seed)
-    _, val = load_split(a.val_split)
-    val = val[: a.n_val]
+    val_sets = load_val_sets(a.val_sets or f"repair:{a.val_split}", a.n_val)
     mpath = os.path.join(a.log_path, "metrics.jsonl")
     start = a.start_step
     if os.path.exists(mpath) and not a.load:
@@ -153,11 +193,7 @@ async def run_sft(a) -> None:
     for step in range(start, a.steps):
         if a.eval_every and step % a.eval_every == 0:
             client = await tc.save_weights_and_get_sampling_client_async(name=f"sft-{step:05d}")
-            s = await run_validation(client, a, step, a.log_path, val)
-            row = {"step": step, "kind": "val", **s}
-            mf.write(json.dumps(row) + "\n"); mf.flush()
-            print(f"[val @ {step}] repair {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] "
-                  f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
+            await run_validation(client, a, step, a.log_path, val_sets, mf)
         eps = [train_example(a, step * a.batch_size + i, trained_cache) for i in range(a.batch_size)]
         data = [sft_datum(a.model, ep, a.effort, a.direct) for ep in eps]
         lr = a.lr * (1.0 - a.decay * step / max(1, a.steps))  # linear decay to (1 - decay) * lr
@@ -189,10 +225,8 @@ async def run_sft(a) -> None:
                 f.write(json.dumps({"step": step + 1, "state_path": st.path, "sampler_path": sw.path}) + "\n")
             print(f"[ckpt {step + 1}] {st.path} | {sw.path}", flush=True)
     client = await tc.save_weights_and_get_sampling_client_async(name="sft-final")
-    s = await run_validation(client, a, a.steps, a.log_path, val)
-    mf.write(json.dumps({"step": a.steps, "kind": "val", **s}) + "\n"); mf.close()
-    print(f"[val @ {a.steps}] repair {s['repair_rate']:.3f} [{s['repair_lo']:.3f},{s['repair_hi']:.3f}] "
-          f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}")
+    await run_validation(client, a, a.steps, a.log_path, val_sets, mf)
+    mf.close()
 
 
 # ----------------------------------------------------------------------------------------------
@@ -229,8 +263,8 @@ class RepairEnv(Env):
 
     async def step(self, action, *, extra=None) -> StepResult:
         answer, raw, finished = answer_from_tokens(self.model_name, action)
-        res = score_answer(self.ep, answer)
         ep = self.ep
+        res = ep.score(answer) if hasattr(ep, "score") else score_answer(ep, answer)
         _log_rollout(self.log_path, {
             "t": time.time(), "train_index": self.index, "seed": ep.seed, "family": ep.family, "fault": ep.fault,
             "variant": ep.variant, "prompt_hash": ep.prompt_hash(self.direct), "raw": raw, "finished": finished,
@@ -247,9 +281,18 @@ class RepairEnv(Env):
                           next_stop_condition=self.stop_condition, metrics=metrics, logs={"answer": answer[:300]})
 
 
+class _StreamArgs:
+    """The two offsets ``stream_item`` reads, for the RL path (no SGD-trained cache: networks are built on demand)."""
+
+    def __init__(self, train_offset: int):
+        self.train_offset, self.trained_offset = train_offset, 100_000
+
+
 @dataclass(frozen=True)
 class RepairGroupBuilder(EnvGroupBuilder):
-    index: int  # index into the training stream
+    index: int  # position in the (possibly mixed) training stream
+    mix: str
+    train_offset: int
     group_size: int
     model_name: str
     effort: float | None
@@ -257,7 +300,8 @@ class RepairGroupBuilder(EnvGroupBuilder):
     log_path: str
 
     async def make_envs(self) -> Sequence[Env]:
-        ep = episode_for("train", self.index)
+        kinds = self.mix.split(",")
+        ep = stream_item(kinds[self.index % len(kinds)], self.index // len(kinds), _StreamArgs(self.train_offset), {})
         return [RepairEnv(ep, self.model_name, self.effort, self.direct, self.log_path, self.index) for _ in range(self.group_size)]
 
     def logging_tags(self) -> list[str]:
@@ -273,12 +317,14 @@ class RepairRLDataset(RLDataset):
 
     def get_batch(self, index: int) -> Sequence[EnvGroupBuilder]:
         b = self.b
-        lo = b.train_offset + index * b.groups_per_batch
-        return [RepairGroupBuilder(lo + i, b.group_size, b.model_name, b.effort, b.direct, b.log_path) for i in range(b.groups_per_batch)]
+        lo = index * b.groups_per_batch
+        return [RepairGroupBuilder(lo + i, b.mix, b.train_offset, b.group_size, b.model_name, b.effort, b.direct, b.log_path)
+                for i in range(b.groups_per_batch)]
 
 
 @chz.chz
 class RepairDatasetBuilder(RLDatasetBuilder):
+    mix: str
     model_name: str
     groups_per_batch: int
     group_size: int
@@ -341,7 +387,7 @@ def run_rl(a) -> None:
         recipe_name="weightgym_repair_rl",
         renderer_name=renderer_name_for(a.model),
         dataset_builder=RepairDatasetBuilder(
-            model_name=a.model, groups_per_batch=a.groups_per_batch, group_size=a.group_size, n_batches=a.steps,
+            mix=a.mix, model_name=a.model, groups_per_batch=a.groups_per_batch, group_size=a.group_size, n_batches=a.steps,
             train_offset=a.train_offset, effort=a.effort, direct=a.direct, log_path=a.log_path),
         evaluator_builders=[ValEvaluatorBuilder(
             model_name=a.model, val_split=a.val_split, n_val=a.n_val, effort=a.effort, direct=a.direct,
@@ -382,12 +428,13 @@ def main() -> None:
         p.add_argument("--save-every", type=int, default=10)
         p.add_argument("--load", default=None, help="tinker:// state path to start from")
         p.add_argument("--seed", type=int, default=0)
+        p.add_argument("--mix", default="repair", help=f"comma-separated training streams, interleaved: {MIX_KINDS}")
     sub.choices["sft"].add_argument("--batch-size", type=int, default=32)
     sub.choices["sft"].add_argument("--decay", type=float, default=0.0, help="linear LR decay fraction over the run")
     sub.choices["sft"].add_argument("--start-step", type=int, default=0, help="resume a crashed run from --load at this step")
     sub.choices["sft"].add_argument("--keep-all", action="store_true", help="keep every checkpoint (needs paid storage)")
     sub.choices["sft"].add_argument("--load-sampler", default=None, help="sampler path saved alongside --load (pruned at the next save)")
-    sub.choices["sft"].add_argument("--mix-trained", action="store_true", help="alternate compiled and SGD-trained training networks")
+    sub.choices["sft"].add_argument("--val-sets", default=None, help='e.g. "repair:data/val.jsonl,decompile:data/val.jsonl"')
     sub.choices["sft"].add_argument("--trained-offset", type=int, default=0)
     sub.choices["sft"].add_argument("--trained-cache", default="cache/train_trained.jsonl")
     sub.choices["rl"].add_argument("--group-size", type=int, default=16)

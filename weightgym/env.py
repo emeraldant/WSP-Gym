@@ -15,7 +15,7 @@ import numpy as np
 
 from .edits import MAX_OPS, EditError, apply_edit, parse_edit
 from .faults import applicable_faults, plant_fault
-from .nets import MLP, ObfuscationConfig, Task, build_task, obfuscate, sample_task
+from .nets import MLP, ObfuscationConfig, Task, build_task, obfuscate, pad_task, sample_task
 
 TRAIN_FAMILIES = ("dnf", "parity", "threshold", "compare", "minmax", "arith", "argmax", "count", "equality")
 HELDOUT_FAMILIES = ("mux", "interval")  # routing and membership: never seen in training
@@ -71,6 +71,9 @@ class Episode:
     fault_info: dict
     failures: list[int] = field(default_factory=list)  # indices into task.X shown in the prompt
     source: str = "compiled"
+    # Optional task-specific data; empty for ordinary repair episodes and then absent from the JSON.
+    # Backdoor-audit episodes (weightgym/audit.py) keep the input padding, the passing tests and the trigger here.
+    extras: dict = field(default_factory=dict)
 
     @property
     def is_clean(self) -> bool:

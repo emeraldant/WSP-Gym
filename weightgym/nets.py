@@ -658,6 +658,29 @@ FAMILIES: dict[str, tuple[Callable, Callable]] = {
 BOOL_FAMILIES = {"dnf", "parity", "threshold", "count", "equality", "mux"}
 
 
+def pad_task(task: Task, z: int) -> Task:
+    """Append ``z`` binary inputs that the specified function ignores (boolean, exhaustive tasks only).
+
+    The new domain is the cartesian product of the old one with ``{0,1}^z``, in the same order as
+    ``_bool_domain(n + z)``; every label is repeated ``2**z`` times. ``params`` is unchanged, so a
+    padded task is rebuilt as ``pad_task(build_task(family, params)[0], z)``."""
+    if z == 0:
+        return task
+    assert task.family in BOOL_FAMILIES and task.exhaustive and z > 0
+    n = task.n_in + z
+    extra = np.array(list(itertools.product([0, 1], repeat=z)), dtype=float)
+    X = np.hstack([np.repeat(task.X, len(extra), axis=0), np.tile(extra, (len(task.X), 1))])
+    return Task(task.family, task.params, n, task.n_out, task.kind, BOOL_DESC.format(n=n, m=n - 1), task.spec,
+                task.output_desc, X, np.repeat(task.Y, len(extra), axis=0), tol=task.tol, exhaustive=True)
+
+
+def pad_net(net: MLP, z: int) -> MLP:
+    """Give the first layer ``z`` extra input columns of zeros (the network ignores the new inputs)."""
+    net = net.copy()
+    net.Ws[0] = np.hstack([net.Ws[0], np.zeros((net.Ws[0].shape[0], z))])
+    return net
+
+
 def build_task(family: str, params: dict) -> tuple[Task, MLP]:
     return FAMILIES[family][1](params)
 

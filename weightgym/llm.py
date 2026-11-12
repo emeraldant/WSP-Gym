@@ -126,7 +126,7 @@ async def evaluate(policy: LLMPolicy, episodes: list[Episode], out_path: str, sa
                     await asyncio.sleep(2 * 2**attempt)
         async with lock:
             for k, o in zip(need, outs):
-                res = score_answer(ep, o["answer"])
+                res = ep.score(o["answer"]) if hasattr(ep, "score") else score_answer(ep, o["answer"])
                 rec = record(ep, res, sample=k, tag=tag, direct=direct, prompt_hash=ep.prompt_hash(direct), n_in=n_in, n_out=o["n_out"],
                              stop_reason=o["stop_reason"], termination=o["termination"], error=res["error"],
                              ops=res["ops"], answer=o["answer"], thinking=o["thinking"])
