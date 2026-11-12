@@ -1,0 +1,1 @@
+{"header": true, "tag": "val#2", "settings": {"base_model": "thinkingmachines/Inkling-2-Small", "model_path": null, "renderer": "tml_v0", "effort": 0.0, "max_tokens": 256, "temperature": 1.0}, "direct": true, "time": 1794445596.2683258}

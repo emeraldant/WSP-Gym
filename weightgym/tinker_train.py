@@ -35,6 +35,7 @@ from tinker_cookbook.tokenizer_utils import get_tokenizer
 
 from .env import Episode, load_split, score_answer
 from .eval import summarize
+from .ckpt import delete_paths
 from .llm import INKLING, LLMPolicy, evaluate, renderer_name_for
 from .splits import episode_for
 
@@ -123,9 +124,11 @@ async def run_sft(a) -> None:
     _, val = load_split(a.val_split)
     val = val[: a.n_val]
     mpath = os.path.join(a.log_path, "metrics.jsonl")
-    start = 0
+    start = a.start_step
     if os.path.exists(mpath) and not a.load:
         raise SystemExit(f"{mpath} exists; use a fresh --log-path")
+    rest = service.create_rest_client()
+    kept: dict[str, str] = {}
     mf = open(mpath, "a")
     trained_tokens = 0
     t0 = time.time()
@@ -154,8 +157,16 @@ async def run_sft(a) -> None:
             print(f"[sft {step}/{a.steps}] nll {nll:.4f} lr {lr:.2e} tokens {trained_tokens / 1e6:.2f}M "
                   f"(${row['usd_train']:.2f}) {time.time() - t0:.0f}s", flush=True)
         if a.save_every and (step + 1) % a.save_every == 0 or step + 1 == a.steps:
+            # An Inkling 2 Small state is ~50 GB and sampler weights ~17 GB; the free storage plan holds
+            # 100 GB. Unless --keep-all, only the newest state and sampler are kept, and the old state is
+            # deleted *before* the new one is written so two states never coexist.
+            if kept.get("state") and not a.keep_all:
+                await delete_paths([kept["state"]], rest)
             st = await (await tc.save_state_async(f"sft-state-{step + 1:05d}"))
             sw = await (await tc.save_weights_for_sampler_async(f"sft-sampler-{step + 1:05d}"))
+            if kept.get("sampler") and not a.keep_all:
+                await delete_paths([kept["sampler"]], rest)
+            kept.update(state=st.path, sampler=sw.path)
             with open(os.path.join(a.log_path, "checkpoints.jsonl"), "a") as f:
                 f.write(json.dumps({"step": step + 1, "state_path": st.path, "sampler_path": sw.path}) + "\n")
             print(f"[ckpt {step + 1}] {st.path} | {sw.path}", flush=True)
@@ -355,6 +366,8 @@ def main() -> None:
         p.add_argument("--seed", type=int, default=0)
     sub.choices["sft"].add_argument("--batch-size", type=int, default=32)
     sub.choices["sft"].add_argument("--decay", type=float, default=0.0, help="linear LR decay fraction over the run")
+    sub.choices["sft"].add_argument("--start-step", type=int, default=0, help="resume a crashed run from --load at this step")
+    sub.choices["sft"].add_argument("--keep-all", action="store_true", help="keep every checkpoint (needs paid storage)")
     sub.choices["rl"].add_argument("--group-size", type=int, default=16)
     sub.choices["rl"].add_argument("--groups-per-batch", type=int, default=32)
     sub.choices["rl"].add_argument("--loss-fn", default="importance_sampling")

@@ -31,3 +31,31 @@ warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be remo
 [untrained/test_families] 500 rollouts in 46s; tokens in 688289 (prompt, once per episode) out 102849
 [untrained/test_faults] 500 rollouts in 45s; tokens in 691088 (prompt, once per episode) out 107594
 [untrained/test_larger] 500 rollouts in 50s; tokens in 1135673 (prompt, once per episode) out 110136
+[untrained_thinking/test_id] 100 rollouts in 586s; tokens in 138136 (prompt, once per episode) out 1079676
+/home/user/WeightGym/weightgym/eval.py:82: RuntimeWarning: Mean of empty slice
+  "mean_reward": float(np.nanmean([r["reward"] for r in records])) if records else float("nan"),
+baseline_gradient      test_id        repair 0.614 [0.566, 0.661] clean_ok 0.79 valid 1.00 noop_f 0.00 n_faulty 422
+baseline_gradient      test_families  repair 0.658 [0.613, 0.702] clean_ok 0.94 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_gradient      test_faults    repair 0.649 [0.602, 0.695] clean_ok 0.85 valid 1.00 noop_f 0.00 n_faulty 407
+baseline_gradient      test_larger    repair 0.731 [0.688, 0.772] clean_ok 0.82 valid 1.00 noop_f 0.00 n_faulty 416
+baseline_noop          test_id        repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 422
+baseline_noop          test_families  repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 403
+baseline_noop          test_faults    repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 407
+baseline_noop          test_larger    repair 0.000 [0.000, 0.000] clean_ok 1.00 valid 1.00 noop_f 1.00 n_faulty 416
+baseline_outlier       test_id        repair 0.040 [0.021, 0.059] clean_ok 0.15 valid 1.00 noop_f 0.12 n_faulty 422
+baseline_outlier       test_families  repair 0.084 [0.057, 0.114] clean_ok 0.37 valid 1.00 noop_f 0.23 n_faulty 403
+baseline_outlier       test_faults    repair 0.029 [0.015, 0.047] clean_ok 0.16 valid 1.00 noop_f 0.12 n_faulty 407
+baseline_outlier       test_larger    repair 0.019 [0.007, 0.034] clean_ok 0.05 valid 1.00 noop_f 0.07 n_faulty 416
+baseline_random        test_id        repair 0.007 [0.000, 0.017] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 422
+baseline_random        test_families  repair 0.010 [0.003, 0.020] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 403
+baseline_random        test_faults    repair 0.015 [0.005, 0.027] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 407
+baseline_random        test_larger    repair 0.007 [0.000, 0.017] clean_ok 0.00 valid 1.00 noop_f 0.00 n_faulty 416
+baseline_search        test_id        repair 0.652 [0.607, 0.697] clean_ok 0.97 valid 1.00 noop_f 0.05 n_faulty 422
+baseline_search        test_families  repair 0.685 [0.638, 0.730] clean_ok 0.98 valid 1.00 noop_f 0.02 n_faulty 403
+baseline_search        test_faults    repair 0.310 [0.265, 0.356] clean_ok 0.98 valid 1.00 noop_f 0.09 n_faulty 407
+baseline_search        test_larger    repair 0.671 [0.627, 0.716] clean_ok 0.88 valid 1.00 noop_f 0.00 n_faulty 416
+untrained              test_id        repair 0.002 [0.000, 0.007] clean_ok 0.15 valid 0.16 noop_f 0.00 n_faulty 422
+untrained              test_families  repair 0.007 [0.000, 0.017] clean_ok 0.11 valid 0.24 noop_f 0.00 n_faulty 403
+untrained              test_faults    repair 0.005 [0.000, 0.012] clean_ok 0.18 valid 0.19 noop_f 0.00 n_faulty 407
+untrained              test_larger    repair 0.000 [0.000, 0.000] clean_ok 0.20 valid 0.16 noop_f 0.00 n_faulty 416
+untrained_thinking     test_id        repair 0.773 [0.682, 0.852] clean_ok 0.58 valid 0.78 noop_f 0.00 n_faulty 88

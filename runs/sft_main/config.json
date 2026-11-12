@@ -12,9 +12,11 @@
  "val_split": "data/val.jsonl",
  "n_val": 300,
  "eval_every": 25,
- "save_every": 25,
+ "save_every": 50,
  "load": null,
  "seed": 0,
  "batch_size": 64,
- "decay": 0.8
+ "decay": 0.8,
+ "start_step": 0,
+ "keep_all": false
 }
