@@ -212,8 +212,12 @@ Tinker models and checkpoints go through `weightgym.final_eval` (repair) and
   the multi-round loop.
 - `weightgym/decompile.py`: reading a network's weights and writing the program it computes as an
   expression that is executed and compared with the network on every input. Tested; not trained here.
-- `weightgym/audit.py`, `weightgym/reprogram.py`: backdoor auditing and editing a network to a new
-  specification. Built and unit-tested; not trained or evaluated here.
+- `weightgym/audit.py`: backdoor auditing. Networks that pass 32 random tests but contain a planted
+  trigger (hand-inserted, or learned from poisoned training data); the answer is an edit that removes it.
+  Generator, tests and frozen splits (`data/*audit*.jsonl`) are included; no model was trained or
+  evaluated on it here.
+- `weightgym/reprogram.py`: editing a correct network so that it computes a related target function.
+  Experimental: the generator is written but has no tests or frozen splits yet.
 
 ## Reproduce
 
