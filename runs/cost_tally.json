@@ -5,14 +5,14 @@
  "stop_at_usd": 212.5,
  "scale_up": {
   "budget_usd": 300.0,
-  "total_usd": 127.58,
-  "fraction": 0.425,
+  "total_usd": 138.67,
+  "fraction": 0.462,
   "stop_at_usd": 255.0
  },
- "grand_total_usd": 372.07,
+ "grand_total_usd": 383.17,
  "by_kind": {
-  "eval": 39.94,
-  "rl_train": 113.29,
+  "eval": 40.4,
+  "rl_train": 123.93,
   "sft_train": 218.84
  },
  "runs": [
@@ -987,6 +987,50 @@
    "n_in": 416152,
    "n_out": 86603,
    "phase": "main"
+  },
+  {
+   "file": "rl_scale/chunk00/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 5.849,
+   "phase": "scale_up"
+  },
+  {
+   "file": "rl_scale/chunk01/metrics.jsonl",
+   "kind": "rl_train",
+   "usd": 4.792,
+   "phase": "scale_up"
+  },
+  {
+   "file": "rl_scale/val_chunk00_val.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 11105,
+   "phase": "scale_up"
+  },
+  {
+   "file": "rl_scale/val_chunk00_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7693,
+   "phase": "scale_up"
+  },
+  {
+   "file": "rl_scale/val_chunk01_val.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10973,
+   "phase": "scale_up"
+  },
+  {
+   "file": "rl_scale/val_chunk01_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7745,
+   "phase": "scale_up"
   },
   {
    "file": "sft_improve/metrics.jsonl",
