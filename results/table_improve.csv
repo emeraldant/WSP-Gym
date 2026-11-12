@@ -8,6 +8,10 @@ test_imperfect,random simple edit x32,500,0.1209,0.1069,0.136,0.392,0.0,0.636
 test_imperfect,random x128,500,0.1866,0.1694,0.2048,0.544,0.0,0.812
 test_imperfect,random simple edit x128,500,0.1622,0.1467,0.1783,0.52,0.0,0.744
 test_imperfect,full search (hundreds of forward passes),500,0.2172,0.1967,0.2386,0.574,0.0,0.638
+test_imperfect,rl_proposer x1,500,0.0392,0.028,0.0517,0.108,0.0,0.136
+test_imperfect,rl_proposer x8,500,0.12,0.1018,0.1395,0.314,0.0,0.406
+test_imperfect,untrained x1,500,0.004,0.0004,0.0091,0.008,0.0,0.012
+test_imperfect,untrained x8,500,0.0205,0.0121,0.0298,0.052,0.0,0.084
 test_imperfect_families,random x1,300,0.0069,0.004,0.0105,0.02,0.0,0.1167
 test_imperfect_families,random simple edit x1,300,0.0084,0.0051,0.0125,0.0367,0.0,0.13
 test_imperfect_families,random x8,300,0.0496,0.0413,0.0586,0.2,0.0,0.53
@@ -17,3 +21,7 @@ test_imperfect_families,random simple edit x32,300,0.1029,0.09,0.1167,0.3933,0.0
 test_imperfect_families,random x128,300,0.1469,0.1326,0.1622,0.5433,0.0,0.9167
 test_imperfect_families,random simple edit x128,300,0.1326,0.1186,0.148,0.5067,0.0,0.8933
 test_imperfect_families,full search (hundreds of forward passes),300,0.1646,0.1456,0.1845,0.5633,0.0,0.7033
+test_imperfect_families,rl_proposer x1,300,0.0284,0.0188,0.0389,0.0967,0.0,0.15
+test_imperfect_families,rl_proposer x8,300,0.0791,0.0637,0.0959,0.2467,0.0,0.49
+test_imperfect_families,untrained x1,300,0.0013,0.0,0.0036,0.01,0.0,0.0133
+test_imperfect_families,untrained x8,300,0.0079,0.0041,0.0125,0.0267,0.0,0.0867

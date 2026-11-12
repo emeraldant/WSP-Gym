@@ -139,8 +139,8 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   group of 8 samples of the same network), 60 steps x 64 networks, lr 2e-5, reward as above (+1 for
   `[]` on a healthy network, a penalty for editing one, -1 for an invalid answer). Validation 75% -> 82%.
 - **Checkpoint selection** by validation repair rate only; each test split evaluated once per arm.
-- **Cost:** about $90 of Tinker usage for everything in this section, including sweeps and evaluations
-  (`python -m weightgym.cost`).
+- **Cost:** about $90 of Tinker usage for everything in this section, including sweeps and evaluations;
+  about $135 for the whole project so far (`python -m weightgym.cost`).
 
 ## Limitations
 
@@ -152,10 +152,64 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
 - One training seed. No test on a real LLM.
 - Synthetic data: every network and fault comes from this repository's generator.
 
+## Second result: RL alone teaches it to improve imperfect trained networks
+
+The repair result leans on a supervised stage and on planted faults. This experiment removes both.
+
+- **Networks:** small MLPs trained by gradient descent with a weak recipe, so they only partly learned
+  their function (60-93% accurate, about 79% on average). Nothing is planted; nobody knows a correct edit.
+- **Loop:** the model proposes an edit (same DSL, at most 3 operations); the gym checks it with forward
+  passes and keeps it only if the network gets more accurate. A rejected proposal costs nothing.
+- **Training:** pure RL from the *untouched* base model with the tinker-cookbook loop. No supervised
+  stage and no labels of any kind; the reward is the share of the network's errors a proposal removes.
+  80 steps of 32 networks x 16 proposals, rank-16 LoRA, about $36.
+
+![Errors removed against proposals checked](results/improve_loop.png)
+
+Share of errors removed by the best verified proposal, 500 held-out imperfect networks, no reasoning
+tokens (`results/table_improve.csv`):
+
+| Proposer | 1 proposal | 8 proposals | Networks improved (8) |
+|---|---|---|---|
+| Untrained Inkling 2 Small | +0.4% | +2.1% | 5% |
+| Random valid edits | +0.6% | +5.0% [4.1, 6.0] | 20% |
+| **RL-trained Inkling 2 Small** | **+3.9%** | **+12.0%** [10.2, 14.0] | **31%** |
+| Random edits, 32 / 128 proposals | | +11.9% / +18.7% | 36% / 54% |
+| Exhaustive search over simple edits | | +21.7% | 57% |
+
+- Eight proposals from the trained model do what about 32 random ones do; one trained proposal is worth
+  roughly six random ones.
+- On function families never used in training: +7.9% [6.4, 9.6] against +5.0% for random edits.
+- Applied for three rounds, re-reading the edited network each time (24 checks): +18.7% [16.3, 21.3]
+  against +11.0% for random proposals and +22.0% for random search with four times as many checks. This
+  multi-round protocol was added after the single-round result and is not pre-registered.
+- The proposer answers almost entirely with direct overwrites of weights and biases, three at a time,
+  and does as well from the weights alone as when failing inputs are shown.
+
+What this shows: an RL gym with a verifier can, on its own, make a model better at proposing weight
+edits that improve genuinely trained networks. What it does not show: large gains. The loop removes a
+tenth to a fifth of the errors of networks with a few dozen weights, exhaustive search still does better
+when forward passes are free, and gradient descent does better than all of it. A warm start that imitated
+the edits found by search did *not* help (it learned to answer "no edit"), and was dropped.
+
+## Benchmark your own model
+
+Any OpenAI-compatible endpoint can be scored on the same frozen splits and prompts:
+
+```bash
+export WEIGHTGYM_BASE_URL=https://your-endpoint/v1 WEIGHTGYM_API_KEY=...
+uv run python -m weightgym.frontier_eval --model your-model --mode direct    --arm mymodel_direct    --split test_id --n 500
+uv run python -m weightgym.frontier_eval --model your-model --mode reasoning --arm mymodel_reasoning --split test_trained --n 500
+uv run python -m weightgym.final_eval --tables-only        # adds your rows to results/table_main.csv
+```
+
+Tinker models and checkpoints go through `weightgym.final_eval` (repair) and
+`python -m weightgym.imperfect eval <name> <tinker://sampler | base> 8 test_imperfect` (improve loop).
+
 ## Other tasks in the repository
 
-- `weightgym/imperfect.py`: improving SGD-trained networks that only partly learned their function,
-  with nothing planted and no answer key (results below when the run finishes).
+- `weightgym/imperfect.py`: the improve task above, including the search teacher, the loop baselines and
+  the multi-round loop.
 - `weightgym/decompile.py`: reading a network's weights and writing the program it computes as an
   expression that is executed and compared with the network on every input. Tested; not trained here.
 - `weightgym/audit.py`, `weightgym/reprogram.py`: backdoor auditing and editing a network to a new

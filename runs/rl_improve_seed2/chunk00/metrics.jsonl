@@ -1,0 +1,1 @@
+{"tokens/cumulative/sampled": 4096, "tokens/cumulative/prefill_cached": 19200, "tokens/cumulative/prefill_uncached": 1760, "tokens/cumulative/trained": 0, "tokens/discarded/sampled": 4096, "tokens/discarded/prefill_cached": 19200, "tokens/discarded/prefill_uncached": 1760, "tokens/discarded/trained": 0, "cost/cumulative_usd": 0.0052, "cost/discarded_usd": 0.0052}

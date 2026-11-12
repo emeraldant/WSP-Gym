@@ -158,5 +158,53 @@ def curve(sft_metrics: str, rl_chunks: str | None, out: str, batch_size: int, gr
     print(f"wrote {out}")
 
 
+def improve_chart(table: str = "results/table_improve.csv", split: str = "test_imperfect", out: str = "results/improve_loop.png") -> None:
+    """Second result: share of errors removed against the number of verified proposals."""
+    rows = [r for r in csv.DictReader(open(table)) if r["split"] == split]
+    get = {r["proposer"]: r for r in rows}
+    series = [
+        ("RL-trained proposer", [(k, get.get(f"rl_proposer x{k}")) for k in (1, 8)], SERIES[1]),
+        ("Random edits", [(k, get.get(f"random x{k}")) for k in (1, 8, 32, 128)], SERIES[0]),
+        ("Untrained model", [(k, get.get(f"untrained x{k}")) for k in (1, 8)], SERIES[2]),
+    ]
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 20, "axes.edgecolor": GRID})
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=100)
+    fig.patch.set_facecolor(SURFACE)
+    ax.set_facecolor(SURFACE)
+    for label, pts, color in series:
+        pts = [(k, r) for k, r in pts if r]
+        xs = [k for k, _ in pts]
+        ys = [100 * float(r["gap_closed"]) for _, r in pts]
+        lo = [100 * float(r["gap_lo"]) for _, r in pts]
+        hi = [100 * float(r["gap_hi"]) for _, r in pts]
+        ax.fill_between(xs, lo, hi, color=color, alpha=0.15, linewidth=0)
+        ax.plot(xs, ys, color=color, linewidth=3, marker="o", markersize=11, label=label, zorder=3)
+        ax.text(xs[-1] * 1.12, ys[-1], f"{ys[-1]:.0f}%", va="center", ha="left", color=INK, fontsize=21, fontweight="bold")
+    full = get.get("full search (hundreds of forward passes)")
+    if full:
+        y = 100 * float(full["gap_closed"])
+        ax.axhline(y, color=INK2, linestyle=(0, (4, 3)), linewidth=2)
+        ax.text(1, y + 0.6, f"Exhaustive search over simple edits: {y:.0f}%", ha="left", va="bottom", color=INK2, fontsize=17)
+    ax.set_xscale("log", base=2)
+    ax.set_xticks([1, 8, 32, 128])
+    ax.set_xticklabels(["1", "8", "32", "128"], color=INK2)
+    ax.set_xlim(0.85, 220)
+    ax.set_ylim(0, 26)
+    ax.set_yticks([0, 5, 10, 15, 20, 25])
+    ax.set_yticklabels([f"{v}%" for v in (0, 5, 10, 15, 20, 25)], color=INK2)
+    ax.set_xlabel("Proposed edits checked per network", color=INK2, labelpad=12)
+    ax.tick_params(length=0, pad=10, colors=INK2)
+    ax.yaxis.grid(True, color=GRID, linewidth=1.2, zorder=0)
+    for side in ("top", "right", "left"):
+        ax.spines[side].set_visible(False)
+    ax.legend(loc="center right", frameon=False, fontsize=19, labelcolor=INK)
+    fig.suptitle("RL teaches Inkling 2 Small to propose edits that improve trained networks", x=0.045, y=0.965, ha="left", fontsize=25, fontweight="bold", color=INK)
+    fig.text(0.045, 0.885, "Share of an imperfect network's errors removed by the best verified proposal. 500 SGD-trained networks; 95% intervals.",
+             ha="left", fontsize=16, color=INK2)
+    fig.subplots_adjust(left=0.07, right=0.965, top=0.83, bottom=0.13)
+    fig.savefig(out, dpi=100, facecolor=SURFACE)
+    print(f"wrote {out}")
+
+
 if __name__ == "__main__":
     main()
