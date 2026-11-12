@@ -27,8 +27,28 @@ Frontier closed models still do much better on this gym; see the comparison belo
 
 ![Repair rate by test split](results/repair_rate.png)
 
-*Chart: the untrained model and the two trained models described below. The supervised and RL stages of
-the first model are shown separately in `results/repair_rate_stages.png`.*
+*Chart: the untrained model and the scale-up model's supervised checkpoint (see the update just below).
+The two earlier models described under "Result" are in `results/repair_rate_first_models.png`, and the
+supervised and RL stages of the first model in `results/repair_rate_stages.png`.*
+
+> **Update, Nov 12, 20:20 UTC: one model, three times the data.** The same supervised recipe from the base
+> model on 57,600 networks, half hand-built and half SGD-trained (rank-16 LoRA, 900 steps, about $124).
+> Evaluated once on the frozen test splits, no reasoning tokens (`runs/final/scale_sft`):
+>
+> | Test split | Earlier best | Scale-up, supervised stage |
+> |---|---|---|
+> | **In-distribution (primary)** | 76.5% | **80.3%** [76.5, 83.9] |
+> | Larger networks | 60.6% | 65.4% [60.8, 70.0] |
+> | Unseen function families | 53.6% | 55.6% [50.6, 60.3] |
+> | Unseen fault types | 22.9% | 19.9% [16.0, 23.8] |
+> | SGD-trained networks | 46.2% | **61.8%** [57.1, 66.5] |
+> | scikit-learn networks | 36.4% | **50.1%** [45.3, 54.9] |
+>
+> "Earlier best" takes the better of the two earlier models on each row; no single earlier model had all
+> of them. Against the untrained model reasoning for ~10,600 tokens (75.6%), paired on the same 422
+> networks: +4.7 points [-0.2, +9.7]. An RL stage on top of this checkpoint was running when this was
+> written; the pre-registration for the whole scale-up is in `NOTES.md`. The sections below describe the
+> earlier models and have not yet been rewritten around this one.
 
 ## Result
 
