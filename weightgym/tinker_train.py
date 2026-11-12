@@ -128,7 +128,8 @@ async def run_sft(a) -> None:
     if os.path.exists(mpath) and not a.load:
         raise SystemExit(f"{mpath} exists; use a fresh --log-path")
     rest = service.create_rest_client()
-    kept: dict[str, str] = {}
+    # When resuming, the checkpoint we loaded from is superseded by this run's first save.
+    kept: dict[str, str] = {k: v for k, v in (("state", a.load), ("sampler", a.load_sampler)) if v}
     mf = open(mpath, "a")
     trained_tokens = 0
     t0 = time.time()
@@ -368,6 +369,7 @@ def main() -> None:
     sub.choices["sft"].add_argument("--decay", type=float, default=0.0, help="linear LR decay fraction over the run")
     sub.choices["sft"].add_argument("--start-step", type=int, default=0, help="resume a crashed run from --load at this step")
     sub.choices["sft"].add_argument("--keep-all", action="store_true", help="keep every checkpoint (needs paid storage)")
+    sub.choices["sft"].add_argument("--load-sampler", default=None, help="sampler path saved alongside --load (pruned at the next save)")
     sub.choices["rl"].add_argument("--group-size", type=int, default=16)
     sub.choices["rl"].add_argument("--groups-per-batch", type=int, default=32)
     sub.choices["rl"].add_argument("--loss-fn", default="importance_sampling")

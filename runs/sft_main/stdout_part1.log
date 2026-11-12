@@ -1,0 +1,67 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+/home/user/WeightGym/weightgym/tinker_train.py:123: FutureWarning: DEPRECATED: ServiceClient.create_lora_training_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await ServiceClient.create_lora_training_client(...)` instead; it returns a future of the client that can be awaited.
+  tc = await service.create_lora_training_client_async(base_model=a.model, rank=a.rank, seed=a.seed)
+/home/user/WeightGym/weightgym/tinker_train.py:130: FutureWarning: DEPRECATED: ServiceClient.create_rest_client() is deprecated and will be removed in a future tinker SDK version. Construct tinker.RestClient() directly instead; it takes the same base_url and api_key and needs no ServiceClient.
+  rest = service.create_rest_client()
+/home/user/WeightGym/weightgym/tinker_train.py:137: FutureWarning: DEPRECATED: TrainingClient.save_weights_and_get_sampling_client_async() is deprecated and will be removed in a future tinker SDK version. Use `await TrainingClient.save_weights_and_get_sampling_client(...)` instead; it returns a future of the client that can be awaited.
+  client = await tc.save_weights_and_get_sampling_client_async(name=f"sft-{step:05d}")
+/home/user/WeightGym/weightgym/llm.py:79: FutureWarning: DEPRECATED: SamplingClient.sample_async() is deprecated and will be removed in a future tinker SDK version. Use `await SamplingClient.sample(...)` instead; sample() returns an APIFuture that can be awaited.
+  out = await self.client.sample_async(prompt=prompt, num_samples=n, sampling_params=params)
+[val@0] 300 rollouts in 53s; tokens in 417860 (prompt, once per episode) out 62947
+[val @ 0] repair 0.013 [0.000,0.030] clean_ok 0.17 valid 0.21 noop_f 0.00
+/home/user/WeightGym/weightgym/tinker_train.py:146: FutureWarning: DEPRECATED: TrainingClient.forward_backward_async() is deprecated and will be removed in a future tinker SDK version. Use TrainingClient.forward_backward(...) instead: it returns an APIFuture at once. Submit the optimizer step before waiting: `fwd_bwd_future = client.forward_backward(...); optim_future = client.optim_step(...); await fwd_bwd_future; await optim_future` (or `.result()` on each).
+  fb = await tc.forward_backward_async(data, "cross_entropy")
+/home/user/WeightGym/weightgym/tinker_train.py:147: FutureWarning: DEPRECATED: TrainingClient.optim_step_async() is deprecated and will be removed in a future tinker SDK version. Use TrainingClient.optim_step(...) instead: it returns an APIFuture at once. Submit it right after forward_backward, then wait for both: `fwd_bwd_future = client.forward_backward(...); optim_future = client.optim_step(...); await fwd_bwd_future; await optim_future` (or `.result()` on each).
+  op = await tc.optim_step_async(tinker.AdamParams(learning_rate=lr))
+[sft 0/300] nll 0.3160 lr 3.00e-04 tokens 0.09M ($0.14) 76s
+[sft 5/300] nll 0.1493 lr 2.96e-04 tokens 0.55M ($0.82) 121s
+[sft 10/300] nll 0.1379 lr 2.92e-04 tokens 1.01M ($1.52) 154s
+[sft 15/300] nll 0.1270 lr 2.88e-04 tokens 1.47M ($2.20) 184s
+[sft 20/300] nll 0.1061 lr 2.84e-04 tokens 1.92M ($2.88) 285s
+[val@25] 300 rollouts in 35s; tokens in 417860 (prompt, once per episode) out 11731
+[val @ 25] repair 0.123 [0.085,0.165] clean_ok 0.66 valid 1.00 noop_f 0.05
+[sft 25/300] nll 0.0934 lr 2.80e-04 tokens 2.38M ($3.57) 359s
+[sft 30/300] nll 0.0919 lr 2.76e-04 tokens 2.83M ($4.24) 407s
+[sft 35/300] nll 0.0955 lr 2.72e-04 tokens 3.29M ($4.93) 559s
+[sft 40/300] nll 0.1068 lr 2.68e-04 tokens 3.75M ($5.63) 588s
+[sft 45/300] nll 0.0771 lr 2.64e-04 tokens 4.21M ($6.31) 617s
+/home/user/WeightGym/weightgym/tinker_train.py:165: FutureWarning: DEPRECATED: TrainingClient.save_state_async() is deprecated and will be removed in a future tinker SDK version. Use TrainingClient.save_state(...) instead: it returns an APIFuture that can be awaited (`await TrainingClient.save_state(...)`).
+  st = await (await tc.save_state_async(f"sft-state-{step + 1:05d}"))
+/home/user/WeightGym/weightgym/tinker_train.py:166: FutureWarning: DEPRECATED: TrainingClient.save_weights_for_sampler_async() is deprecated and will be removed in a future tinker SDK version. Use TrainingClient.save_weights_for_sampler(...) instead: it returns an APIFuture that can be awaited (`await TrainingClient.save_weights_for_sampler(...)`).
+  sw = await (await tc.save_weights_for_sampler_async(f"sft-sampler-{step + 1:05d}"))
+[ckpt 50] tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/weights/sft-state-00050 | tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/sampler_weights/sft-sampler-00050
+[val@50] 300 rollouts in 31s; tokens in 417860 (prompt, once per episode) out 11175
+[val @ 50] repair 0.233 [0.178,0.288] clean_ok 0.64 valid 1.00 noop_f 0.09
+[sft 50/300] nll 0.0780 lr 2.60e-04 tokens 4.66M ($6.99) 743s
+[sft 55/300] nll 0.0806 lr 2.56e-04 tokens 5.11M ($7.66) 789s
+[sft 60/300] nll 0.0733 lr 2.52e-04 tokens 5.57M ($8.35) 833s
+[sft 65/300] nll 0.0800 lr 2.48e-04 tokens 6.02M ($9.03) 864s
+[sft 70/300] nll 0.0703 lr 2.44e-04 tokens 6.48M ($9.72) 893s
+[val@75] 300 rollouts in 41s; tokens in 417860 (prompt, once per episode) out 11915
+[val @ 75] repair 0.386 [0.326,0.449] clean_ok 0.61 valid 1.00 noop_f 0.03
+[sft 75/300] nll 0.0536 lr 2.40e-04 tokens 6.94M ($10.40) 979s
+[sft 80/300] nll 0.0679 lr 2.36e-04 tokens 7.39M ($11.09) 1060s
+[sft 85/300] nll 0.0714 lr 2.32e-04 tokens 7.84M ($11.76) 1132s
+[sft 90/300] nll 0.0842 lr 2.28e-04 tokens 8.29M ($12.44) 1204s
+[sft 95/300] nll 0.0633 lr 2.24e-04 tokens 8.75M ($13.12) 1265s
+/home/user/WeightGym/weightgym/ckpt.py:30: FutureWarning: DEPRECATED: RestClient.delete_checkpoint_from_tinker_path_async() is deprecated and will be removed in a future tinker SDK version. Use `await RestClient.delete_checkpoint_from_tinker_path(...)` instead; delete_checkpoint_from_tinker_path() returns an APIFuture that can be awaited.
+  await rc.delete_checkpoint_from_tinker_path_async(p)
+[ckpt 100] tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/weights/sft-state-00100 | tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/sampler_weights/sft-sampler-00100
+[val@100] 300 rollouts in 21s; tokens in 417860 (prompt, once per episode) out 12028
+[val @ 100] repair 0.441 [0.377,0.504] clean_ok 0.67 valid 1.00 noop_f 0.03
+[sft 100/300] nll 0.0609 lr 2.20e-04 tokens 9.21M ($13.81) 1409s
+[sft 105/300] nll 0.0593 lr 2.16e-04 tokens 9.66M ($14.49) 1482s
+[sft 110/300] nll 0.0546 lr 2.12e-04 tokens 10.12M ($15.17) 1516s
+[sft 115/300] nll 0.0453 lr 2.08e-04 tokens 10.57M ($15.86) 1559s
+[sft 120/300] nll 0.0577 lr 2.04e-04 tokens 11.02M ($16.54) 1589s
+[val@125] 300 rollouts in 23s; tokens in 417860 (prompt, once per episode) out 10975
+[val @ 125] repair 0.462 [0.398,0.525] clean_ok 0.75 valid 1.00 noop_f 0.09
+[sft 125/300] nll 0.0592 lr 2.00e-04 tokens 11.48M ($17.22) 1648s
+[sft 130/300] nll 0.0720 lr 1.96e-04 tokens 11.94M ($17.91) 1678s
+[sft 135/300] nll 0.0675 lr 1.92e-04 tokens 12.39M ($18.58) 1715s
+[sft 140/300] nll 0.0468 lr 1.88e-04 tokens 12.84M ($19.26) 1805s
+[sft 145/300] nll 0.0543 lr 1.84e-04 tokens 13.29M ($19.94) 1859s
+[ckpt 150] tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/weights/sft-state-00150 | tinker://bb1e126b-6030-5542-a6ba-d2ba86174dda:train:0/sampler_weights/sft-sampler-00150
+[val@150] 300 rollouts in 20s; tokens in 417860 (prompt, once per episode) out 11480
+[val @ 150] repair 0.466 [0.403,0.530] clean_ok 0.75 valid 1.00 noop_f 0.06
+[sft 150/300] nll 0.0516 lr 1.80e-04 tokens 13.74M ($20.61) 1971s

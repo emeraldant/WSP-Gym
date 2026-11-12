@@ -51,13 +51,20 @@ def tally(root: str = "runs") -> dict:
         rel = os.path.relpath(path, root)
         if base == "metrics.jsonl":
             sft_usd, rl_usd = 0.0, 0.0
+            cfg_path = os.path.join(os.path.dirname(path), "config.json")
+            sft_model = "thinkingmachines/Inkling-2-Small"
+            if os.path.exists(cfg_path):
+                try:
+                    sft_model = json.load(open(cfg_path)).get("model", sft_model)
+                except (json.JSONDecodeError, AttributeError):
+                    pass
             for line in open(path):
                 try:
                     r = json.loads(line)
                 except json.JSONDecodeError:
                     continue
-                if r.get("kind") == "train":
-                    sft_usd = max(sft_usd, r.get("usd_train", 0.0))
+                if r.get("kind") == "train":  # sum per-step tokens: survives resumes, counts re-run steps
+                    sft_usd += r.get("tokens", 0) * PRICE[sft_model]["train"] / 1e6
                 rl_usd = max(rl_usd, r.get("cost/cumulative_usd", 0.0))
             if sft_usd:
                 rows.append({"file": rel, "kind": "sft_train", "usd": sft_usd})
