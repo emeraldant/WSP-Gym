@@ -7,6 +7,12 @@ frontier_sol_direct,untrained,test_id,76,0.9079,0.8421,0.9737
 frontier_sol_reasoning,untrained,test_id,48,1.0,1.0,1.0
 frontier_sol_reasoning,untrained,test_larger,30,1.0,1.0,1.0
 frontier_sol_reasoning,untrained,test_trained,23,0.913,0.7826,1.0
+scale_sft,untrained,test_id,422,0.8009,0.763,0.8389
+scale_sft,untrained,test_families,403,0.5484,0.4988,0.598
+scale_sft,untrained,test_faults,407,0.1941,0.1548,0.2334
+scale_sft,untrained,test_larger,416,0.6538,0.6082,0.6995
+scale_sft,untrained,test_trained,403,0.6154,0.5658,0.6625
+scale_sft,untrained,test_external,415,0.4843,0.4361,0.5349
 sft,untrained,test_id,422,0.7014,0.6588,0.7441
 sft,untrained,test_families,403,0.4342,0.3871,0.4839
 sft,untrained,test_faults,407,0.2039,0.1646,0.2432
