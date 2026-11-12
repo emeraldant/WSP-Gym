@@ -28,6 +28,21 @@ the accuracy the fault destroyed. 95% bootstrap intervals in brackets.
 | SGD-trained networks (training used only hand-built ones) | 0.3% | 12.9% | 13.9% [10.4, 17.4] |
 | Networks trained by an independent library (scikit-learn, L-BFGS) | 1.7% | — | 9.4% [6.8, 12.3] |
 
+**Adding SGD-trained networks to training fixes most of the weakest rows.** A second model trained with
+the same supervised recipe, but with half of every batch drawn from SGD-trained networks (and no RL
+stage), on the same test splits:
+
+| Test split | Hand-built only, + RL (above) | Hand-built + SGD-trained (supervised only) |
+|---|---|---|
+| Fresh SGD-trained networks (our trainer) | 13.9% | **46.2%** [41.2, 51.1] |
+| Networks fitted by scikit-learn, an optimiser never used in training | 9.4% | **36.4%** [31.8, 41.0] |
+| In-distribution, hand-built | 76.5% | 57.1% [52.4, 61.9] |
+| Unseen function families | 53.6% | 40.7% |
+| Larger networks | 60.6% | 39.2% |
+| Unseen fault types | 22.9% | 14.0% |
+
+It saw half as many hand-built networks and had no RL, which is why those rows are lower.
+
 Paired difference, final vs untrained, on the primary split: **+76.3 points** [+72.3, +80.3].
 Healthy control networks correctly left unedited: 15% untrained, 86% after the supervised stage, 99% after RL.
 
@@ -57,11 +72,13 @@ For scale, on the same in-distribution test networks:
   weights as text; published results so far use closed frontier models off the shelf.
 - **It carries over to unseen function families (54%) and larger networks (61%)**, so it is not simply
   memorising the training circuits. A statistics-only heuristic repairs 2-8% on these splits.
-- **It does not carry over to networks produced by an optimiser: 14% on our own SGD-trained networks
-  and 9% on networks fitted by scikit-learn** (`data/test_external.jsonl`, added after training; the
-  supervised checkpoint no longer existed, hence the dash). Training saw only hand-built circuits hidden
-  behind symmetries. This is the most important limitation. No public benchmark of small ReLU networks
-  with exactly checkable tasks was found to test on; the nearest, WSPBench, would need conversion.
+- **Trained only on hand-built circuits, it does not carry over to networks produced by an optimiser:
+  14% on our own SGD-trained networks and 9% on networks fitted by scikit-learn**
+  (`data/test_external.jsonl`, added after training; the supervised checkpoint no longer existed, hence
+  the dash). **Shown SGD-trained networks during training, it repairs 46% of fresh ones and 36% of the
+  scikit-learn ones**, an optimiser it never saw, so the gap was mostly a matter of training data. No
+  public benchmark of small ReLU networks with exactly checkable tasks was found to test on; the
+  nearest, WSPBench, would need conversion.
 - **Frontier models are far ahead.** GPT-6 Astra and GPT-6.1 Sol repair 91-100% of the same networks
   with a few hundred reasoning tokens, and about 90% of the SGD-trained ones. This gym, at this size, is
   near ceiling for them. The open/closed gap on this skill is large; post-training closes part of it.
@@ -144,15 +161,22 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   group of 8 samples of the same network), 60 steps x 64 networks, lr 2e-5, reward as above (+1 for
   `[]` on a healthy network, a penalty for editing one, -1 for an invalid answer). Validation 75% -> 82%.
 - **Checkpoint selection** by validation repair rate only; each test split evaluated once per arm.
-- **Cost:** about $90 of Tinker usage for everything in this section, including sweeps and evaluations;
-  about $135 for the whole project so far (`python -m weightgym.cost`).
+- **Mixed-source model:** the supervised recipe again from the base model, 300 steps x 64 with every
+  other network SGD-trained (`--mix repair,repair_trained`); final checkpoint, no selection.
+- **Cost:** about $90 of Tinker usage for the hand-built repair model including sweeps and evaluations;
+  about $193 for the whole project (`python -m weightgym.cost`, `runs/cost_tally.json`).
+- **Adapters kept on Tinker** (LoRA sampler weights): the final repair model, the mixed-source repair
+  model and the RL-trained proposer; paths are in `NOTES.md`.
 
 ## Limitations
 
 - Tiny networks (tens to hundreds of weights), single planted faults, functions with a one-line formula.
 - Search with forward passes and gradient descent both repair 60-70% of these networks; the point is
   that a language model can learn to do it from the weights alone, not that this beats either.
-- Poor transfer to SGD-trained networks (14%) and to unseen fault types (23%).
+- Poor transfer to unseen fault types (14-23%), and to SGD-trained networks unless they are in the
+  training mix (14% without, 46% with; 36% on a different optimiser's networks).
+- The mixed-source model had no RL stage and half the hand-built data; a single model that is best on
+  every row was not trained.
 - Frontier closed models solve the gym almost completely; it does not discriminate between them.
 - One training seed. No test on a real LLM.
 - Synthetic data: every network and fault comes from this repository's generator.

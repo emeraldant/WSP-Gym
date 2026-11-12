@@ -1,12 +1,12 @@
 {
  "budget_usd": 250.0,
- "total_usd": 149.12,
- "fraction": 0.596,
+ "total_usd": 193.46,
+ "fraction": 0.774,
  "stop_at_usd": 212.5,
  "by_kind": {
-  "eval": 20.4,
+  "eval": 23.56,
   "rl_train": 74.56,
-  "sft_train": 54.16
+  "sft_train": 95.34
  },
  "runs": [
   {
@@ -207,6 +207,48 @@
    "usd": 0.231,
    "n_in": 703464,
    "n_out": 20409
+  },
+  {
+   "file": "final/sft_mixed/test_external.jsonl",
+   "kind": "eval",
+   "usd": 0.213,
+   "n_in": 645540,
+   "n_out": 19821
+  },
+  {
+   "file": "final/sft_mixed/test_families.jsonl",
+   "kind": "eval",
+   "usd": 0.225,
+   "n_in": 688289,
+   "n_out": 18779
+  },
+  {
+   "file": "final/sft_mixed/test_faults.jsonl",
+   "kind": "eval",
+   "usd": 0.225,
+   "n_in": 691088,
+   "n_out": 17501
+  },
+  {
+   "file": "final/sft_mixed/test_id.jsonl",
+   "kind": "eval",
+   "usd": 0.226,
+   "n_in": 689973,
+   "n_out": 19479
+  },
+  {
+   "file": "final/sft_mixed/test_larger.jsonl",
+   "kind": "eval",
+   "usd": 0.36,
+   "n_in": 1135673,
+   "n_out": 19428
+  },
+  {
+   "file": "final/sft_mixed/test_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.231,
+   "n_in": 703464,
+   "n_out": 19634
   },
   {
    "file": "final/sft_rl/test_external.jsonl",
@@ -666,6 +708,109 @@
    "usd": 0.137,
    "n_in": 417860,
    "n_out": 11281
+  },
+  {
+   "file": "sft_mixed/metrics.jsonl",
+   "kind": "sft_train",
+   "usd": 41.176
+  },
+  {
+   "file": "sft_mixed/val_step00000.jsonl",
+   "kind": "eval",
+   "usd": 0.188,
+   "n_in": 417860,
+   "n_out": 63025
+  },
+  {
+   "file": "sft_mixed/val_step00000_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.128,
+   "n_in": 277978,
+   "n_out": 44694
+  },
+  {
+   "file": "sft_mixed/val_step00050.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 10421
+  },
+  {
+   "file": "sft_mixed/val_step00050_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7281
+  },
+  {
+   "file": "sft_mixed/val_step00100.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11208
+  },
+  {
+   "file": "sft_mixed/val_step00100_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7904
+  },
+  {
+   "file": "sft_mixed/val_step00150.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11319
+  },
+  {
+   "file": "sft_mixed/val_step00150_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 8083
+  },
+  {
+   "file": "sft_mixed/val_step00200.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11146
+  },
+  {
+   "file": "sft_mixed/val_step00200_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7907
+  },
+  {
+   "file": "sft_mixed/val_step00250.jsonl",
+   "kind": "eval",
+   "usd": 0.136,
+   "n_in": 417860,
+   "n_out": 11090
+  },
+  {
+   "file": "sft_mixed/val_step00250_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7475
+  },
+  {
+   "file": "sft_mixed/val_step00300.jsonl",
+   "kind": "eval",
+   "usd": 0.137,
+   "n_in": 417860,
+   "n_out": 11334
+  },
+  {
+   "file": "sft_mixed/val_step00300_repair_val_trained.jsonl",
+   "kind": "eval",
+   "usd": 0.091,
+   "n_in": 277978,
+   "n_out": 7916
   },
   {
    "file": "sweep/rl_lr2e-4/metrics.jsonl",

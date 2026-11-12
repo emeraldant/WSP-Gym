@@ -12,6 +12,12 @@ sft,untrained,test_families,403,0.4342,0.3871,0.4839
 sft,untrained,test_faults,407,0.2039,0.1646,0.2432
 sft,untrained,test_larger,416,0.5216,0.4736,0.5697
 sft,untrained,test_trained,403,0.1266,0.0943,0.1613
+sft_mixed,untrained,test_id,422,0.5687,0.5213,0.6161
+sft_mixed,untrained,test_families,403,0.3995,0.3499,0.4491
+sft_mixed,untrained,test_faults,407,0.1351,0.1007,0.1695
+sft_mixed,untrained,test_larger,416,0.3918,0.3461,0.4399
+sft_mixed,untrained,test_trained,403,0.4591,0.4094,0.5087
+sft_mixed,untrained,test_external,415,0.347,0.2988,0.3952
 sft_rl,untrained,test_id,422,0.763,0.7227,0.8033
 sft_rl,untrained,test_families,403,0.5285,0.4813,0.5757
 sft_rl,untrained,test_faults,407,0.2236,0.1843,0.2654
