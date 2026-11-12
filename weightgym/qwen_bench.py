@@ -244,6 +244,32 @@ def write_adapter(name: str, ops: list[dict]) -> str:
     return path
 
 
+def write_delta_adapter(name: str, deltas: dict, meta: dict | None = None) -> str:
+    """An arbitrary low-rank edit as an adapter: ``deltas[(layer, matrix)] = (B, A)`` with delta W = B @ A
+    (numpy arrays, at most LORA_RANK columns in B)."""
+    import torch
+    from safetensors.torch import save_file
+
+    path = os.path.join(ADAPTERS, name)
+    os.makedirs(path, exist_ok=True)
+    tensors, modules = {}, []
+    for (layer, matrix), (B, A) in deltas.items():
+        r = B.shape[1]
+        assert r <= LORA_RANK and A.shape[0] == r, "edit rank exceeds the adapter rank"
+        mod = f"model.language_model.layers.{layer}.mlp.{MATRICES[matrix]}"
+        Bp, Ap = torch.zeros(B.shape[0], LORA_RANK), torch.zeros(LORA_RANK, A.shape[1])
+        Bp[:, :r], Ap[:r] = torch.from_numpy(B).float(), torch.from_numpy(A).float()
+        tensors[f"base_model.model.{mod}.lora_A.weight"] = Ap.to(torch.bfloat16)
+        tensors[f"base_model.model.{mod}.lora_B.weight"] = Bp.to(torch.bfloat16)
+        modules.append(mod)
+    save_file(tensors, os.path.join(path, "adapter_model.safetensors"))
+    cfg = {"peft_type": "LORA", "base_model_name_or_path": BASE, "task_type": "CAUSAL_LM", "r": LORA_RANK,
+           "lora_alpha": LORA_RANK, "lora_dropout": 0.0, "bias": "none", "target_modules": modules, "inference_mode": True}
+    json.dump(cfg, open(os.path.join(path, "adapter_config.json"), "w"), indent=1)
+    json.dump(meta or {}, open(os.path.join(path, "edit.json"), "w"), indent=1)
+    return path
+
+
 def merged_checkpoint(name: str, ops: list[dict]) -> str:
     """The edit written into a full copy of the checkpoint (bfloat16, rounded once): the reference the adapter
     route is checked against, and the form in which an edit would be released."""
