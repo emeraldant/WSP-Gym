@@ -1,0 +1,20 @@
+{
+ "cmd": "sft",
+ "log_path": "runs/sft_main",
+ "model": "thinkingmachines/Inkling-2-Small",
+ "effort": 0.0,
+ "direct": true,
+ "max_tokens": 256,
+ "rank": 32,
+ "lr": 0.0003,
+ "steps": 300,
+ "train_offset": 10000,
+ "val_split": "data/val.jsonl",
+ "n_val": 300,
+ "eval_every": 25,
+ "save_every": 25,
+ "load": null,
+ "seed": 0,
+ "batch_size": 64,
+ "decay": 0.8
+}

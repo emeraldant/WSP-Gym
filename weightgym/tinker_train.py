@@ -117,7 +117,7 @@ async def run_sft(a) -> None:
     json.dump(vars(a), open(os.path.join(a.log_path, "config.json"), "w"), indent=1)
     service = tinker.ServiceClient()
     if a.load:
-        tc = await service.create_training_client_from_state_async(a.load)
+        tc = await service.create_training_client_from_state_with_optimizer_async(a.load)
     else:
         tc = await service.create_lora_training_client_async(base_model=a.model, rank=a.rank, seed=a.seed)
     _, val = load_split(a.val_split)
@@ -139,7 +139,7 @@ async def run_sft(a) -> None:
                   f"clean_ok {s['clean_ok']:.2f} valid {s['valid']:.2f} noop_f {s['noop_faulty']:.2f}", flush=True)
         eps = [episode_for("train", a.train_offset + step * a.batch_size + i) for i in range(a.batch_size)]
         data = [sft_datum(a.model, ep, a.effort, a.direct) for ep in eps]
-        lr = a.lr  # constant; Inkling learning rates are calibrated by sweep (see NOTES.md)
+        lr = a.lr * (1.0 - a.decay * step / max(1, a.steps))  # linear decay to (1 - decay) * lr
         fb = await tc.forward_backward_async(data, "cross_entropy")
         op = await tc.optim_step_async(tinker.AdamParams(learning_rate=lr))
         out = await fb
@@ -354,6 +354,7 @@ def main() -> None:
         p.add_argument("--load", default=None, help="tinker:// state path to start from")
         p.add_argument("--seed", type=int, default=0)
     sub.choices["sft"].add_argument("--batch-size", type=int, default=32)
+    sub.choices["sft"].add_argument("--decay", type=float, default=0.0, help="linear LR decay fraction over the run")
     sub.choices["rl"].add_argument("--group-size", type=int, default=16)
     sub.choices["rl"].add_argument("--groups-per-batch", type=int, default=32)
     sub.choices["rl"].add_argument("--loss-fn", default="importance_sampling")
