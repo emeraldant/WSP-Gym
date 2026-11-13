@@ -423,6 +423,8 @@ def build() -> tuple[dict, dict]:
     T["offshelf_stuck"], T["offshelf_reasoning"] = esc(R["stuck"]), esc(R["reasoning"])
     T["offshelf_lead"], T["offshelf_note"] = esc(R["method"]), esc(R["note"].replace("\\*", "*"))
     T["offshelf_tldr_reason"] = ("; " + esc(R["tldr_reason"])) if R["tldr_reason"] else ""
+    T["offshelf_page"] = esc(R["page"]).replace(f"repairs {R['trained']} in about", f"repairs <b>{R['trained']}</b> in about", 1)
+    T["offshelf_page_note"] = esc(R["page_note"])
     D["offshelf_reading"] = R
 
     # --- verifier -------------------------------------------------------------------------------
@@ -671,7 +673,13 @@ def build() -> tuple[dict, dict]:
         for r in q["rows"]:
             for k in ("label", "math500", "lo", "hi", "n"):
                 assert k in r, f"qwen.json row missing {k}"
-        CHECKS.append("qwen.json present and well-formed; Qwen section shown")
+        CHECKS.append("qwen.json present and well-formed; real-LLM note filled from it")
+        qrow = lambda needle: [r for r in q["rows"] if needle in r["label"]]
+        qm = sorted(r["math500"] for r in qrow("edit proposed by"))
+        assert len(qrow("Unedited")) == 1 and len(qrow("Published edit")) == 1 and len(qrow("best random edit")) == 1 and qm
+        T["qwen_unedited"], T["qwen_published"] = pct(qrow("Unedited")[0]["math500"]), pct(qrow("Published edit")[0]["math500"])
+        T["qwen_random"], T["qwen_models"] = pct(qrow("best random edit")[0]["math500"]), f"between {pct(qm[0])} and {pct(qm[-1])}"
+        T["qwen_readme"] = esc(REPO_URL + "#fourth-result-a-real-llm-qwen35-08b")
         rnd = [r for r in q["rows"] if "best random edit" in r["label"]]
         if rnd:  # the README's opening list quotes this figure by hand
             assert f"random edit to the same table reaches {100 * rnd[0]['math500']:.1f}%" in open(p("README.md")).read(), "README intro: random-edit figure"

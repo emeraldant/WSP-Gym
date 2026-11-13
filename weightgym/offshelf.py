@@ -288,6 +288,28 @@ def reading(table: list[dict]) -> dict[str, str]:
         + (f", {_joined(nm(r) for r in p_tie)} cannot be told apart from it" if p_tie else "")
         + f", and the other {len(p_behind)} are behind it (the closest, {nm(closest)}, by {100 * f(closest['trained_minus_this']):.1f} points "
         f"[{100 * f(closest['diff_lo']):.1f}, {100 * f(closest['diff_hi']):.1f}]).")
+    # A shorter telling for the page; the README carries the full paragraphs above.
+    assert all(r in soft and f(r["mean_reasoning_tokens"]) > 0 for r in p_ahead)
+    pg = [f"Told to answer at once, the {len(off)} models with reasoning switched off repair {span(off)}; the trained Inkling 2 Small repairs "
+          f"{out['trained']} in about {out['trained_tokens']} tokens."]
+    others_soft = [r for r in soft if r not in p_ahead]
+    if p_ahead:
+        pg.append(f"{_joined(nm(r) for r in p_ahead)} {'is' if len(p_ahead) == 1 else 'are'} ahead ({_joined(_pct(r['repair_rate']) for r in p_ahead)}, "
+                  f"after about {_joined(tok(r['mean_reasoning_tokens']) for r in p_ahead)} reasoning tokens)"
+                  + (f", and {_joined(nm(r) + ' repairs ' + _pct(r['repair_rate']) for r in others_soft)}." if others_soft else "."))
+    if stuck:
+        pg.append(f"Another {len(stuck)} models kept reasoning past the 512-token limit, so their figure there is not a fair score.")
+    pg2 = [f"Free to reason, every model repairs {span(allr, 'fixed_of_finished', lambda x: _pct(x, 0))} of the faulty networks it finishes within "
+           f"20,000 tokens; most rows are decided by how often it finishes."]
+    if len(level) == 1 and fin(level[0]) == max(fin(r) for r in open_r):
+        pg2.append(f"Of the open models, {nm(level[0])} finishes most ({_pct(fin(level[0]), 0)}) and matches the trained model, at {times} times the tokens.")
+    out["page"] = " ".join(pg) + " " + " ".join(pg2)
+    out["page_note"] = (
+        f"The first {N} networks of the in-distribution test set ({out['faulty']} faulty), through OpenRouter, with the same prompts as Inkling 2 Small. "
+        "An answer cut off at the token limit counts as not repaired. Tokens include reasoning; the figure in brackets is how many were reasoning. "
+        "Where an API would not switch reasoning off, its lowest setting was used. The limits were chosen for Inkling 2 Small and the other models "
+        "reasoned at their default effort, so the with-reasoning column compares models at a fixed budget, not at their best. "
+        "* Added after the first results, answer-at-once only.")
     out["method"] = (
         f"Each model was given the first {N} networks of the in-distribution test set ({out['faulty']} of them faulty) through OpenRouter, "
         f"with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token "

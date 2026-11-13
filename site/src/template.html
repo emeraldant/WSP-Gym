@@ -27,7 +27,7 @@
 <nav class="toc" aria-label="Sections">
   <div class="toc-in">
     <a class="toc-home" href="#top">WSP-Gym</a>
-    <a href="#summary">Summary</a><a href="#race">One network</a><a href="#task">Task</a><a href="#results">Results</a><a href="#tinker">Training</a><a href="#compare">Compared</a><a href="#verify">Verifier</a><a href="#rl-only">RL alone</a><a href="#failed">Did not work</a><a href="#qwen" class="toc-qwen" hidden>Qwen</a><a href="#limits">Limits</a><a href="#reproduce">Reproduce</a>
+    <a href="#summary">Summary</a><a href="#race">One network</a><a href="#task">Task</a><a href="#results">Results</a><a href="#tinker">Training</a><a href="#compare">Compared</a><a href="#verify">Verifier</a><a href="#rl-only">RL alone</a><a href="#failed">Did not work</a><a href="#limits">Limits</a><a href="#reproduce">Reproduce</a>
     <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme"><span aria-hidden="true">&#9680;</span></button>
   </div>
 </nav>
@@ -43,7 +43,7 @@
 <section class="col tldr" aria-labelledby="tldr-h">
   <h2 id="tldr-h">TL;DR</h2>
   <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with closed frontier models used off the shelf. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
-  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning: {{vs_think}} points {{vs_think_ci}}, paired on the same {{vs_think_n}} networks. That gap is the token limit, not better answers: the untrained model runs out of its {{think_cap_tokens}} tokens on {{think_cap}} of networks and repairs {{think_finished}} of those it finishes. Training buys speed.</p>
+  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning. Training buys speed, not better answers: the untrained model's misses are mostly answers that ran out of its {{think_cap_tokens}}-token limit ({{think_cap}} of networks), and it repairs {{think_finished}} of those it finishes.</p>
   <p>Off the shelf, the {{offshelf_n_once_open}} other open-weights models that would answer at once fix at most {{offshelf_best_open_direct}} of a sample of the same networks{{offshelf_tldr_reason}}. GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}}. The networks are tiny, and most of the gain comes from the supervised stage.</p>
 </section>
 
@@ -225,16 +225,14 @@
   </table>
   </div>
   <h3 id="offshelf">Other models, off the shelf</h3>
-  <p>{{offshelf_direct}}</p>
-  <p>{{offshelf_stuck}}</p>
-  <p>{{offshelf_reasoning}}</p>
+  <p>{{offshelf_page}}</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Model</th><th scope=col>Weights</th><th scope=col>Told to answer at once: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens (of them reasoning)</th><th scope=col>Free to reason: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th></tr></thead>
     <tbody>{{table_offshelf}}</tbody>
   </table>
   </div>
-  <p class="muted">{{offshelf_lead}} {{offshelf_note}}</p>
+  <p class="muted">{{offshelf_page_note}}</p>
 </div>
 
 <!-- =============================== VERIFIER =============================== -->
@@ -294,6 +292,7 @@
     <li><b>Pure RL on the repair task.</b> From the base model, RL learned the answer format in one or two steps and then collapsed to always answering "no edit": when almost every guess fails, doing nothing scores better. Hence the supervised stage.</li>
     <li><b>Real tabular data.</b> On networks under-trained on 8 public datasets the proposer never saw, one trained proposal removes {{real_rl1}} of errors against {{real_rand1}} for a random edit, but with eight tries the edge mostly disappears: {{real_rl8}} {{real_rl8_ci}} against {{real_rand8}} {{real_rand8_ci}}. Gradient descent removes {{real_grad}}.</li>
     <li><b>Public image classifiers.</b> Editing the final layer of {{ih_n}} classifiers from the Hugging Face Hub improved none of the well-trained ones; the only clear gain ({{ih_best_change}} points) was on a broken model that scores {{ih_best_before}}.</li>
+    <li><b>A real LLM.</b> Shown one layer of Qwen3.5-0.8B as a small table read from its weights, our models proposed edits that lift MATH-500 from {{qwen_unedited}} to {{qwen_models}}, level with the published edit ({{qwen_published}}). But a random edit to the same table reaches {{qwen_random}}, and across eight layers none of the trained models beat random edits. <a href="{{qwen_readme}}">Tables and method</a>.</li>
   </ul>
 </section>
 <figure class="wide fig" id="fig-collapse" data-anim="collapse" aria-describedby="collapse-cap">
@@ -307,25 +306,6 @@
   <div class="chart" data-chart="heads"></div>
   <figcaption id="heads-cap">The point far to the right is the broken model.</figcaption>
 </figure>
-
-<!-- =============================== QWEN (hidden unless site/qwen.json exists) =============================== -->
-<section id="qwen" class="col" hidden>
-  <h2>A real LLM: no gain over random edits</h2>
-</section>
-<figure class="wide fig qwen-fig" id="fig-qwen" hidden>
-  <div class="chart" data-chart="qwen"></div>
-</figure>
-<div class="col qwen-body" hidden>
-  <p class="qwen-summary"></p>
-  <p class="qwen-across" hidden></p>
-  <div class="scroll qwen-tablewrap">
-  <table class="data qwen-table">
-    <thead><tr><th scope=col>Condition</th><th scope=col>MATH-500</th><th scope=col>95% interval</th><th scope=col>Problems</th><th scope=col>Note</th></tr></thead>
-    <tbody></tbody>
-  </table>
-  </div>
-  <ul class="notes qwen-caveats" hidden></ul>
-</div>
 
 <!-- =============================== LIMITS =============================== -->
 <section id="limits" class="col limits">

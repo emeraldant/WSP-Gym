@@ -754,6 +754,7 @@
   function renderQwen(q) {
     if (!q || !Array.isArray(q.rows)) return;
     const sec = document.getElementById("qwen"), body = document.querySelector(".qwen-body");
+    if (!sec || !body) return;  // the page states the real-LLM result in one line; the full table is in the README
     body.querySelector(".qwen-table tbody").innerHTML = q.rows.map((r) =>
       `<tr><th scope=row>${esc(r.label)}</th><td>${pct1(r.math500)}</td><td>[${r1(r.lo)}, ${r1(r.hi)}]</td><td>${esc(r.n)}</td><td class=muted>${esc(r.note || "")}</td></tr>`).join("");
     body.querySelector(".qwen-tablewrap").hidden = !q.rows.length;
