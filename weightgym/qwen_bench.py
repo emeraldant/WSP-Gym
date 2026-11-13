@@ -79,7 +79,8 @@ def prepare() -> None:
 
 
 def load_set(name: str, n: int | None = None) -> list[dict]:
-    rows = [json.loads(line) for line in open(os.path.join(BENCH, f"{name}.jsonl"))]
+    """Rows of a problem set; ``idx`` is the row's position in the whole set (it fixes the sampling seed)."""
+    rows = [{**json.loads(line), "idx": i} for i, line in enumerate(open(os.path.join(BENCH, f"{name}.jsonl")))]
     return rows[:n] if n else rows
 
 
@@ -340,44 +341,61 @@ async def generate(client, model: str, problem: str, seed: int, max_tokens: int,
     raise RuntimeError("unreachable")
 
 
-async def evaluate(arm: str, set_name: str, n: int | None, samples: int, model: str = "base", ban_wait: bool = False,
-                   max_tokens: int = MAX_TOKENS, concurrency: int = 256, out_dir: str = OUT, quiet: bool = False) -> dict:
-    """Score one condition on one problem set. Resumable: finished (problem, sample) pairs are kept."""
-    rows = load_set(set_name, n)
-    tag = set_name if max_tokens == MAX_TOKENS else f"{set_name}_cap{max_tokens}"
-    path = os.path.join(out_dir, arm, f"{tag}.jsonl")
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    done = {}
-    if os.path.exists(path):
-        for line in open(path):
-            r = json.loads(line)
-            if not r.get("header"):
-                done[(r["id"], r["sample"])] = r
-    else:
-        with open(path, "w") as f:
-            f.write(json.dumps({"header": True, "arm": arm, "set": set_name, "model": model, "ban_wait": ban_wait, "max_tokens": max_tokens,
-                                "sampling": {**SAMPLING, "top_k": TOP_K}, "instruction": INSTRUCTION, "time": time.time()}) + "\n")
-    todo = [(row, s) for row in rows for s in range(samples) if (row["id"], s) not in done]
-    client, sem, t0 = _client(), asyncio.Semaphore(concurrency), time.time()
-    index = {row["id"]: i for i, row in enumerate(load_set(set_name))}
+async def generate_records(todo: list[tuple[dict, int]], model: str = "base", ban_wait: bool = False, max_tokens: int = MAX_TOKENS,
+                           concurrency: int = 256, on_record=None) -> list[dict]:
+    """Generate and grade one answer for every (row, sample) pair. The seed of a pair is 1000 * row["idx"] + sample,
+    so a pair gets the same seed wherever and in whatever order it is run."""
+    client, sem = _client(), asyncio.Semaphore(concurrency)
 
     async def one(row, s):
-        text, finish, n_tok = await generate(client, model, row["problem"], 1000 * index[row["id"]] + s, max_tokens, ban_wait, sem)
+        text, finish, n_tok = await generate(client, model, row["problem"], 1000 * row["idx"] + s, max_tokens, ban_wait, sem)
         return row, s, text, finish, n_tok
 
-    pending = [asyncio.ensure_future(one(row, s)) for row, s in todo]
+    out = []
+    for fut in asyncio.as_completed([asyncio.ensure_future(one(row, s)) for row, s in todo]):
+        row, s, text, finish, n_tok = await fut
+        rec = {"id": row["id"], "sample": s, "finish": finish, "tokens": n_tok, **grade(row, text, finish),
+               "head": text[:300], "tail": text[-600:]}
+        out.append(rec)
+        if on_record:
+            on_record(rec)
+    return out
+
+
+def _header(arm: str, set_name: str, model: str, ban_wait: bool, max_tokens: int, **extra) -> str:
+    return json.dumps({"header": True, "arm": arm, "set": set_name, "model": model, "ban_wait": ban_wait, "max_tokens": max_tokens,
+                       "sampling": {**SAMPLING, "top_k": TOP_K}, "instruction": INSTRUCTION, "time": time.time(), **extra}) + "\n"
+
+
+def tag_of(set_name: str, max_tokens: int) -> str:
+    return set_name if max_tokens == MAX_TOKENS else f"{set_name}_cap{max_tokens}"
+
+
+async def evaluate(arm: str, set_name: str, n: int | None, samples: int, model: str = "base", ban_wait: bool = False,
+                   max_tokens: int = MAX_TOKENS, concurrency: int = 256, out_dir: str = OUT, quiet: bool = False) -> dict:
+    """Score one condition on one problem set on the local server. Resumable: finished (problem, sample) pairs,
+    from this machine or merged in from another one, are kept."""
+    rows = load_set(set_name, n)
+    tag = tag_of(set_name, max_tokens)
+    path = os.path.join(out_dir, arm, f"{tag}.jsonl")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    done = {(r["id"], r["sample"]): r for r in load_records(arm, tag, out_dir)}
+    if not os.path.exists(path):
+        with open(path, "w") as f:
+            f.write(_header(arm, set_name, model, ban_wait, max_tokens))
+    todo = [(row, s) for row in rows for s in range(samples) if (row["id"], s) not in done]
+    t0, k = time.time(), [0]
     with open(path, "a") as f:
-        for k, fut in enumerate(asyncio.as_completed(pending)):
-            row, s, text, finish, n_tok = await fut
-            rec = {"id": row["id"], "sample": s, "finish": finish, "tokens": n_tok, **grade(row, text, finish),
-                   "head": text[:300], "tail": text[-600:]}
-            done[(row["id"], s)] = rec
+        def on_record(rec):
+            done[(rec["id"], rec["sample"])] = rec
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
             f.flush()
-            if not quiet and (k + 1) % 100 == 0:
-                print(f"[{arm}/{tag}] {k + 1}/{len(pending)} in {time.time() - t0:.0f}s", flush=True)
-    recs = [done[(row["id"], s)] for row in rows for s in range(samples)]
-    return summarize(recs)
+            k[0] += 1
+            if not quiet and k[0] % 100 == 0:
+                print(f"[{arm}/{tag}] {k[0]}/{len(todo)} in {time.time() - t0:.0f}s", flush=True)
+
+        await generate_records(todo, model, ban_wait, max_tokens, concurrency, on_record)
+    return summarize([done[(row["id"], s)] for row in rows for s in range(samples)])
 
 
 def summarize(recs: list[dict]) -> dict:
@@ -397,8 +415,17 @@ def summarize(recs: list[dict]) -> dict:
 
 
 def load_records(arm: str, tag: str, out_dir: str = OUT) -> list[dict]:
-    path = os.path.join(out_dir, arm, f"{tag}.jsonl")
-    return [r for r in map(json.loads, open(path)) if not r.get("header")] if os.path.exists(path) else []
+    """Records of one condition on one set: ``<tag>.jsonl`` (this machine) plus ``<tag>.<source>.jsonl`` (answers
+    generated elsewhere under the same protocol, e.g. ``.modal``). One record per (problem, sample); first seen wins."""
+    d = os.path.join(out_dir, arm)
+    out: dict[tuple, dict] = {}
+    for fn in sorted(os.listdir(d)) if os.path.isdir(d) else []:
+        if fn.endswith(".jsonl") and fn.split(".")[0] == tag:
+            for line in open(os.path.join(d, fn)):
+                r = json.loads(line)
+                if not r.get("header"):
+                    out.setdefault((r["id"], r["sample"]), r)
+    return list(out.values())
 
 
 def table(out_dir: str = OUT, results: str = "results/table_qwen.csv") -> None:
@@ -409,12 +436,11 @@ def table(out_dir: str = OUT, results: str = "results/table_qwen.csv") -> None:
         d = os.path.join(out_dir, arm)
         if not os.path.isdir(d):
             continue
-        for f in sorted(os.listdir(d)):
-            if f.endswith(".jsonl"):
-                recs = load_records(arm, f[:-6], out_dir)
-                if recs:
-                    s = summarize(recs)
-                    rows.append({"arm": arm, "set": f[:-6], **{k: (round(v, 4) if isinstance(v, float) else v) for k, v in s.items()}})
+        for tag in sorted({f.split(".")[0] for f in os.listdir(d) if f.endswith(".jsonl")}):
+            recs = load_records(arm, tag, out_dir)
+            if recs:
+                s = summarize(recs)
+                rows.append({"arm": arm, "set": tag, **{k: (round(v, 4) if isinstance(v, float) else v) for k, v in s.items()}})
     if rows:
         os.makedirs(os.path.dirname(results), exist_ok=True)
         with open(results, "w", newline="") as f:

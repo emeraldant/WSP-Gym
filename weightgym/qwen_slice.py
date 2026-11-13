@@ -289,78 +289,106 @@ def proposals() -> dict[str, dict[int, list[list[dict]]]]:
 
 # ------------------------------------------------------------------------------------------ verification on Qwen
 def _cfg() -> dict:
+    """runs/qwen_slice/screen_config.json: cap (token limit), screen_idx (rows of the practice set ``train`` used for
+    screening), keep_above (screen accuracy an edit must beat), baseline (unedited, screen set), baseline_dev."""
     return json.load(open(os.path.join(OUT, "screen_config.json")))
 
 
-async def _score(items: dict[int, SliceItem], layer: int, ops: list[dict], set_name: str, n: int, cap: int, gate) -> dict:
+def screen_rows() -> list[dict]:
     from . import qwen_bench as qb
 
-    eid = edit_id(layer, ops)
-    tag = set_name if cap == qb.MAX_TOKENS else f"{set_name}_cap{cap}"
-    recs = qb.load_records(f"edit_{eid}", tag, os.path.join(OUT, "edits"))
-    if len(recs) >= n:
-        return qb.summarize(recs[:n])
+    rows = qb.load_set("train")
+    return [rows[i] for i in _cfg()["screen_idx"]]
+
+
+def screen_acc(arm: str, out_dir: str | None = None) -> float | None:
+    """Accuracy of one condition on the screen rows (sample 0), or None if they are not all scored yet."""
+    from . import qwen_bench as qb
+
+    cfg = _cfg()
+    recs = {r["id"]: r for r in qb.load_records(arm, qb.tag_of("train", cfg["cap"]), out_dir or os.path.join(OUT, "edits")) if r["sample"] == 0}
+    ids = [r["id"] for r in screen_rows()]
+    if any(i not in recs for i in ids):
+        return None
+    return sum(recs[i]["correct"] for i in ids) / len(ids)
+
+
+async def _score(items: dict[int, SliceItem], layer: int, ops: list[dict], set_name: str, rows: list[dict], cap: int, gate) -> None:
+    """Score one edit on the local GPU server (resumable; rows already scored anywhere are skipped)."""
+    from . import qwen_bench as qb
+
+    eid, out_dir = edit_id(layer, ops), os.path.join(OUT, "edits")
+    tag = qb.tag_of(set_name, cap)
+    done = {(r["id"], r["sample"]) for r in qb.load_records(f"edit_{eid}", tag, out_dir)}
+    todo = [(r, 0) for r in rows if (r["id"], 0) not in done]
+    if not todo:
+        return
     async with gate:
         B, A = items[layer].factors(ops)
         qb.write_delta_adapter(eid, {(layer, "down"): (B, A)}, {"layer": layer, "slice_ops": ops})
         await qb.load_adapter(eid)
+        path = os.path.join(out_dir, f"edit_{eid}", f"{tag}.jsonl")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         try:
-            return await qb.evaluate(f"edit_{eid}", set_name, n, 1, eid, False, cap, 256, os.path.join(OUT, "edits"), quiet=True)
+            with open(path, "a") as f:
+                def on_record(rec):
+                    f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                    f.flush()
+                await qb.generate_records(todo, eid, False, cap, 256, on_record)
         finally:
             await qb.unload_adapter(eid)
 
 
-async def screen(parallel: int = 6) -> None:
-    cfg, props = _cfg(), proposals()
+def distinct_edits() -> dict[str, tuple[int, list[dict]]]:
+    return {edit_id(layer, ops): (layer, ops) for by in proposals().values() for layer, es in by.items() for ops in es}
+
+
+async def screen(parallel: int = 6, order: str = "forward") -> None:
+    """Score every distinct valid edit on the screen rows with the local server. ``order`` lets a second worker
+    (e.g. cloud containers) start from the other end of the list."""
+    cfg, rows = _cfg(), screen_rows()
     items = {it.layer: it for it in load_items()}
-    todo = {}
-    for arm, by in props.items():
-        for layer, edits in by.items():
-            for ops in edits:
-                todo[edit_id(layer, ops)] = (layer, ops)
-    print(f"{len(todo)} distinct valid edits from {len(props)} arms")
+    todo = sorted(distinct_edits().items())
+    if order == "reverse":
+        todo = todo[::-1]
+    print(f"{len(todo)} distinct valid edits")
     gate = asyncio.Semaphore(parallel)
 
     async def one(eid, layer, ops):
-        s = await _score(items, layer, ops, "train", cfg["screen_n"], cfg["cap"], gate)
-        print(f"{eid} acc {100 * s['acc']:.1f}% cut {100 * s['cut_share']:.0f}% Wait {s['waits_per_10k_chars']:.0f}  {json.dumps(ops)[:150]}", flush=True)
+        if screen_acc(f"edit_{eid}") is None:
+            await _score(items, layer, ops, "train", rows, cfg["cap"], gate)
+        acc = screen_acc(f"edit_{eid}")
+        if acc is not None:
+            print(f"{eid} screen acc {100 * acc:.1f}%  {json.dumps(ops)[:150]}", flush=True)
 
-    await asyncio.gather(*(one(e, l, o) for e, (l, o) in todo.items()))
+    await asyncio.gather(*(one(e, l, o) for e, (l, o) in todo))
 
 
 def kept_edits() -> dict[str, dict[int, tuple[list[dict], float] | None]]:
-    """arm -> layer -> (edit, screen accuracy) of the arm's best edit that beats the keep threshold, else None."""
-    from . import qwen_bench as qb
-
+    """arm -> layer -> (edit, screen accuracy) of the arm's best edit that beats the keep threshold, else None
+    (the first one sampled wins ties)."""
     cfg, out = _cfg(), {}
-    tag = f"train_cap{cfg['cap']}" if cfg["cap"] != qb.MAX_TOKENS else "train"
     for arm, by in proposals().items():
         out[arm] = {}
         for layer in LAYERS:
             best = None
             for ops in by.get(layer, []):
-                recs = qb.load_records(f"edit_{edit_id(layer, ops)}", tag, os.path.join(OUT, "edits"))
-                if len(recs) < cfg["screen_n"]:
-                    continue
-                acc = qb.summarize(recs[:cfg["screen_n"]])["acc"]
-                if acc > cfg["keep_above"] + 1e-9 and (best is None or acc > best[1] + 1e-9):
+                acc = screen_acc(f"edit_{edit_id(layer, ops)}")
+                if acc is not None and acc > cfg["keep_above"] + 1e-9 and (best is None or acc > best[1] + 1e-9):
                     best = (ops, acc)
             out[arm][layer] = best
     return out
 
 
 async def dev(parallel: int = 4) -> None:
+    from . import qwen_bench as qb
+
     cfg, kept = _cfg(), kept_edits()
     items = {it.layer: it for it in load_items()}
     gate = asyncio.Semaphore(parallel)
     todo = {edit_id(layer, b[0]): (layer, b[0]) for by in kept.values() for layer, b in by.items() if b}
     print(f"{len(todo)} kept edits to score on dev")
-
-    async def one(eid, layer, ops):
-        s = await _score(items, layer, ops, "dev", 256, cfg["cap"], gate)
-        print(f"{eid} dev acc {100 * s['acc']:.1f}%  {json.dumps(ops)[:150]}", flush=True)
-
-    await asyncio.gather(*(one(e, l, o) for e, (l, o) in todo.items()))
+    await asyncio.gather(*(_score(items, l, o, "dev", qb.load_set("dev"), cfg["cap"], gate) for l, o in todo.values()))
 
 
 def table(results: str = "results/table_qwen_slice.csv") -> None:
@@ -369,7 +397,7 @@ def table(results: str = "results/table_qwen_slice.csv") -> None:
     from . import qwen_bench as qb
 
     cfg, kept, props = _cfg(), kept_edits(), proposals()
-    tag = f"dev_cap{cfg['cap']}" if cfg["cap"] != qb.MAX_TOKENS else "dev"
+    tag = qb.tag_of("dev", cfg["cap"])
     base_dev = cfg["baseline_dev"]["acc"]
     rows, per_arm = [], {}
     for arm in sorted(kept):
@@ -382,7 +410,7 @@ def table(results: str = "results/table_qwen_slice.csv") -> None:
                 recs = qb.load_records(f"edit_{edit_id(layer, b[0])}", tag, os.path.join(OUT, "edits"))
                 row.update(screen_acc=round(100 * b[1], 2), ops=json.dumps(b[0]))
                 if len(recs) >= 256:
-                    acc = qb.summarize(recs[:256])["acc"]
+                    acc = qb.summarize(recs)["acc"]
                     row.update(dev_acc=round(100 * acc, 2), dev_change_points=round(100 * (acc - base_dev), 2))
             changes.append(row["dev_change_points"])
             rows.append(row)
@@ -419,8 +447,10 @@ def main() -> None:
     p.add_argument("arm")
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
-    for c in ("random", "screen", "dev", "table", "prompt"):
+    for c in ("random", "dev", "table", "prompt"):
         sub.add_parser(c)
+    p = sub.add_parser("screen")
+    p.add_argument("--order", default="forward", choices=["forward", "reverse"])
     a = ap.parse_args()
     if a.cmd == "build":
         build()
@@ -429,7 +459,7 @@ def main() -> None:
     elif a.cmd == "random":
         propose_random()
     elif a.cmd == "screen":
-        asyncio.run(screen())
+        asyncio.run(screen(order=a.order))
     elif a.cmd == "dev":
         asyncio.run(dev())
     elif a.cmd == "prompt":

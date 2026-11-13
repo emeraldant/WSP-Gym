@@ -1,0 +1,1 @@
+{"header": true, "arm": "n573_x2", "set": "math500", "model": "x2", "ban_wait": false, "max_tokens": 32768, "sampling": {"temperature": 0.6, "top_p": 0.95, "presence_penalty": 1.5, "top_k": 20}, "instruction": "Please reason step by step, and put your final answer within \\boxed{}.", "time": 1794525779.454784}
