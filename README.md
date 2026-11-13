@@ -13,8 +13,10 @@ training on synthetic faults, then policy-gradient RL with the tinker-cookbook l
 result on held-out networks. Four results:
 
 1. **Repair at a glance.** With no reasoning tokens, the share of broken networks it fixes goes from
-   0.2% to 82.9%. The untrained model, allowed about 10,600 reasoning tokens per network, fixes 75.6%
-   of the same networks. The same trained model fixes 67% of networks made by gradient descent and 51%
+   0.2% to 82.9%. The untrained model, reasoning for about 10,600 tokens per network under a
+   20,000-token limit, fixes 75.6% of the same networks: it runs out of tokens on 22% of them and
+   repairs 97.6% of those it finishes, so what training buys is speed, not a better answer than
+   careful reasoning. The same trained model fixes 67% of networks made by gradient descent and 51%
    of networks from an optimiser it never saw.
 2. **RL alone, no labels.** Pure RL from the untouched base model teaches it to propose edits that
    improve genuinely imperfect trained networks: 8 proposals remove 12% of a network's errors, against
@@ -71,42 +73,44 @@ For scale, on the same in-distribution test networks:
 
 **Trained without reasoning against untrained with reasoning,** paired on the same 422 faulty networks:
 +7.3 points [+2.4, +12.3] (`results/table_vs_reasoning.csv`). The untrained model runs out of its
-20,000-token allowance on 22% of networks.
+20,000-token allowance on 22% of networks, and those cut-off answers are nearly all of its misses: it
+repairs 97.6% of the networks it finishes. With a larger allowance it would probably repair more than
+the trained model does.
 
 ### Other models, off the shelf
 
 <!-- offshelf:start -->
 Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token limit), then free to reason (20,000-token limit).
 
-Told to answer at once, 9 of the 19 models did, in the sense that fewer than a quarter of their answers ran past the 512-token limit. Of those, the 4 open-weights models repair 2.3% to 8.0%; the trained Inkling 2 Small repairs 79.5% in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 3 closed models repair 0.0% to 62.5%. Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning, which its API does not count against the limit. The other 9 models kept reasoning and were cut off on 53% to 100% of networks. Their figure in that column (0.0% to 43.2%) says how often their reasoning fits in 512 tokens, not how well they answer at a glance: Claude Opus 5.5 and Claude Fable 5.2, for example, repair 97% to 100% of the faulty networks they finish.
+Told to answer at once, 9 of the 19 models did, in the sense that fewer than a quarter of their answers ran past the 512-token limit. 6 of them (4 open-weights, 2 closed) ran with reasoning switched off and repair 0.0% to 8.0%; the trained Inkling 2 Small repairs 79.5% in about 40 tokens, also with no reasoning. The other 3 cannot have reasoning switched off through their API and ran at its lowest setting: Gemini 4 Carbon still used no reasoning tokens on 95% of networks and repairs 62.5%; GPT-6 Astra repairs 96.6% after about 112 reasoning tokens per network; GPT-6.1 Sol repairs 90.9% after about 170 reasoning tokens per network. Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning, which its API does not count against the limit. The other 9 models kept reasoning, in reasoning tokens or in the answer itself, and were cut off on 53% to 100% of networks. Their figure in that column (0.0% to 43.2%) says how often their reasoning fits in 512 tokens, not how well they answer at a glance: Claude Opus 5.5 and Claude Fable 5.2, for example, repair 97% to 100% of the faulty networks they finish.
 
-Free to reason, the 20,000-token limit decides most rows: every model repairs 90% to 100% of the faulty networks it finishes. Muse Spark Open (84.1%) finishes 91% of networks and is level with the trained model, at about 200 times the tokens. The other 7 open models finish 32% to 62% and repair 28.4% to 60.2%. Untrained Inkling 2 Small, at the low reasoning effort used for it throughout, finishes 78% and repairs 77.3%; the 4 closed models finish 96% to 100% and repair 96.6% to 100.0%.
+Free to reason, the 20,000-token limit decides most rows: every model repairs 90% to 100% of the faulty networks it finishes. The networks a model finishes are probably the easier ones, so that is a guide to what a higher limit would give, not a measurement of it. Muse Spark Open (84.1%) finishes 91% of networks and is level with the trained model, at about 200 times the tokens. The other 7 open models finish 32% to 62% and repair 28.4% to 60.2%. Untrained Inkling 2 Small, at the low reasoning effort used for it throughout, finishes 78% and repairs 77.3%; the 4 closed models finish 96% to 100% and repair 96.6% to 100.0%.
 
-| Model | Weights | Told to answer at once: repaired | cut off | tokens | Free to reason: repaired | cut off | tokens |
+| Model | Weights | Told to answer at once: repaired | cut off | tokens (of them reasoning) | Free to reason: repaired | cut off | tokens |
 |---|---|---|---|---|---|---|---|
-| **Inkling 2 Small, post-trained on Tinker** | open | **79.5% [70.5, 87.5]** | 0% | **~40** | not used | - | - |
+| **Inkling 2 Small, post-trained on Tinker** | open | **79.5% [70.5, 87.5]** | 0% | **~40 (0)** | not used | - | - |
 | Inkling 2 Small, untrained | open | 0.0% [0.0, 0.0] | 85% | ~224 | 77.3% [68.2, 85.2] | 22% | ~10,797 |
-| Inkling (first generation, larger) | open | 3.4% [0.0, 8.0] | 0% | ~31 | 30.7% [21.6, 40.9] | 64% | ~17,438 |
-| Qwen3.8 2.4T | open | 10.2% [4.5, 17.0] | 81% | ~1,484 | 60.2% [50.0, 70.5] | 38% | ~20,260 |
-| DeepSeek V4 Pro | open | 2.3% [0.0, 5.7] | 0% | ~34 | 30.7% [21.6, 39.8] | 68% | ~17,670 |
-| Kimi K3.1 Pro | open | 8.0% [2.3, 13.6] | 7% | ~69 | not run (cost) | - | - |
-| GLM-5.3 | open | 2.3% [0.0, 5.7] | 87% | ~505 | 36.4% [26.1, 46.6] | 61% | ~16,822 |
-| Muse Spark Open | open | 0.0% [0.0, 0.0] | 89% | ~500 | 84.1% [76.1, 92.0] | 9% | ~8,110 |
-| Mistral Large 4 | open | 0.0% [0.0, 0.0] | 100% | ~512 | 30.7% [21.6, 40.9] | 63% | ~17,287 |
-| Nemotron 3 Ultra | open | 3.4% [0.0, 8.0] | 0% | ~59 | 28.4% [19.3, 37.5] | 64% | ~16,216 |
-| Beam 1.0 | open | 0.0% [0.0, 0.0] | 99% | ~511 | 50.0% [39.8, 60.2] | 49% | ~16,300 |
-| GPT-6.1 Sol | closed | 90.9% [84.1, 96.6] | 8% | ~195 | 100.0% [100.0, 100.0] | 0% | ~437 |
-| GPT-6 Astra | closed | 96.6% [92.0, 100.0] | 4% | ~139 | 100.0% [100.0, 100.0] | 0% | ~382 |
-| Claude Fable 5.2 | closed | 37.5% [27.3, 47.7] | 62% | ~447 | not run (cost) | - | - |
-| Gemini 4 Carbon | closed | 62.5% [52.3, 72.7] | 5% | ~58 | 96.6% [92.0, 100.0] | 4% | ~6,756 |
-| Grok 4.7 | closed | 98.9% [96.6, 100.0] | 0% | ~11,278 | 96.6% [92.0, 100.0] | 0% | ~35,728 |
-| Claude Opus 5.5 \* | closed | 43.2% [33.0, 53.4] | 53% | ~438 | not run | - | - |
-| Claude Sonnet 5.5 \* | closed | 5.7% [1.1, 11.4] | 69% | ~390 | not run | - | - |
-| Claude Haiku 5.5 \* | closed | 0.0% [0.0, 0.0] | 0% | ~21 | not run | - | - |
-| Gemini 4 Hydrogen \* | closed | 3.4% [0.0, 8.0] | 85% | ~442 | not run | - | - |
-| GPT-6 Luna \* | closed | 3.4% [0.0, 8.0] | 0% | ~21 | not run | - | - |
+| Inkling (first generation, larger) | open | 3.4% [0.0, 8.0] | 0% | ~31 (0) | 30.7% [21.6, 40.9] | 64% | ~17,438 |
+| Qwen3.8 2.4T | open | 10.2% [4.5, 17.0] | 81% | ~1,484 (1,412) | 60.2% [50.0, 70.5] | 38% | ~20,260 |
+| DeepSeek V4 Pro | open | 2.3% [0.0, 5.7] | 0% | ~34 (0) | 30.7% [21.6, 39.8] | 68% | ~17,670 |
+| Kimi K3.1 Pro | open | 8.0% [2.3, 13.6] | 7% | ~69 (0) | not run (cost) | - | - |
+| GLM-5.3 | open | 2.3% [0.0, 5.7] | 87% | ~505 (467) | 36.4% [26.1, 46.6] | 61% | ~16,822 |
+| Muse Spark Open | open | 0.0% [0.0, 0.0] | 89% | ~500 (398) | 84.1% [76.1, 92.0] | 9% | ~8,110 |
+| Mistral Large 4 | open | 0.0% [0.0, 0.0] | 100% | ~512 (511) | 30.7% [21.6, 40.9] | 63% | ~17,287 |
+| Nemotron 3 Ultra | open | 3.4% [0.0, 8.0] | 0% | ~59 (0) | 28.4% [19.3, 37.5] | 64% | ~16,216 |
+| Beam 1.0 | open | 0.0% [0.0, 0.0] | 99% | ~511 (509) | 50.0% [39.8, 60.2] | 49% | ~16,300 |
+| GPT-6.1 Sol | closed | 90.9% [84.1, 96.6] | 8% | ~195 (170) | 100.0% [100.0, 100.0] | 0% | ~437 |
+| GPT-6 Astra | closed | 96.6% [92.0, 100.0] | 4% | ~139 (112) | 100.0% [100.0, 100.0] | 0% | ~382 |
+| Claude Fable 5.2 | closed | 37.5% [27.3, 47.7] | 62% | ~447 (431) | not run (cost) | - | - |
+| Gemini 4 Carbon | closed | 62.5% [52.3, 72.7] | 5% | ~58 (25) | 96.6% [92.0, 100.0] | 4% | ~6,756 |
+| Grok 4.7 | closed | 98.9% [96.6, 100.0] | 0% | ~11,278 (11,243) | 96.6% [92.0, 100.0] | 0% | ~35,728 |
+| Claude Opus 5.5 \* | closed | 43.2% [33.0, 53.4] | 53% | ~438 (422) | not run | - | - |
+| Claude Sonnet 5.5 \* | closed | 5.7% [1.1, 11.4] | 69% | ~390 (5) | not run | - | - |
+| Claude Haiku 5.5 \* | closed | 0.0% [0.0, 0.0] | 0% | ~21 (0) | not run | - | - |
+| Gemini 4 Hydrogen \* | closed | 3.4% [0.0, 8.0] | 85% | ~442 (436) | not run | - | - |
+| GPT-6 Luna \* | closed | 3.4% [0.0, 8.0] | 0% | ~21 (0) | not run | - | - |
 
-An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; "cut off" is the share of the 100 networks where that happened. Tokens are the mean generated per network, reasoning included. The limits were chosen for Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at the effort used), and the other models reasoned at their provider's default effort, so the with-reasoning column compares models at a fixed budget, not at their best. \* Added after the first results, answer-at-once only. Two with-reasoning runs were left out for cost, before either had produced an answer.
+An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; "cut off" is the share of the 100 networks where that happened. Tokens are the mean generated per network, reasoning included; in the answer-at-once column the figure in brackets is how many of them were reasoning. Where an API would not switch reasoning off, the model ran at its lowest setting. The limits were chosen for Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at the effort used), and the other models reasoned at their provider's default effort, so the with-reasoning column compares models at a fixed budget, not at their best. \* Added after the first results, answer-at-once only. Two with-reasoning runs were left out for cost, before either had produced an answer.
 
 Paired on the same 88 faulty networks, among the models that answered at once: GPT-6 Astra (+17.0 points [+8.0, +26.1]) and GPT-6.1 Sol (+11.4 points [+2.3, +21.6]) are ahead of the trained Inkling 2 Small, and the other 7 are behind it (the closest, Gemini 4 Carbon, by 17.0 points [4.5, 29.5]).
 <!-- offshelf:end -->
@@ -175,8 +179,10 @@ third guess.
 
 - **An open-weights model can be trained to do weight-space repair, and to do it without reasoning.**
   Before training, Inkling 2 Small can do the task only by reasoning for about 10,600 tokens, and still
-  runs out of room on 22% of networks. After post-training it fixes more of the same networks (+7.3
-  points, interval above) in ~38 tokens, with no reasoning, no tools and no forward passes. As far as
+  runs out of room on 22% of networks. After post-training it fixes more of the same networks under
+  that limit (+7.3 points, interval above) in ~38 tokens, with no reasoning, no tools and no forward
+  passes. That is a gain in speed, not in accuracy: the untrained model repairs 97.6% of the networks it
+  finishes reasoning about. As far as
   we know this is the first *trained* weight-space programmer working from weights as text; published
   results so far use closed frontier models off the shelf.
 - **It carries over to unseen function families (59%) and larger networks (70%)**, so it is not simply
@@ -297,7 +303,8 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
 - One training seed for the final model. The RL stage's gain in-distribution (+2.6 points) is inside
   its own interval.
 - The reasoning-mode reference is the untrained model at one effort setting with a 20,000-token cap;
-  a larger allowance would let it finish more often.
+  a larger allowance would let it finish more often and, on the figures above, probably repair more
+  than the trained model.
 - On a real LLM the proposers did no better than random edits to the table they were shown, by the
   comparison fixed in advance. The edits that work are in one layer of one model and remove one known
   failure (the fourth result).

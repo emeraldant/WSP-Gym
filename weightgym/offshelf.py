@@ -84,6 +84,8 @@ def row(arm: str, name: str, model: str, open_weights: bool, regime: str, seeds:
         return None
     s = summarize(recs)
     rt = [r["reasoning_tokens"] for r in recs if r.get("reasoning_tokens") is not None]
+    if not rt and not any((r.get("thinking") or "").strip() for r in recs):
+        rt = [0] * len(recs)  # Tinker logs carry the reasoning text, not a count: no text in any answer means none
     cost = [r["cost_usd"] for r in recs if r.get("cost_usd") is not None]
     # Faulty networks whose answer was not cut off at the token limit, and the share of those repaired. Descriptive
     # only: the networks a model finishes are not a random sample of the networks it was given.
@@ -98,6 +100,7 @@ def row(arm: str, name: str, model: str, open_weights: bool, regime: str, seeds:
         "cut_at_token_cap": round(sum(r.get("stop_reason") == "length" for r in recs) / len(recs), 4),
         "mean_out_tokens": round(sum(r["n_out"] for r in recs) / len(recs), 1),
         "mean_reasoning_tokens": round(sum(rt) / len(rt), 1) if rt else "",
+        "no_reasoning_share": round(sum(x == 0 for x in rt) / len(rt), 4) if rt else "",
         "reasoning_setting": json.dumps((header or {}).get("settings", {}).get("reasoning")) if arm.startswith(("open_", "frontier_")) else "",
         "cost_usd": round(sum(cost), 2) if cost else "", "added_later": 0,
     }
@@ -140,31 +143,37 @@ def _rows() -> list[dict]:
     return out
 
 
-def _cell(r: dict | None, not_run: str = "") -> tuple[str, str, str]:
+def tokens_cell(r: dict, bracket: bool) -> str:
+    """Mean tokens generated per network; with ``bracket``, how many of them were reasoning (where that is known)."""
+    rt = r.get("mean_reasoning_tokens", "")
+    return f"~{float(r['mean_out_tokens']):,.0f}" + (f" ({float(rt):,.0f})" if bracket and rt != "" else "")
+
+
+def _cell(r: dict | None, not_run: str = "", bracket: bool = False) -> tuple[str, str, str]:
     if r is None:
         return not_run or "-", "-", "-"
     n = "" if int(float(r["n"])) == N else f" (n={int(float(r['n']))})"
     return (f"{_pct(r['repair_rate'])} [{_pct(r['repair_lo'])[:-1]}, {_pct(r['repair_hi'])[:-1]}]{n}", _pct(r["cut_at_token_cap"], 0),
-            f"~{float(r['mean_out_tokens']):,.0f}")
+            tokens_cell(r, bracket))
 
 
 def markdown(table: list[dict]) -> str:
     by = {(r["arm"], r["regime"]): r for r in table}
-    lines = ["| Model | Weights | Told to answer at once: repaired | cut off | tokens | Free to reason: repaired | cut off | tokens |",
+    lines = ["| Model | Weights | Told to answer at once: repaired | cut off | tokens (of them reasoning) | Free to reason: repaired | cut off | tokens |",
              "|---|---|---|---|---|---|---|---|"]
     t = by.get(("scale_rl", "direct"))
     if t:
-        c, cut, tok = _cell(t)
+        c, cut, tok = _cell(t, bracket=True)
         lines.append(f"| **Inkling 2 Small, post-trained on Tinker** | open | **{c}** | {cut} | **{tok}** | not used | - | - |")
     u, ur = by.get(("untrained", "direct")), by.get(("untrained_thinking", "reasoning"))
     if u or ur:
-        lines.append(f"| Inkling 2 Small, untrained | open | {' | '.join(_cell(u))} | {' | '.join(_cell(ur))} |")
+        lines.append(f"| Inkling 2 Small, untrained | open | {' | '.join(_cell(u, bracket=True))} | {' | '.join(_cell(ur))} |")
     for prefix, name, _model, open_weights in MODELS + ADDED:
         d, r = by.get((f"{prefix}_direct", "direct")), by.get((f"{prefix}_reasoning", "reasoning"))
         if d is None and r is None:
             continue
         star = " \\*" if (prefix, name, _model, open_weights) in ADDED else ""
-        lines.append(f"| {name}{star} | {'open' if open_weights else 'closed'} | {' | '.join(_cell(d, NOT_RUN.get((prefix, 'direct'), '')))} "
+        lines.append(f"| {name}{star} | {'open' if open_weights else 'closed'} | {' | '.join(_cell(d, NOT_RUN.get((prefix, 'direct'), ''), True))} "
                      f"| {' | '.join(_cell(r, NOT_RUN.get((prefix, 'reasoning'), '')))} |")
     return "\n".join(lines)
 
@@ -211,23 +220,30 @@ def reading(table: list[dict]) -> dict[str, str]:
     best = max(once_open, key=lambda r: f(r["repair_rate"]))
     out.update(n_models=str(len(open_d + closed_d)), n_once=str(len(once)), n_once_open=str(len(once_open)),
                best_open=_pct(best["repair_rate"]), best_open_name=nm(best), n_stuck=str(len(stuck)))
+    # Of those, which really had reasoning switched off, and which only ran at their API's lowest setting.
+    is_off = lambda r: json.loads(r.get("reasoning_setting") or "null") == {"enabled": False}
+    off, soft = [r for r in once if is_off(r)], [r for r in once if not is_off(r)]
+    assert all(f(r["mean_reasoning_tokens"]) == 0 for r in off) and f(trained["mean_reasoning_tokens"]) == 0
+    off_open = [r for r in off if r["weights"] == "open"]
+    assert once_open == off_open, "the page's summary line says the open models that answered at once had reasoning off"
     parts = [f"Told to answer at once, {len(once)} of the {len(open_d + closed_d)} models did, in the sense that fewer than a quarter of their "
-             f"answers ran past the 512-token limit. Of those, the {len(once_open)} open-weights models repair {span(once_open)}; the trained "
-             f"Inkling 2 Small repairs {out['trained']} in about {out['trained_tokens']} tokens."]
-    c = []
-    if ahead:
-        c.append(f"{_joined(nm(r) for r in ahead)} do better ({span(ahead)}) in about {span(ahead, 'mean_out_tokens', tok)} tokens")
-    if rest:
-        c.append(f"the other {len(rest)} closed models repair {span(rest)}")
-    if c:
-        parts.append(("; ".join(c))[0].upper() + ("; ".join(c))[1:] + ".")
+             f"answers ran past the 512-token limit. {len(off)} of them ({len(off_open)} open-weights, {len(off) - len(off_open)} closed) ran with "
+             f"reasoning switched off and repair {span(off)}; the trained Inkling 2 Small repairs {out['trained']} in about "
+             f"{out['trained_tokens']} tokens, also with no reasoning."]
+    if soft:
+        glance = sorted((r for r in soft if f(r["no_reasoning_share"]) >= 0.9), key=lambda r: -f(r["repair_rate"]))
+        brief = sorted((r for r in soft if r not in glance), key=lambda r: -f(r["repair_rate"]))
+        c = [f"{nm(r)} still used no reasoning tokens on {_pct(r['no_reasoning_share'], 0)} of networks and repairs {_pct(r['repair_rate'])}" for r in glance]
+        c += [f"{nm(r)} repairs {_pct(r['repair_rate'])} after about {tok(r['mean_reasoning_tokens'])} reasoning tokens per network" for r in brief]
+        parts.append(f"The other {len(soft)} cannot have reasoning switched off through their API and ran at its lowest setting: " + "; ".join(c) + ".")
     for r in heavy:
         parts.append(f"{nm(r)} repairs {_pct(r['repair_rate'])} after about {tok(r['mean_out_tokens'])} tokens of reasoning, which its API does not count against the limit.")
     out["direct"] = " ".join(parts)
     if stuck:
         well = sorted((r for r in stuck if f(r["finished_faulty"]) >= 20 and f(r["fixed_of_finished"]) >= 0.9), key=lambda r: -f(r["repair_rate"]))
         out["stuck"] = (
-            f"The other {len(stuck)} models kept reasoning and were cut off on {span(stuck, 'cut_at_token_cap', lambda x: _pct(x, 0))} of networks. "
+            f"The other {len(stuck)} models kept reasoning, in reasoning tokens or in the answer itself, and were cut off on "
+            f"{span(stuck, 'cut_at_token_cap', lambda x: _pct(x, 0))} of networks. "
             f"Their figure in that column ({span(stuck)}) says how often their reasoning fits in 512 tokens, not how well they answer at a glance"
             + (f": {_joined(nm(r) for r in well)}, for example, repair {span(well, 'fixed_of_finished', lambda x: _pct(x, 0))} of the faulty networks they finish."
                if well else "."))
@@ -243,7 +259,8 @@ def reading(table: list[dict]) -> dict[str, str]:
     rated = lambda rs: _joined(f"{nm(r)} ({_pct(r['repair_rate'])})" for r in sorted(rs, key=lambda r: -f(r["repair_rate"])))
     allr = open_r + closed_r + [think]
     parts = [f"Free to reason, the 20,000-token limit decides most rows: every model repairs {span(allr, 'fixed_of_finished', lambda x: _pct(x, 0))} "
-             f"of the faulty networks it finishes."]
+             f"of the faulty networks it finishes. The networks a model finishes are probably the easier ones, so that is a guide to what a "
+             f"higher limit would give, not a measurement of it."]
     out["tldr_reason"] = ""
     if level:
         ratios = sorted(round(f(r["mean_out_tokens"]) / f(trained["mean_out_tokens"]), -1) for r in level)
@@ -277,7 +294,9 @@ def reading(table: list[dict]) -> dict[str, str]:
         f"limit), then free to reason (20,000-token limit).")
     out["note"] = (
         "An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; \"cut off\" is the share of the "
-        f"{N} networks where that happened. Tokens are the mean generated per network, reasoning included. The limits were chosen for "
+        f"{N} networks where that happened. Tokens are the mean generated per network, reasoning included; in the answer-at-once column the "
+        "figure in brackets is how many of them were reasoning. Where an API would not switch reasoning off, the model ran at its lowest "
+        "setting. The limits were chosen for "
         "Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at "
         "the effort used), and the other "
         "models reasoned at their provider's default effort, so the with-reasoning column compares models at a fixed budget, not at their best. "

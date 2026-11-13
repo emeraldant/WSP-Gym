@@ -43,7 +43,7 @@
 <section class="col tldr" aria-labelledby="tldr-h">
   <h2 id="tldr-h">TL;DR</h2>
   <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with closed frontier models used off the shelf. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
-  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning: {{vs_think}} points {{vs_think_ci}}, paired on the same {{vs_think_n}} networks.</p>
+  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning: {{vs_think}} points {{vs_think_ci}}, paired on the same {{vs_think_n}} networks. That gap is the token limit, not better answers: the untrained model runs out of its {{think_cap_tokens}} tokens on {{think_cap}} of networks and repairs {{think_finished}} of those it finishes. Training buys speed.</p>
   <p>Off the shelf, the {{offshelf_n_once_open}} other open-weights models that would answer at once fix at most {{offshelf_best_open_direct}} of a sample of the same networks{{offshelf_tldr_reason}}. GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}}. The networks are tiny, and most of the gain comes from the supervised stage.</p>
 </section>
 
@@ -98,7 +98,7 @@
   <figcaption id="race-cap">Same number of generated tokens, not wall-clock time: {{ex_think_tokens}} tokens on one network on the left; {{race_n}} networks answered and {{race_rep}} repaired on the right. Real model output; playback is compressed.</figcaption>
 </figure>
 <div class="col">
-  <p>Over all {{n_faulty_id}} faulty test networks, the untrained model with reasoning fixes <b>{{think_id}}</b> {{think_id_ci}} at ~{{think_tokens}} tokens, and runs out of its {{think_cap_tokens}}-token allowance on {{think_cap}} of them. The trained model fixes <b>{{rl_id}}</b> {{rl_id_ci}} at ~{{rl_tokens}} tokens, about {{token_ratio}} times fewer.</p>
+  <p>Over all {{n_faulty_id}} faulty test networks, the untrained model with reasoning fixes <b>{{think_id}}</b> {{think_id_ci}} at ~{{think_tokens}} tokens, and runs out of its {{think_cap_tokens}}-token allowance on {{think_cap}} of them (it repairs {{think_finished}} of those it finishes). The trained model fixes <b>{{rl_id}}</b> {{rl_id_ci}} at ~{{rl_tokens}} tokens, about {{token_ratio}} times fewer.</p>
 </div>
 
 <!-- =============================== TASK =============================== -->
@@ -230,7 +230,7 @@
   <p>{{offshelf_reasoning}}</p>
   <div class="scroll">
   <table class="data">
-    <thead><tr><th scope=col>Model</th><th scope=col>Weights</th><th scope=col>Told to answer at once: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th><th scope=col>Free to reason: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th></tr></thead>
+    <thead><tr><th scope=col>Model</th><th scope=col>Weights</th><th scope=col>Told to answer at once: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens (of them reasoning)</th><th scope=col>Free to reason: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th></tr></thead>
     <tbody>{{table_offshelf}}</tbody>
   </table>
   </div>

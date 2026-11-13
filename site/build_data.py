@@ -181,6 +181,8 @@ def build() -> tuple[dict, dict]:
             row[k] = snap(row[k], row["n_faulty"])
     think_recs = records(p("runs/final/untrained_thinking/test_id.jsonl"))
     cap_share = float(np.mean([r["stop_reason"] == "length" for r in think_recs]))
+    think_done = [r for r in think_recs if not r["clean"] and r["stop_reason"] != "length"]
+    think_finished = float(np.mean([bool(r["success"]) for r in think_done]))  # repaired, of the faulty networks it finished
     think_cap_tokens = read_jsonl(p("runs/final/untrained_thinking/test_id.jsonl"))[0]["settings"]["max_tokens"]
     think_effort = read_jsonl(p("runs/final/untrained_thinking/test_id.jsonl"))[0]["settings"]["effort"]
     rl_settings = read_jsonl(p("runs/final/scale_rl/test_id.jsonl"))[0]["settings"]
@@ -196,7 +198,7 @@ def build() -> tuple[dict, dict]:
     T.update(
         rl_id=pct(rl["repair_rate"]), rl_id_ci=ci(rl["repair_lo"], rl["repair_hi"]), rl_tokens=f"{rl['mean_out_tokens']:.0f}",
         think_id=pct(think["repair_rate"]), think_id_ci=ci(think["repair_lo"], think["repair_hi"]),
-        think_tokens=thousands(think["mean_out_tokens"]), think_cap=pct(cap_share, 0), think_cap_tokens=f"{think_cap_tokens:,}",
+        think_tokens=thousands(think["mean_out_tokens"]), think_cap=pct(cap_share, 0), think_cap_tokens=f"{think_cap_tokens:,}", think_finished=pct(think_finished),
         think_effort=f"{think_effort}", rl_temp=f"{rl_settings['temperature']}", rl_max_tokens=f"{rl_settings['max_tokens']}",
         rl_effort=f"{rl_settings['effort']}",
         untrained_id=pct(unt["repair_rate"]), untrained_valid=pct(unt["valid"], 0),
@@ -356,7 +358,7 @@ def build() -> tuple[dict, dict]:
     ]
     # Other models off the shelf, each on the first 100 test networks (results/table_offshelf.csv, written by
     # python -m weightgym.offshelf). One point per model and regime.
-    from weightgym.offshelf import ADDED as OFF_ADDED, MODELS as OFF_MODELS, NOT_RUN as OFF_NOT_RUN
+    from weightgym.offshelf import ADDED as OFF_ADDED, MODELS as OFF_MODELS, NOT_RUN as OFF_NOT_RUN, tokens_cell as off_tokens_cell
     off = {(r["arm"], r["regime"]): r for r in read_csv("table_offshelf.csv")}
     for (arm, regime), r in off.items():
         if not arm.startswith(("open_", "frontier_")):
@@ -390,16 +392,16 @@ def build() -> tuple[dict, dict]:
         trs.append(f"<tr><th scope=row>{esc(label)}</th><td>{pct(base[k])}</td><td>&mdash;</td><td class=muted>{int(rl['n_faulty'])} faulty networks</td></tr>")
     T["table_compare"] = "\n".join(trs)
 
-    def off_cells(r, not_run=""):
+    def off_cells(r, not_run="", bracket=False):
         if r is None:
             return (f"<td class=muted>{esc(not_run)}</td>" if not_run else "<td>&mdash;</td>") + "<td>&mdash;</td><td>&mdash;</td>"
         n = "" if int(r["n"]) == int(T["offshelf_n"]) else f" <span class=ci>n={int(r['n'])}</span>"
         cut = float(r["cut_at_token_cap"])
         return (f"<td>{pct(float(r['repair_rate']))} <span class=ci>{ci(float(r['repair_lo']), float(r['repair_hi']))}</span>{n}</td>"
-                f"<td{'' if cut >= 0.25 else ' class=muted'}>{pct(cut, 0)}</td><td>~{float(r['mean_out_tokens']):,.0f}</td>")
+                f"<td{'' if cut >= 0.25 else ' class=muted'}>{pct(cut, 0)}</td><td>{esc(off_tokens_cell(r, bracket))}</td>")
 
-    otr = [f"<tr class=final><th scope=row>Inkling 2 Small, post-trained on Tinker</th><td>open</td>{off_cells(off.get(('scale_rl', 'direct')))}<td class=muted>not used</td><td>&mdash;</td><td>&mdash;</td></tr>",
-           f"<tr><th scope=row>Inkling 2 Small, untrained</th><td>open</td>{off_cells(off.get(('untrained', 'direct')))}{off_cells(off.get(('untrained_thinking', 'reasoning')))}</tr>"]
+    otr = [f"<tr class=final><th scope=row>Inkling 2 Small, post-trained on Tinker</th><td>open</td>{off_cells(off.get(('scale_rl', 'direct')), bracket=True)}<td class=muted>not used</td><td>&mdash;</td><td>&mdash;</td></tr>",
+           f"<tr><th scope=row>Inkling 2 Small, untrained</th><td>open</td>{off_cells(off.get(('untrained', 'direct')), bracket=True)}{off_cells(off.get(('untrained_thinking', 'reasoning')))}</tr>"]
     for m in OFF_MODELS + OFF_ADDED:
         prefix, name, _id, open_w = m
         d_, r_ = off.get((f"{prefix}_direct", "direct")), off.get((f"{prefix}_reasoning", "reasoning"))
@@ -407,7 +409,7 @@ def build() -> tuple[dict, dict]:
             continue
         star = " *" if m in OFF_ADDED else ""
         otr.append(f"<tr><th scope=row>{esc(name)}{star}</th><td>{'open' if open_w else 'closed'}</td>"
-                   f"{off_cells(d_, OFF_NOT_RUN.get((prefix, 'direct'), ''))}{off_cells(r_, OFF_NOT_RUN.get((prefix, 'reasoning'), ''))}</tr>")
+                   f"{off_cells(d_, OFF_NOT_RUN.get((prefix, 'direct'), ''), True)}{off_cells(r_, OFF_NOT_RUN.get((prefix, 'reasoning'), ''))}</tr>")
     T["table_offshelf"] = "\n".join(otr)
     D["offshelf_same"] = {k: {"rate": float(off[a]["repair_rate"]), "lo": float(off[a]["repair_lo"]), "hi": float(off[a]["repair_hi"]), "tokens": float(off[a]["mean_out_tokens"])}
                           for k, a in (("trained", ("scale_rl", "direct")), ("untrained", ("untrained", "direct")), ("think", ("untrained_thinking", "reasoning"))) if a in off}
@@ -416,6 +418,7 @@ def build() -> tuple[dict, dict]:
     from weightgym.offshelf import reading as off_reading
     R = off_reading(list(off.values()))
     T["offshelf_n_once_open"], T["offshelf_best_open_direct"] = R["n_once_open"], R["best_open"]
+    assert f"repairs {R['trained']} in about" in R["direct"]
     T["offshelf_direct"] = esc(R["direct"]).replace(f"repairs {R['trained']} in about", f"repairs <b>{R['trained']}</b> in about", 1)
     T["offshelf_stuck"], T["offshelf_reasoning"] = esc(R["stuck"]), esc(R["reasoning"])
     T["offshelf_lead"], T["offshelf_note"] = esc(R["method"]), esc(R["note"].replace("\\*", "*"))
@@ -722,6 +725,7 @@ def check_readme(D: dict, T: dict) -> None:
         f"**{T['vs_unt']} points** {T['vs_unt_ci']}",
         f"same {T['vs_think_n']} faulty networks",
         f"out of its\n20,000-token allowance on {T['think_cap']}" if T["think_cap_tokens"] == "20,000" else T["think_cap"],
+        f"repairs {T['think_finished']} of those it finishes", f"repairs {T['think_finished']} of the networks it finishes",
         f"**{T['rl_larger']}** {T['rl_larger_ci']}", f"**{T['rl_families']}** {T['rl_families_ci']}",
         f"**{T['rl_faults']}** {T['rl_faults_ci']}", f"**{T['rl_trained']}** {T['rl_trained_ci']}",
         f"**{T['rl_external']}** {T['rl_external_ci']}",
