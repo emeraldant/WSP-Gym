@@ -10,7 +10,7 @@ again. Edits are scored only by how the edited network behaves.
 
 We used it to post-train **Inkling 2 Small** on Thinking Machines' **Tinker** API (LoRA: supervised
 training on synthetic faults, then policy-gradient RL with the tinker-cookbook loop) and measured the
-result on held-out networks. Three results:
+result on held-out networks. Four results:
 
 1. **Repair at a glance.** With no reasoning tokens, the share of broken networks it fixes goes from
    0.2% to 82.9%. The untrained model, allowed about 10,600 reasoning tokens per network, fixes 75.6%
@@ -23,6 +23,10 @@ result on held-out networks. Three results:
    proposal from an RL-trained model is worth about eight random ones, but with eight proposals the edge
    over random search is small. On 13 public image classifiers, editing the final layer improved none
    of the well-trained ones.
+
+4. **A real LLM.** Shown one layer of Qwen3.5-0.8B as a small table read from its weights, Inkling 2 Small
+   proposes an edit that takes MATH-500 from 8% to 38%, level with the published edit found with closed
+   frontier models. Proposers RL-trained on small networks give that edit in one short answer.
 
 Frontier closed models still do much better on this gym; see the comparison below.
 
@@ -249,7 +253,7 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   its own interval.
 - The reasoning-mode reference is the untrained model at one effort setting with a 20,000-token cap;
   a larger allowance would let it finish more often.
-- No test on a real LLM.
+- On a real LLM the evidence is one layer of one model and one known failure (the fourth result).
 - Synthetic data: every network and fault comes from this repository's generator, apart from the
   scikit-learn split.
 
@@ -343,6 +347,40 @@ slightly worse).
 Taken together: the trained proposer makes better single guesses than chance on real data it has never
 seen, but this is far from "improves real models". Small edits to a network that is already well
 trained find nothing, and where there is slack, ordinary gradient descent finds much more of it.
+
+## Fourth result: a real LLM, Qwen3.5-0.8B
+
+The proposers above read small networks printed as text, so they cannot be shown an 873M-weight model.
+Each is shown a *slice*: for one MLP layer, a table with one row per token of a fixed list (" Wait", "Wait",
+"</think>", " Therefore", " So", "boxed") and one column per neuron, where each entry is how hard that
+neuron's output pushes that token's score, read directly from the weights. 64 of the layer's 3,584 neurons
+are printed. Every answer in the gym's edit format maps to a real low-rank edit of that layer's output
+matrix (`weightgym/qwen_slice.py`), which is written into the model and scored on math problems
+(`weightgym/qwen_bench.py`, following the evaluation code released with Takehi et al.).
+
+<!-- qwen:start -->
+Qwen3.5-0.8B gets stuck repeating lines that start with "Wait" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two "Wait" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+2.4 points [-3.6, +8.4] on the 250 problems both were run on). Proposers trained by RL on Tinker, on small networks only, give this kind of edit in one answer of about 137 tokens with no reasoning: 15 of their 16 answers for this layer helped, against 2 of 8 random edits. Untrained, Inkling 2 Small finds it too, by reasoning for about 1,685 tokens. When the same table is shown with its numbers shuffled, only 6 of 16 answers help, so the proposers are using the weights they read.
+
+MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):
+
+| Condition | MATH-500 | Answers cut at the token limit | Problems |
+|---|---|---|---|
+| Unedited Qwen3.5-0.8B | 8.2% [5.8, 10.6] | 93% | all 500 problems |
+| Published edit: layer 22, neuron 573 x2 (Beaker) | 35.6% [30.0, 41.6] | 62% | problems 250-499 only |
+| "Wait" token ban, no weight change (Beaker's control) | 38.0% [32.4, 44.0] | 61% | problems 250-499 only |
+| Layer 23 edit proposed by untrained Inkling 2 Small with reasoning | 38.2% [34.0, 42.4] | 57% | all 500 problems |
+| Layer 23 edit proposed by RL proposer (formula tasks) and untrained Inkling 2 Small with reasoning | 37.4% [33.2, 41.6] | 59% | all 500 problems |
+
+- The edit removes one habit; it does not add math ability. Banning the "Wait" token, with no weight change, scores 38.0%.
+- One layer of one model. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.
+- We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the published runs did, is a harder search.
+- GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%.
+<!-- qwen:end -->
+
+How the proposers were compared, the screening on practice problems, the shuffled-weights control and what
+is still running are in `NOTES.md` ("Qwen3.5-0.8B on a local GPU"). The harness first reproduced three
+published numbers: unedited, the one-neuron edit, and the token ban. These runs used rented H100 GPUs on
+Modal (about $26) and a local RTX 5080; the proposals themselves cost well under a dollar of Tinker sampling.
 
 ## Benchmark your own model
 

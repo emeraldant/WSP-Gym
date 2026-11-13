@@ -662,6 +662,22 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
     for r in table:
         print(f"{r['condition'][:86]:86s} {100 * r['acc']:5.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] n={r['n_problems']} ({r['block']})")
     print(summary)
+    _readme_section(table, summary, caveats)
+
+
+def _readme_section(table: list[dict], summary: str, caveats: list[str], readme: str = "README.md") -> None:
+    """Rewrite the block between the qwen markers of the README from the same numbers as the page."""
+    start, end = "<!-- qwen:start -->", "<!-- qwen:end -->"
+    text = open(readme).read()
+    if start not in text or end not in text:
+        return
+    rows = "\n".join(f"| {r['condition']} | {100 * r['acc']:.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] | {100 * r['cut_share']:.0f}% | {r['block']} |" for r in table)
+    body = (f"{start}\n{summary}\n\n"
+            "MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):\n\n"
+            "| Condition | MATH-500 | Answers cut at the token limit | Problems |\n|---|---|---|---|\n" + rows + "\n\n"
+            + "\n".join(f"- {c}" for c in caveats) + f"\n{end}")
+    a, b = text.index(start), text.index(end) + len(end)
+    open(readme, "w").write(text[:a] + body + text[b:])
 
 
 def main() -> None:
