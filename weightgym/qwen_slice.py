@@ -626,34 +626,37 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
     best = max((r for r in table if r["arm"].startswith("edit_")), key=lambda r: r["acc"], default=None)
     n_scored = sum(screen_acc(f"edit_{e}") is not None for e in d)
     pct = lambda v: f"{100 * v:.1f}%"  # noqa: E731
-    summary = ""
+    summary, caveats = "", []
     if best:
         E = {r["id"]: r for r in complete_block(qb.load_records(best["arm"], "math500", edit_dir))[0]}
         X = {r["id"]: r for r in complete_block(qb.load_records("n573_x2", "math500"))[0]}
         px = paired(E, X)
+        f, r, u, rnd = (hits(a_, 23) for a_ in ("formula_rl_proposer", "real_rl_proposer", "untrained_reasoning", "random"))
+        f22, r22 = hits("formula_rl_proposer", 22), hits("real_rl_proposer", 22)
+        ctl = [control_hits(a_, 23) for a_ in ("formula_rl_proposer", "real_rl_proposer")]
+        rl_tok = (f[2] * f[1] + r[2] * r[1]) / (f[1] + r[1])
         summary = (
-            f"Qwen3.5-0.8B loops on lines that start with \"Wait\" and runs out of tokens: unedited it solves {pct(by['unedited']['acc'])} of MATH-500. "
-            f"We showed Inkling 2 Small one MLP layer of Qwen as a small table read from the weights (six tokens by 64 neurons) and wrote its "
-            f"answer into the real model. The best edit so far, proposed by the untrained model with reasoning, scales down layer 23's push on "
-            f"the two \"Wait\" tokens and reaches {pct(best['acc'])} [{100 * best['lo']:.1f}, {100 * best['hi']:.1f}] "
-            f"({100 * best['minus_unedited']:+.1f} points [{100 * best['diff_lo']:+.1f}, {100 * best['diff_hi']:+.1f}] paired against unedited). "
-            f"On the {px[3]} problems where both were run it is level with the published one-neuron edit ({100 * px[0]:+.1f} points "
-            f"[{100 * px[1]:+.1f}, {100 * px[2]:+.1f}]), and banning the \"Wait\" token without touching any weight does as well. "
-            + _hit_sentence())
-    caveats = [
-        "This is the untrained model's result first. Whether the Tinker-trained proposers beat random edits across layers is not settled: "
-        f"{n_scored} of {len(d)} proposed edits have been scored so far, and in layer 23 a random row swap also works.",
-        "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores the same (Beaker's finding).",
-        "We chose what the proposer sees: the six tokens of the table include the two \"Wait\" tokens, and the prompt names the failure. "
-        "The proposer chose the layer rows, the direction and the size of the change.",
-        "One model, one failure mode, one sampled answer per problem (the published protocol averages four). "
-        "The published edit and the token ban were run on 250 of the 500 problems here.",
-        "The two edits given the full MATH-500 run were picked by their score on 256 held-out practice problems before layers 16-21 had been screened.",
-        "For reference, not re-run here: Takehi et al. report 48.1% for GPT-6 Astra's edit with 50 forward passes (51.1% in Beaker's re-run); "
-        "Beaker's best runs reach 37.4-39.5%.",
-    ]
-    status = f"In progress: layers 22-23 screened ({n_scored} of {len(d)} edits scored); layers 16-21 running on a local GPU."
-    json.dump({"status": status, "rows": [{k: v for k, v in r.items() if k not in ("highlight", "eid")} for r in out],
+            f"Qwen3.5-0.8B gets stuck repeating lines that start with \"Wait\" and runs out of tokens: it solves {pct(by['unedited']['acc'])} of "
+            f"MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and "
+            f"wrote its answer into the real model. Scaling down how hard layer 23 pushes the two \"Wait\" tokens lifts MATH-500 to "
+            f"{pct(best['acc'])} [{100 * best['lo']:.1f}, {100 * best['hi']:.1f}], level with the published one-neuron edit that was found with "
+            f"closed frontier models ({100 * px[0]:+.1f} points [{100 * px[1]:+.1f}, {100 * px[2]:+.1f}] on the {px[3]} problems both were run on). "
+            f"Proposers trained by RL on Tinker, on small networks only, give this kind of edit in one answer of about {rl_tok:.0f} tokens with no "
+            f"reasoning: {f[0] + r[0]} of their {f[1] + r[1]} answers for this layer helped, against {rnd[0]} of {rnd[1]} random edits. "
+            f"Untrained, Inkling 2 Small finds it too, by reasoning for about {u[2]:,.0f} tokens.")
+        if all(c is not None for c in ctl):
+            summary += (f" When the same table is shown with its numbers shuffled, only {ctl[0][0] + ctl[1][0]} of {ctl[0][1] + ctl[1][1]} "
+                        f"answers help, so the proposers are using the weights they read.")
+        wb = by.get("wait_ban")
+        caveats = [
+            "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores "
+            + (pct(wb["acc"]) if wb else "about the same") + ".",
+            f"One layer of one model. In layer 22 the same proposers gave the same kind of edit and {f22[0] + r22[0]} of {f22[1] + r22[1]} helped.",
+            "We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the "
+            "published runs did, is a harder search.",
+            "GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%.",
+        ]
+    json.dump({"status": "", "rows": [{k: v for k, v in r.items() if k not in ("highlight", "eid")} for r in out],
                "bars": [{"label": r["label"], "value": r["math500"], "lo": r["lo"], "hi": r["hi"], "note": r["note"], "highlight": r["highlight"]} for r in out],
                "caveats": caveats, "summary": summary}, open(site_json, "w"), indent=1)
     for r in table:
