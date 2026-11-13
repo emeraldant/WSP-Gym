@@ -249,7 +249,7 @@ def cmd_screen(containers: int, limit: int | None) -> None:
             base.append({"key": (arm, qb.tag_of(set_name, cap)), "todo": todo, "ban_wait": False, "cap": cap, "edit": edit})
     edits = dict(sorted(qs.distinct_edits().items())[::-1])
     jobs = _slice_jobs(edits, "train", qs.screen_rows(), cap)[:limit]
-    print(f"{len(edits)} distinct valid edits, {len(jobs)} to score here, {len(base)} baseline jobs")
+    print(f"{len(edits)} distinct valid edits, {len(jobs)} to score here, {len(base)} baseline jobs", flush=True)
     # at most 16 adapters are live on one server: a batch holds up to 12 edits
     waves = ([base] if base else []) + [jobs[i:i + 12] for i in range(0, len(jobs), 12)]
     sinks = {"base": file_sink(qb.OUT), "edit": file_sink(os.path.join(qs.OUT, "edits"))}

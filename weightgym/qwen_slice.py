@@ -204,20 +204,51 @@ class SliceItem:
         return W - self.W
 
     def factors(self, ops: list[dict], max_rank: int = 8) -> tuple[np.ndarray, np.ndarray]:
-        """delta = B @ A with at most ``max_rank`` columns (exact: each operation has rank at most 2)."""
-        d = self.real_delta(ops)
-        cols = np.flatnonzero(np.abs(d).sum(axis=0) > 0)
-        rows_dense = len(cols) > max_rank          # a row operation touches every column: factor by SVD
-        if not rows_dense:
-            B = d[:, cols]
-            A = np.zeros((len(cols), d.shape[1]))
-            A[np.arange(len(cols)), cols] = 1.0
-            return B, A
-        u, sv, vt = np.linalg.svd(d, full_matrices=False)
-        r = int(np.sum(sv > 1e-9 * sv[0]))
-        if r > max_rank:
-            raise EditError(f"edit has rank {r} > {max_rank}")
-        return u[:, :r] * sv[:r], vt[:r]
+        """The same change as ``real_delta`` in factored form, delta = B @ A, built directly from the operations
+        (each contributes at most two rank-1 terms), so no decomposition of a 1024 x 3584 matrix is needed."""
+        W, U, G, P = self.W, self.U, self.G, self.net.Ws[0]
+        bs: list[np.ndarray] = []
+        as_: list[np.ndarray] = []
+
+        def col(j):      # current output column of neuron j
+            return W[:, j] + sum(b * a[j] for b, a in zip(bs, as_))
+
+        def push(t):     # current row t of the slice: the pushes of every neuron on token t
+            return P[t] + sum((U[t] @ b) * a for b, a in zip(bs, as_))
+
+        def unit(j):
+            e = np.zeros(W.shape[1])
+            e[j] = 1.0
+            return e
+
+        for op in ops:
+            kind, is_col = op["op"], op.get("axis") == "col"
+            if kind == "scale" and is_col:
+                new = [((op["factor"] - 1.0) * col(op["index"]), unit(op["index"]))]
+            elif kind == "scale":
+                new = [((op["factor"] - 1.0) * G[:, op["index"]], push(op["index"]))]
+            elif kind == "swap" and is_col:
+                i, j = op["i"], op["j"]
+                ci, cj = col(i), col(j)
+                new = [(cj - ci, unit(i)), (ci - cj, unit(j))] if i != j else []
+            elif kind == "swap":
+                t, s_ = op["i"], op["j"]
+                new = [(G[:, t] - G[:, s_], push(s_) - push(t))] if t != s_ else []
+            elif kind == "set":
+                t, j = op["index"]
+                new = [((op["value"] - U[t] @ col(j)) * G[:, t], unit(j))]
+            elif is_col:
+                new = [(G @ np.array(op["vector"], dtype=float), unit(op["index"]))]
+            else:
+                new = [(G[:, op["index"]].copy(), np.array(op["vector"], dtype=float))]
+            for b, a in new:
+                bs.append(b)
+                as_.append(a)
+        if len(bs) > max_rank:
+            raise EditError(f"edit has rank {len(bs)} > {max_rank}")
+        if not bs:
+            return np.zeros((W.shape[0], 0)), np.zeros((0, W.shape[1]))
+        return np.stack(bs, axis=1), np.stack(as_, axis=0)
 
 
 def edit_id(layer: int, ops: list[dict]) -> str:
