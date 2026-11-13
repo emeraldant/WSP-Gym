@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WeightGym: an open model trained to repair networks</title>
-<meta name="description" content="Inkling 2 Small, post-trained with LoRA on Tinker, repairs small neural networks by reading their raw weights as text. Every number on this page is read from the project's logs.">
+<title>WSP-Gym: an open model trained to repair networks</title>
+<meta name="description" content="Inkling 2 Small, post-trained with LoRA on Tinker, repairs small neural networks by reading their raw weights as text.">
 <meta property="og:type" content="article">
+<meta property="og:site_name" content="WSP-Gym">
+<meta property="og:url" content="https://emeraldant.github.io/WSP-Gym/">
 <meta property="og:title" content="We trained an open model to repair neural networks from their raw weights">
-<meta property="og:description" content="Inkling 2 Small, post-trained on Tinker: {{rl_id}} of broken test networks repaired in ~{{rl_tokens}} tokens, against {{think_id}} in ~{{think_tokens}} tokens before training. Limits stated next to every result.">
-<meta property="og:image" content="media/og-1200x630.png">
+<meta property="og:description" content="Inkling 2 Small, post-trained on Tinker: {{rl_id}} of broken test networks repaired in ~{{rl_tokens}} tokens, against {{think_id}} in ~{{think_tokens}} tokens before training.">
+<meta property="og:image" content="https://emeraldant.github.io/WSP-Gym/media/og-1200x630.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="We trained an open model to repair neural networks from their raw weights">
 <meta name="twitter:description" content="Inkling 2 Small, post-trained on Tinker: {{rl_id}} repaired in ~{{rl_tokens}} tokens, against {{think_id}} in ~{{think_tokens}} tokens before training.">
-<meta name="twitter:image" content="media/og-1200x630.png">
+<meta name="twitter:image" content="https://emeraldant.github.io/WSP-Gym/media/og-1200x630.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316161a'/%3E%3Cg stroke='%233987e5' stroke-width='2.2'%3E%3Cline x1='8' y1='9' x2='16' y2='16'/%3E%3Cline x1='8' y1='23' x2='16' y2='16'/%3E%3Cline x1='16' y1='16' x2='24' y2='16'/%3E%3C/g%3E%3Cline x1='8' y1='9' x2='8' y2='23' stroke='%23e0652f' stroke-width='2.2'/%3E%3Cg fill='%23f0efec'%3E%3Ccircle cx='8' cy='9' r='3'/%3E%3Ccircle cx='8' cy='23' r='3'/%3E%3Ccircle cx='16' cy='16' r='3'/%3E%3Ccircle cx='24' cy='16' r='3'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,25 +26,25 @@
 <body>
 <nav class="toc" aria-label="Sections">
   <div class="toc-in">
-    <a class="toc-home" href="#top">WeightGym</a>
-    <a href="#summary">Summary</a><a href="#race">One network</a><a href="#task">Task</a><a href="#results">Results</a><a href="#tinker">Tinker</a><a href="#compare">Compared</a><a href="#verify">Verifier</a><a href="#rl-only">RL alone</a><a href="#failed">Did not work</a><a href="#qwen" class="toc-qwen" hidden>Qwen</a><a href="#limits">Limits</a><a href="#reproduce">Reproduce</a>
+    <a class="toc-home" href="#top">WSP-Gym</a>
+    <a href="#summary">Summary</a><a href="#race">One network</a><a href="#task">Task</a><a href="#results">Results</a><a href="#tinker">Training</a><a href="#compare">Compared</a><a href="#verify">Verifier</a><a href="#rl-only">RL alone</a><a href="#failed">Did not work</a><a href="#qwen" class="toc-qwen" hidden>Qwen</a><a href="#limits">Limits</a><a href="#reproduce">Reproduce</a>
     <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme"><span aria-hidden="true">&#9680;</span></button>
   </div>
 </nav>
 <button class="theme-toggle theme-toggle-phone" type="button" aria-label="Switch between light and dark theme"><span aria-hidden="true">&#9680;</span></button>
 
 <header class="masthead col" id="top">
-  <p class="kicker">WeightGym &middot; weight-space repair</p>
+  <p class="kicker">WSP-Gym &middot; weight-space repair</p>
   <h1>We trained an open model to repair neural networks by reading their raw weights</h1>
   <p class="dek">Inkling 2 Small, post-trained with LoRA on Tinker, reads a broken network's weights as plain text and answers with a small edit that fixes it. No tools, no forward passes and, after training, no reasoning.</p>
-  <p class="byline"><a href="{{byline_url}}">{{byline}}</a> &middot; November 2026 &middot; <a href="#reproduce">code, frozen test sets and every rollout log</a></p>
+  <p class="byline"><a href="{{byline_url}}">{{byline}}</a> &middot; November 2026 &middot; <a href="{{repo_url}}">code, frozen test sets and every rollout log</a></p>
 </header>
 
 <section class="col tldr" aria-labelledby="tldr-h">
   <h2 id="tldr-h">TL;DR</h2>
   <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with closed frontier models used off the shelf. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
-  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning. Paired on the same {{vs_think_n}} networks the difference is {{vs_think}} points {{vs_think_ci}}.</p>
-  <p>The limits are real and are stated below next to each result: tiny networks, planted single faults, most of the gain comes from the supervised stage, unseen fault types stay at {{faults_0}}, and frontier closed models fix {{frontier_range}} of the same networks.</p>
+  <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning: {{vs_think}} points {{vs_think_ci}}, paired on the same {{vs_think_n}} networks.</p>
+  <p>The networks are tiny, most of the gain comes from the supervised stage, and frontier closed models still fix {{frontier_range}} of the same networks.</p>
 </section>
 
 <!-- =============================== SUMMARY CARD =============================== -->
@@ -59,7 +61,7 @@
       <span class="p-label">2 &middot; Trained on Tinker</span>
       <span class="p-num">{{sft_nets}} <small>networks</small></span>
       <span class="p-sub">supervised, then {{rl_steps}} RL steps; {{cost_final}} of Tinker usage. Validation repair rate:</span>
-      <div class="p-fig" data-mini="curve" role="img" aria-label="Validation repair rate rising over training to {{sel_score}} mean at the selected checkpoint."></div>
+      <div class="p-fig" data-mini="curve" role="img" aria-label="Validation repair rate rising over training."></div>
     </a>
     <a class="panel" href="#rl-only">
       <span class="p-label">3 &middot; RL alone, no labels</span>
@@ -68,13 +70,13 @@
       <div class="p-fig" data-mini="improve" role="img" aria-label="Errors removed with 8 proposals: RL-trained {{imp_rl8}}, random {{imp_rand8}}, untrained {{imp_unt8}}."></div>
     </a>
   </div>
-  <p class="card-foot"><span>Held-out test networks; every number from the project's logs. Limits below each result.</span><span class="card-by">{{byline}}</span></p>
+  <p class="card-foot"><span>Held-out test networks.</span><span class="card-by">{{byline}}</span></p>
 </figure>
 
 <!-- =============================== RACE =============================== -->
 <section id="race" class="col">
   <h2>One network, then the same number of tokens</h2>
-  <p class="setup"><span class="tag">Setup</span> One test network with a planted fault. Left: untrained Inkling 2 Small, allowed to reason. Right: the post-trained model, told to answer at once. It answers this network first, then keeps going through the next faulty test networks in the log, until both sides have generated the same number of tokens.</p>
+  <p class="setup"><span class="tag">Setup</span> One test network with a planted fault. Left: untrained Inkling 2 Small, allowed to reason. Right: the post-trained model, told to answer at once, on this network and then on the next faulty test networks, until both have generated the same number of tokens.</p>
 </section>
 <figure class="wide fig" id="fig-race" data-anim="race" aria-describedby="race-cap">
   <div class="fig-head"><span class="fig-title">Test network {{ex_seed}} &middot; {{ex_nw}} weights &middot; target: {{ex_spec}}</span><button class="replay" type="button">Replay</button></div>
@@ -93,10 +95,10 @@
     </div>
   </div>
   <p class="sr-only">Animation: on the left, the untrained model's {{ex_think_tokens}}-token reasoning on one network streams past until it answers with an edit that repairs it. On the right, in the same number of generated tokens, the trained model answers {{race_n}} faulty test networks, starting with this one, and repairs {{race_rep}} of them.</p>
-  <figcaption id="race-cap">Same number of generated tokens, not wall-clock time. The untrained model spends {{ex_think_tokens}} tokens on this one network (near the median of about {{ex_median_think}} for faulty networks) and repairs it. In {{race_used}} tokens the trained model answers this network and the next {{race_n_after}} faulty networks of <code>runs/final/scale_rl/test_id.jsonl</code> in file order: <b>{{race_rep}} of {{race_n}} repaired</b>, {{race_miss}} missed (outlined tiles). Every tile is a logged answer with its logged token count and outcome. On average over all {{n_faulty_id}} faulty test networks the trained model uses about {{token_ratio}} times fewer tokens. Text is real and unedited; playback speed is not.</figcaption>
+  <figcaption id="race-cap">Same number of generated tokens, not wall-clock time: {{ex_think_tokens}} tokens on one network on the left; {{race_n}} networks answered and {{race_rep}} repaired on the right. Real model output; playback is compressed.</figcaption>
 </figure>
 <div class="col">
-  <p>Across all {{n_faulty_id}} faulty in-distribution test networks: untrained with reasoning <b>{{think_id}}</b> {{think_id_ci}} at ~{{think_tokens}} tokens, {{think_cap}} cut off at the {{think_cap_tokens}}-token cap; trained without reasoning <b>{{rl_id}}</b> {{rl_id_ci}} at ~{{rl_tokens}} tokens. Paired on the same networks: {{vs_think}} points {{vs_think_ci}}.</p>
+  <p>Over all {{n_faulty_id}} faulty test networks, the untrained model with reasoning fixes <b>{{think_id}}</b> {{think_id_ci}} at ~{{think_tokens}} tokens, and runs out of its {{think_cap_tokens}}-token allowance on {{think_cap}} of them. The trained model fixes <b>{{rl_id}}</b> {{rl_id_ci}} at ~{{rl_tokens}} tokens, about {{token_ratio}} times fewer.</p>
 </div>
 
 <!-- =============================== TASK =============================== -->
@@ -112,18 +114,18 @@
   </div>
   <ol class="steps" aria-live="off">
     <li data-step="0">The model reads the weights as text.</li>
-    <li data-step="1">What was planted: the outgoing weights of h1[0] and h1[2] were swapped.</li>
+    <li data-step="1">The planted fault: the outgoing weights of h1[0] and h1[2] are swapped.</li>
     <li data-step="2">The trained model's answer swaps them back: <code>{{ex_rl_answer}}</code></li>
-    <li data-step="3">Accuracy on the task's {{ex_n_inputs}} scoring inputs.</li>
+    <li data-step="3">Accuracy on the task's {{ex_n_inputs}} inputs.</li>
   </ol>
   <div class="accbar" role="img" aria-label="Accuracy rises from {{ex_acc_faulty}} to {{ex_rl_acc}}"><div class="acc-track"><div class="acc-fill"></div></div><span class="acc-val"></span></div>
-  <figcaption id="repair-cap">Line width is proportional to the weight's magnitude; colour shows its sign. The planted fault is from <code>data/test_id.jsonl</code>; the answer and scores are re-computed at build time with <code>weightgym.env.score_answer</code> and agree with the logs.</figcaption>
+  <figcaption id="repair-cap">Line width shows a weight's magnitude, colour its sign.</figcaption>
 </figure>
 <div class="col">
-  <p>Edits are scored only by how the edited network behaves: <code>recovery = (acc_after - acc_faulty) / (acc_clean - acc_faulty)</code>, and a network counts as repaired at recovery of at least {{repair_threshold}}. Nothing is matched against the planted fault, so any equivalent fix counts. About one network in six is healthy, and the right answer there is the empty edit <code>[]</code>.</p>
+  <p>An edit is scored only by how the edited network behaves: <code>recovery = (acc_after - acc_faulty) / (acc_clean - acc_faulty)</code>, and a network counts as repaired at a recovery of {{repair_threshold}} or more. Any equivalent fix counts. About one network in six is healthy, and the right answer there is the empty edit <code>[]</code>.</p>
   <div class="scroll">
   <table class="data">
-    <caption>Three answers for this network, from the logs</caption>
+    <caption>Three answers for this network</caption>
     <thead><tr><th scope=col>Model</th><th scope=col>Tokens</th><th scope=col>Answer</th><th scope=col>Accuracy after</th></tr></thead>
     <tbody>
       <tr><th scope=row>Untrained, told to answer at once</th><td>{{ex_unt_tokens}}</td><td><code>{{ex_unt_answer}}</code></td><td>{{ex_unt_acc}} (was {{ex_acc_faulty}})</td></tr>
@@ -132,11 +134,11 @@
     </tbody>
   </table>
   </div>
-  <p>The reasoning model found a different fix from the planted one: it silenced both swapped paths and kept the neuron that already computes the target. Behavioural scoring accepts it. Untrained and told to answer at once, the model usually starts reasoning anyway and is cut off; only {{untrained_valid}} of its answers on this test set are valid, and it repairs {{untrained_id}}.</p>
-  <details class="prompt"><summary>The exact prompt for this network (no-reasoning variant)</summary><pre>{{ex_prompt}}</pre></details>
+  <p>The reasoning model found a different fix: it silenced both swapped paths and kept the neuron that already computes the target. Told to answer at once, the untrained model usually starts reasoning anyway and is cut off; only {{untrained_valid}} of its answers are valid, and it repairs {{untrained_id}}.</p>
+  <details class="prompt"><summary>The prompt the model sees for this network</summary><pre>{{ex_prompt}}</pre></details>
 
   <h3 id="disguise">Nothing to memorise</h3>
-  <p>Every network the model sees is disguised with function-preserving symmetries, so the same function never looks the same twice. Below, one real compiled circuit from the gym goes through the gym's own disguise functions (<code>weightgym/nets.py</code>), one at a time.</p>
+  <p>Every network is disguised with function-preserving symmetries, so the same function never looks the same twice. Here one compiled circuit goes through the gym's disguises, one at a time.</p>
 </div>
 <figure class="wide fig" id="fig-disguise" data-anim="disguise" aria-describedby="disguise-cap">
   <div class="fig-head"><span class="fig-title">One function, five sets of weights &middot; target: {{dis_spec}}</span><button class="replay" type="button">Replay</button></div>
@@ -146,181 +148,158 @@
     <div class="weights-wrap"><p class="dnote"></p><pre class="weights dweights"></pre></div>
   </div>
   <div class="same"><span class="same-dot"></span><span class="same-text">Outputs identical on all {{dis_n}} inputs</span><span class="same-sub"></span></div>
-  <figcaption id="disguise-cap">Built at build time by <code>permute_hidden</code>, <code>rescale_hidden</code>, <code>split_neuron</code> and <code>add_dead_neuron</code> on a compiled <code>arith</code> circuit. <code>build_data.py</code> checks that every variant gives the same outputs as the original on all {{dis_n}} inputs, using the exact weights, and that the 2-decimal weights shown are still correct on every input. The gym also adds exactly cancelling neuron pairs, small noise and rounding.</figcaption>
+  <figcaption id="disguise-cap">Weights shown to 2 decimals. The gym also adds exactly cancelling neuron pairs, small noise and rounding.</figcaption>
 </figure>
 <div class="col">
-  <p>Because of this, a statistics-only heuristic that resets or rescales the most unusual row, column or scalar repairs only <b>{{outlier_id}}</b> of the in-distribution test networks.</p>
+  <p>A statistics-only heuristic that resets or rescales the most unusual row, column or scalar repairs <b>{{outlier_id}}</b> of the in-distribution test networks.</p>
 </div>
 
 <!-- =============================== RESULTS =============================== -->
 <section id="results" class="col">
-  <h2>Results on six frozen test sets</h2>
-  <p class="setup"><span class="tag">Setup</span> {{n_test}} networks per test set, generated from disjoint seeds before any training. One model and one LoRA adapter for every row; no reasoning tokens; temperature {{rl_temp}}, one sample per network. Each set was evaluated once.</p>
+  <h2>Results on six test sets</h2>
+  <p class="setup"><span class="tag">Setup</span> {{n_test}} networks per test set, generated before training from seeds disjoint from training. One adapter for every row; no reasoning; temperature {{rl_temp}}, one answer per network.</p>
 </section>
 <figure class="wide fig" id="fig-splits" data-anim="splits" aria-describedby="splits-cap">
   <div class="fig-head"><span class="fig-title">Share of broken networks repaired, no reasoning</span><button class="replay" type="button">Replay</button></div>
   <div class="legend"><span><i class="sw sw-trained"></i>Post-trained on Tinker</span><span><i class="sw sw-untrained"></i>Untrained</span><span><i class="tick-key"></i>Statistics-only heuristic</span></div>
   <div class="chart" data-chart="splits"></div>
-  <figcaption id="splits-cap">Whiskers are 95% bootstrap intervals over networks.</figcaption>
+  <figcaption id="splits-cap">Whiskers: 95% bootstrap intervals over networks.</figcaption>
 </figure>
 <div class="col">
-  <p><b>Primary metric</b>, fixed before training: in-distribution repair rate, {{rl_id}} {{rl_id_ci}}; paired difference against the untrained model {{vs_unt}} points {{vs_unt_ci}}. It carries over to unseen function families ({{rl_families_0}}) and larger networks ({{rl_larger_0}}), where the heuristic repairs {{outlier_range}}. It carries over to networks fitted by scikit-learn, an optimiser never used in training, but loses ground there ({{rl_external_0}}, against {{rl_trained_0}} on networks from our own trainer), and it wrongly edits {{external_clean_bad}} of healthy scikit-learn networks.</p>
+  <p>In-distribution the trained model repairs {{rl_id}} {{rl_id_ci}}, {{vs_unt}} points over the untrained model. It carries over to function families it never trained on ({{rl_families_0}}) and to larger networks ({{rl_larger_0}}). On networks fitted by scikit-learn, an optimiser never used in training, it repairs {{rl_external_0}} and wrongly edits {{external_clean_bad}} of the healthy ones. Fault types it never saw are the weak row: {{rl_faults_0}}.</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Test set</th><th scope=col>Untrained</th><th scope=col>Trained</th><th scope=col>Heuristic</th><th scope=col>Healthy left alone</th></tr></thead>
     <tbody>{{table_splits}}</tbody>
   </table>
   </div>
-  <p class="limit"><b>Limit.</b> Fault types it never saw remain the weak row ({{rl_faults_0}}), and neither more data nor RL moved it.</p>
 </div>
 
-<!-- =============================== TINKER =============================== -->
+<!-- =============================== TRAINING =============================== -->
 <section id="tinker" class="col">
   <h2>How it was trained on Tinker</h2>
-  <p class="setup"><span class="tag">Setup</span> Tinker runs the forward and backward passes of a LoRA adapter on Inkling 2 Small; the training loop, the gym and the reward run on our side. Rank-{{rank}} LoRA from the base model, then two stages.</p>
+  <p class="setup"><span class="tag">Setup</span> Rank-{{rank}} LoRA on Inkling 2 Small. Tinker runs the forward and backward passes; the gym and the reward run locally. Checkpoint chosen on validation networks.</p>
 </section>
 <figure class="wide fig" id="fig-train" data-anim="train" aria-describedby="train-cap">
   <div class="fig-head"><span class="fig-title">Validation repair rate during training</span><button class="replay" type="button">Replay</button></div>
   <div class="legend"><span><i class="sw sw-trained"></i>Hand-built validation networks</span><span><i class="sw sw-aqua"></i>Gradient-made validation networks</span></div>
   <div class="chart" data-chart="train"></div>
-  <figcaption id="train-cap">From <code>runs/sft_scale/metrics.jsonl</code> (every 100 supervised steps) and <code>runs/rl_scale/chunks.jsonl</code> (after every RL chunk). The RL stage is drawn wider than its share of steps so its points are readable. Sampled at temperature {{rl_temp}}, so each point carries a few points of noise.</figcaption>
+  <figcaption id="train-cap">The RL stage is drawn wider than its share of steps.</figcaption>
 </figure>
 <div class="col">
   <ol class="stages">
-    <li><b>Supervised stage, {{sft_steps}} steps &times; {{batch}} networks</b> ({{sft_nets}} networks, every other one made by gradient descent rather than compiled by hand). The target is the inverse of the planted fault, known because we planted it. Learning rate <span class=nw>{{sft_lr}}</span> decaying linearly to <span class=nw>{{sft_lr_end}}</span>. This stage is supervised fine-tuning, not RL.</li>
-    <li><b>RL stage, {{rl_steps}} steps</b> with the tinker-cookbook policy-gradient loop: {{rl_groups}} networks per step, {{rl_group}} samples of each, rewards centred within each group, learning rate <span class=nw>{{rl_lr}}</span>. Reward is the behavioural score: +1 for <code>[]</code> on a healthy network, a penalty for editing one, -1 for an invalid answer. Run as {{rl_chunks}} chunks of {{rl_chunk_steps}} steps with validation after each.</li>
-    <li><b>Checkpoint selection</b> on validation only: the mean repair rate over 300 hand-built and 200 gradient-made validation networks. {{sft_score}} after the supervised stage, {{sel_score}} for the selected RL checkpoint (chunk {{sel_chunk}}). The stopping rule was written down before RL started.</li>
+    <li><b>Supervised, {{sft_steps}} steps &times; {{batch}} networks</b> ({{sft_nets}} networks, half of them trained by gradient descent rather than compiled by hand). The target is the inverse of the planted fault.</li>
+    <li><b>RL, {{rl_steps}} steps</b> with the tinker-cookbook policy-gradient loop: {{rl_groups}} networks per step, {{rl_group}} samples of each, rewards centred within each group. The reward is the behavioural score: +1 for <code>[]</code> on a healthy network, a penalty for editing one, -1 for an invalid answer.</li>
   </ol>
-  <div class="tiles">
-    <div class="tile"><span class="tile-num">{{cost_final}}</span><span class="tile-sub">Tinker usage for the final model: supervised {{cost_sft}}, RL {{cost_rl}}, evaluation {{cost_eval}}</span></div>
-    <div class="tile"><span class="tile-num">{{cost_total}}</span><span class="tile-sub">for the whole project, including earlier models, sweeps and every evaluation</span></div>
-  </div>
-  <p class="small">Costs are estimated from logged token counts at list prices (<code>python -m weightgym.cost</code>, <code>runs/cost_tally.json</code>).</p>
-
-  <h3>What Tinker calls look like</h3>
-  <p>The supervised loop, as it ran (<code>weightgym/tinker_train.py</code>). Each step sends {{batch}} rendered prompt-and-answer pairs; Tinker computes the loss and gradients on its GPUs and applies the Adam step to the adapter.</p>
+  <p>The final model used {{cost_final}} of Tinker compute ({{cost_total}} for the whole project). The supervised loop is a few Tinker calls per step:</p>
   <pre class="code"><code>{{code_sft}}</code></pre>
-  <p>The RL stage hands the gym to the tinker-cookbook RL loop, which samples from the current adapter, scores each answer with the gym, centres rewards within groups and trains:</p>
+  <p>The RL stage passes the gym to the tinker-cookbook RL loop:</p>
   <pre class="code"><code>{{code_rl}}</code></pre>
-  <p>The final adapter and four earlier ones (the first repair model, the mixed-source model and two RL-trained proposers) are kept on Tinker as LoRA sampler weights.</p>
 
-  <h3>How it got there</h3>
-  <p>Five checkpoints on the same frozen test splits, each evaluated once. Repair rate, no reasoning. Training data did most of the work: the same supervised recipe on three times the data moved the mixed-source model from {{mixed_id_0}} to {{scale_sft_id_0}} in-distribution. Networks made by gradient descent need to be in the training mix: trained on hand-built circuits only, the first model repaired {{first_trained_0}} of them; the final model repairs {{rl_trained_0}}.</p>
+  <h3>What made the difference</h3>
   <div class="scroll">
-  <table class="data dense">
-    <thead><tr><th scope=col>Model</th><th scope=col>Supervised training networks</th><th scope=col>In-dist.</th><th scope=col>Larger</th><th scope=col>Unseen families</th><th scope=col>Unseen faults</th><th scope=col>Gradient-made</th><th scope=col>scikit-learn</th></tr></thead>
-    <tbody>{{table_progress}}</tbody>
+  <table class="data">
+    <thead><tr><th scope=col>Change</th><th scope=col>Measured on</th><th scope=col>Effect</th></tr></thead>
+    <tbody>{{table_takeaway}}</tbody>
   </table>
   </div>
-  <p class="limit"><b>Limit: RL added about {{rl_gain_pooled_0}} points.</b> Paired on the same networks, RL minus supervised is {{rl_gain_id}} points in-distribution {{rl_gain_id_ci}}, inside its own interval, and {{rl_gain_pooled}} {{rl_gain_pooled_ci}} pooled over the six sets (a post-hoc summary). The clearer effect is restraint on healthy networks: correctly left alone rose from {{clean_larger_sft}} to {{clean_larger_rl}} on larger networks.</p>
 </div>
 
 <!-- =============================== COMPARE =============================== -->
 <section id="compare" class="col">
   <h2>Compared with what</h2>
-  <p class="setup"><span class="tag">Setup</span> The same in-distribution test networks and prompts, given to other models and to methods that do not read weights as text.</p>
+  <p class="setup"><span class="tag">Setup</span> The same test networks and prompts, given to other models and to methods that do not read weights as text.</p>
 </section>
 <figure class="wide fig" id="fig-tokens" data-anim="tokens" aria-describedby="tokens-cap">
   <div class="fig-head"><span class="fig-title">Repair rate against tokens generated per network</span><button class="replay" type="button">Replay</button></div>
   <div class="chart" data-chart="tokens"></div>
   <ol class="chart-key" data-key="tokens"></ol>
-  <figcaption id="tokens-cap">Token axis is logarithmic. Hollow points are GPT-6 Astra and GPT-6.1 Sol run through OpenRouter on the same prompts; the account ran out of credit first, so they are partial samples (at most {{frontier_max_n}} networks), and their APIs do not allow reasoning to be switched off. Dashed lines are methods that generate no tokens; search and gradient descent use forward passes.</figcaption>
+  <figcaption id="tokens-cap">Log token axis. Hollow points: frontier models on partial samples. Dashed lines: methods that generate no tokens.</figcaption>
 </figure>
 <div class="col">
-  <p>Post-training moves Inkling 2 Small from the right of this chart to the left: fewer tokens and a higher repair rate than its own reasoning mode. Search with forward passes ({{search_id}}) and gradient descent ({{gradient_id}}) are below it here, but they are a different kind of method. The claim is that a language model can learn to do this from the weights alone, in one short answer, not that this is the best way to repair a network.</p>
+  <p>After training, Inkling 2 Small uses fewer tokens and repairs more networks than its own reasoning mode. Frontier closed models are well ahead: GPT-6 Astra and GPT-6.1 Sol repair {{frontier_range}} of the same networks with a few hundred reasoning tokens, and {{frontier_trained_range}} of the gradient-made ones. Search with forward passes repairs {{search_id}}, gradient descent {{gradient_id}}.</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Method</th><th scope=col>Repair rate</th><th scope=col>Tokens per network</th><th scope=col>Sample</th></tr></thead>
     <tbody>{{table_compare}}</tbody>
   </table>
   </div>
-  <p class="small">* Partial samples; see the caption.</p>
-  <p class="limit"><b>Limit: frontier models are far ahead.</b> GPT-6 Astra and GPT-6.1 Sol repair {{frontier_range}} of the same networks with a few hundred reasoning tokens, and {{frontier_trained_range}} of the gradient-made ones. At this size the gym is near ceiling for them. Post-training closes part of the open/closed gap, not all of it.</p>
 </div>
 
 <!-- =============================== VERIFIER =============================== -->
 <section id="verify" class="col">
   <h2>With a verifier: eight proposals</h2>
-  <p class="setup"><span class="tag">Setup</span> A different regime, kept apart from the headline because it uses forward passes. The final model samples 8 answers per faulty network; a verifier that knows the specification runs each edited network and keeps the first one that repairs it.</p>
+  <p class="setup"><span class="tag">Setup</span> The trained model samples 8 answers per faulty network; a verifier runs each edited network and keeps the first that repairs it. This uses forward passes.</p>
 </section>
 <figure class="wide fig" id="fig-verify" data-anim="verify" aria-describedby="verify-cap">
   <div class="fig-head"><span class="fig-title">Share of faulty networks fixed within k verified answers</span><button class="replay" type="button">Replay</button></div>
   <div class="legend"><span><i class="sw sw-trained"></i>In-distribution</span><span><i class="sw sw-aqua"></i>Gradient-made</span><span><i class="sw sw-violet"></i>scikit-learn</span><span><i class="dash-key"></i>8 random edits, verified</span></div>
   <div class="chart" data-chart="verify"></div>
-  <figcaption id="verify-cap">From <code>results/table_verify.csv</code>. The 8 samples contain {{ver_distinct}} distinct answers on average, so most of the gain comes from the second and third guess.</figcaption>
+  <figcaption id="verify-cap">Shaded bands: 95% intervals.</figcaption>
 </figure>
 <div class="col">
-  <p>Eight verified proposals beat both forward-pass baselines in-distribution ({{ver_id}}) and on gradient-made networks ({{ver_trained}}).</p>
+  <p>With eight verified answers the model fixes {{ver_id}} in-distribution and {{ver_trained}} of gradient-made networks, above both forward-pass baselines. On scikit-learn networks ({{ver_external}}) it matches simple search and stays below gradient descent. The 8 samples contain {{ver_distinct}} distinct answers on average.</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Share of faulty networks fixed</th><th scope=col>In-distribution</th><th scope=col>Gradient-made</th><th scope=col>scikit-learn</th></tr></thead>
     <tbody>{{table_verify}}</tbody>
   </table>
   </div>
-  <p class="limit"><b>Limit.</b> This uses forward passes, so it is not the headline regime. On the scikit-learn networks eight verified proposals ({{ver_external}}) only match the simple search and stay below gradient descent.</p>
 </div>
 
 <!-- =============================== RL ONLY =============================== -->
 <section id="rl-only" class="col">
   <h2>RL alone, no labels: improving imperfect trained networks</h2>
-  <p class="setup"><span class="tag">Setup</span> Small networks trained by gradient descent with a weak recipe, so they only partly learned their function. Nothing is planted and nobody knows a correct edit. The model proposes an edit; the gym checks it with forward passes and keeps it only if the network gets more accurate. Trained by pure RL from the untouched base model, with no supervised stage.</p>
+  <p class="setup"><span class="tag">Setup</span> Small networks trained by gradient descent that only partly learned their function. Nothing is planted. The model proposes an edit; the gym keeps it only if the network gets more accurate. Trained by RL from the base model, with no supervised stage.</p>
 </section>
 <figure class="wide fig" id="fig-loop" data-anim="loop" aria-describedby="loop-cap">
-  <div class="fig-head"><span class="fig-title">Propose and verify, replayed: test network {{imp_ex_seed}} &middot; {{imp_ex_nw}} weights &middot; target: {{imp_ex_spec}}</span><button class="replay" type="button">Replay</button></div>
+  <div class="fig-head"><span class="fig-title">Propose and verify: test network {{imp_ex_seed}} &middot; {{imp_ex_nw}} weights &middot; target: {{imp_ex_spec}}</span><button class="replay" type="button">Replay</button></div>
   <div class="loop">
     <div class="loop-acc"><span class="loop-acc-label">Network accuracy</span><span class="loop-acc-val"></span><div class="acc-track"><div class="acc-base"></div><div class="acc-fill"></div></div><span class="loop-note"></span></div>
     <ol class="proposals"></ol>
   </div>
-  <figcaption id="loop-cap">The 8 proposals the RL-trained model actually sampled for this network, in order, re-applied at build time. The best one that beats the unedited network is kept. This network was picked because it shows both outcomes and its result ({{imp_ex_gap}} of errors removed) is near the mean over networks where a proposal was kept ({{imp_mean_kept}}); on {{imp_none}} of test networks none of the 8 proposals was kept.</figcaption>
+  <figcaption id="loop-cap">The model's 8 proposals for one network; the best one that beats the unedited network is kept. On {{imp_none}} of test networks none is kept.</figcaption>
 </figure>
 <figure class="wide fig" id="fig-improve" data-anim="improve" aria-describedby="improve-cap">
   <div class="fig-head"><span class="fig-title">Share of a network's errors removed, against proposals checked</span><button class="replay" type="button">Replay</button></div>
-  <div class="legend"><span><i class="sw sw-trained"></i>RL-trained Inkling 2 Small</span><span><i class="sw sw-untrained"></i>Untrained Inkling 2 Small</span><span><i class="sw sw-gray"></i>Random valid edits</span><span><i class="ring-key"></i>RL, second seed</span></div>
+  <div class="legend"><span><i class="sw sw-trained"></i>RL-trained Inkling 2 Small</span><span><i class="sw sw-untrained"></i>Untrained Inkling 2 Small</span><span><i class="sw sw-gray"></i>Random valid edits</span><span><i class="ring-key"></i>RL, second run</span></div>
   <div class="chart" data-chart="improve"></div>
-  <figcaption id="improve-cap">{{imp_n}} held-out imperfect networks, no reasoning tokens, 95% intervals (<code>results/table_improve.csv</code>).</figcaption>
+  <figcaption id="improve-cap">{{imp_n}} held-out imperfect networks; shaded bands are 95% intervals.</figcaption>
 </figure>
 <div class="col">
-  <p>Eight proposals from the trained model remove {{imp_rl8}} of errors {{imp_rl8_ci}}, about what 32 random ones do ({{imp_rand32}}); eight random edits remove {{imp_rand8}}. On function families never used in training: {{imp_fam}} against {{imp_fam_rand}} for random edits.</p>
+  <p>Eight proposals from the trained model remove {{imp_rl8}} {{imp_rl8_ci}} of errors, about what 32 random edits do ({{imp_rand32}}); eight random edits remove {{imp_rand8}}. On function families never used in training: {{imp_fam}} against {{imp_fam_rand}}. A second, shorter training run reached {{imp_seed2}} {{imp_seed2_ci}}. Exhaustive search over simple edits removes {{imp_search}}.</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Proposer</th><th scope=col>1 proposal</th><th scope=col>8 proposals</th><th scope=col>Networks improved (8)</th></tr></thead>
     <tbody>{{table_improve}}</tbody>
   </table>
   </div>
-  <p class="limit"><b>Limit: one strong seed, one weaker, and a small effect.</b> A shorter repeat (30 RL steps, different training networks) scored {{imp_seed2}} {{imp_seed2_ci}}: above random edits, well below the first seed. The loop removes a tenth to a fifth of the errors of networks with a few dozen weights; exhaustive search does better when forward passes are free ({{imp_search}}), and gradient descent does better than all of it.</p>
 </div>
 
 <!-- =============================== DID NOT WORK =============================== -->
 <section id="failed" class="col">
   <h2>What did not work</h2>
-  <h3>Pure RL on the repair task</h3>
+  <ul class="notes">
+    <li><b>Pure RL on the repair task.</b> From the base model, RL learned the answer format in one or two steps and then collapsed to always answering "no edit": when almost every guess fails, doing nothing scores better. Hence the supervised stage.</li>
+    <li><b>Real tabular data.</b> On networks under-trained on 8 public datasets the proposer never saw, one trained proposal removes {{real_rl1}} of errors against {{real_rand1}} for a random edit, but with eight tries the edge mostly disappears: {{real_rl8}} {{real_rl8_ci}} against {{real_rand8}} {{real_rand8_ci}}. Gradient descent removes {{real_grad}}.</li>
+    <li><b>Public image classifiers.</b> Editing the final layer of {{ih_n}} classifiers from the Hugging Face Hub improved none of the well-trained ones; the only clear gain ({{ih_best_change}} points) was on a broken model that scores {{ih_best_before}}.</li>
+  </ul>
 </section>
 <figure class="wide fig" id="fig-collapse" data-anim="collapse" aria-describedby="collapse-cap">
-  <div class="fig-head"><span class="fig-title">Pure RL from the base model: share of faulty training networks answered with "no edit"</span><button class="replay" type="button">Replay</button></div>
+  <div class="fig-head"><span class="fig-title">Pure RL from the base model: share of faulty networks answered with "no edit"</span><button class="replay" type="button">Replay</button></div>
   <div class="legend"><span><i class="sw sw-untrained"></i>lr 2e-4</span><span><i class="sw sw-violet"></i>lr 6e-5</span><span><i class="sw sw-gray"></i>lr 2e-5</span></div>
   <div class="chart" data-chart="collapse"></div>
-  <figcaption id="collapse-cap">Learning-rate sweep, 8 steps of 12 networks &times; 16 samples (<code>runs/sweep/rl_lr*/metrics.jsonl</code>). At the lowest rate it had not collapsed, but had not improved repair either.</figcaption>
+  <figcaption id="collapse-cap">Three learning rates; at the lowest, no collapse but no improvement either.</figcaption>
 </figure>
-<div class="col">
-  <p>Starting from the base model, RL learned the answer format in one or two steps and then collapsed to always answering "no edit": when almost every guess fails, doing nothing scores better than guessing. That is why the repair model has a supervised stage. (In the propose-and-verify setting above, a wrong proposal is simply rejected, and pure RL works.)</p>
-  <h3>Real data</h3>
-  <p>Small networks under-trained on 24 public tabular datasets, 8 of them held out entirely; a proposer trained by pure RL on the other 16. On {{real_n}} networks from the held-out datasets, one trained proposal removes {{real_rl1}} of errors against {{real_rand1}} for a random edit. With eight proposals it is {{real_rl8}} {{real_rl8_ci}} against {{real_rand8}} {{real_rand8_ci}}: a small edge whose intervals overlap. Gradient descent removes {{real_grad}}.</p>
-  <h3>Public image classifiers</h3>
-</div>
 <figure class="wide fig" id="fig-heads" data-anim="heads" aria-describedby="heads-cap">
   <div class="fig-head"><span class="fig-title">Change in test accuracy after the kept edit, {{ih_n}} image classifiers</span><button class="replay" type="button">Replay</button></div>
   <div class="chart" data-chart="heads"></div>
-  <figcaption id="heads-cap">Formula-trained RL proposer, 8 proposals per model (<code>results/table_imagehead.csv</code>). Hover a point for the model name. The point far to the right is the broken model.</figcaption>
+  <figcaption id="heads-cap">The point far to the right is the broken model.</figcaption>
 </figure>
-<div class="col">
-  <p>{{ih_n}} public image classifiers from the Hugging Face Hub (beans, CIFAR-10, MNIST, Fashion-MNIST). Only the final layer is small enough to read, so that is what gets edited; proposals are checked on validation images and scored on the official test split. With the formula-trained proposer {{ih_unchanged}} of {{ih_n}} were unchanged; the only clear gain ({{ih_best_change}} points) was on a broken model that scores {{ih_best_before}}.</p>
-  <p class="limit"><b>Limit.</b> No well-trained model improved beyond noise, and none was lifted above its claimed accuracy by an edit.</p>
-</div>
 
 <!-- =============================== QWEN (hidden unless site/qwen.json exists) =============================== -->
 <section id="qwen" class="col" hidden>
   <h2>A real LLM: Qwen3.5-0.8B</h2>
-  <p class="qwen-status small"></p>
 </section>
 <figure class="wide fig qwen-fig" id="fig-qwen" hidden>
   <div class="chart" data-chart="qwen"></div>
@@ -333,21 +312,19 @@
     <tbody></tbody>
   </table>
   </div>
-  <div class="limit qwen-caveats" hidden><b>Limits</b><ul></ul></div>
+  <ul class="notes qwen-caveats" hidden></ul>
 </div>
 
 <!-- =============================== LIMITS =============================== -->
 <section id="limits" class="col limits">
-  <h2>Limitations</h2>
+  <h2>What this does not show</h2>
   <ul>
-    <li>Tiny networks (tens to hundreds of weights), single planted faults, functions with a one-line formula. Apart from the scikit-learn set, every network and fault comes from this project's generator.</li>
-    <li>Most of the gain is supervised. The supervised stage trains on synthetic faults whose inverse edit is known because we planted it. RL added about {{rl_gain_pooled_0}} points ({{rl_gain_pooled}} {{rl_gain_pooled_ci}} pooled, post hoc), and its in-distribution gain ({{rl_gain_id}}) is inside its own interval.</li>
-    <li>Poor transfer to unseen fault types ({{rl_faults_0}}), and a clear drop on networks from an optimiser it never saw ({{rl_external_0}}, with {{external_clean_bad}} of healthy ones wrongly edited).</li>
-    <li>Frontier closed models (GPT-6 Astra, GPT-6.1 Sol) repair {{frontier_range}} of the same networks; the gym does not discriminate between them, and their rows are partial samples.</li>
-    <li>One training seed for the final model.</li>
-    <li>The reasoning-mode reference is the untrained model at one effort setting with a {{think_cap_tokens}}-token cap; a larger allowance would let it finish more often.</li>
-    <li>No evidence on real LLMs. On {{ih_n}} public image classifiers, editing the final layer improved none of the well-trained ones.</li>
-    <li>The adapter is a specialist. Asked to reason, the first trained model did not: it still answered in a few dozen tokens. Nothing here shows it became a better weight-space reasoner.</li>
+    <li>Anything about large networks: these have tens to hundreds of weights, one planted fault each, and compute functions with a one-line formula.</li>
+    <li>That RL did most of the work. Most of the gain comes from supervised training on faults we planted, so the fix is known. RL adds about {{rl_gain_pooled_0}} points ({{rl_gain_pooled}} {{rl_gain_pooled_ci}} pooled over the six test sets; {{rl_gain_id}} in-distribution, within noise), most visibly as fewer edits to healthy networks.</li>
+    <li>Transfer to new kinds of fault: fault types never seen in training stay at {{rl_faults_0}}, and networks from an optimiser it never saw drop to {{rl_external_0}}.</li>
+    <li>Parity with frontier models: GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}} of the same networks.</li>
+    <li>Robustness across training runs: the final model is one training seed, and the reasoning reference is one effort setting with a {{think_cap_tokens}}-token cap.</li>
+    <li>Better reasoning or real-model gains: asked to reason, the trained model still answers in a few dozen tokens, and editing the final layer of {{ih_n}} public image classifiers improved none of the well-trained ones. {{limits_llm}}</li>
   </ul>
 </section>
 
@@ -355,22 +332,33 @@
 <section id="credits" class="col">
   <h2>Credits and related work</h2>
   <ul>
-    <li>Rikiya Takehi, Jayden Teoh, Alex Zhang and Omar Khattab, <a href="https://rikiyat.github.io/blog/weight-space-programming/"><i>Sparks of Weight-Space Programming</i></a> (MIT CSAIL, 2026), for the idea and their released logs.</li>
-    <li>Beaker, <a href="https://www.withbeaker.ai/blog/weight-space-programming"><i>Weight-space programming</i></a> (2026), for the trivial-baseline discipline this page tries to follow.</li>
-    <li>Thinking Machines, for <a href="https://tinker-docs.thinkingmachines.ai/">Tinker</a> and Inkling 2 Small, and for <a href="https://github.com/thinking-machines-lab/tinker-cookbook">tinker-cookbook</a>, whose RL loop this uses.</li>
-    <li>Trained weight readers that take weights as numbers rather than text: Langosco et al., <i>Towards Meta-Models for Automated Interpretability</i>; Weight Oracles (arXiv 2610.07334). Cha et al. (arXiv 2611.05798) on auditing weight readers with function-preserving symmetries; WSPBench for a planted-fault repair benchmark.</li>
+    <li>Rikiya Takehi, Jayden Teoh, Alex Zhang and Omar Khattab, <a href="https://rikiyat.github.io/blog/weight-space-programming/"><i>Sparks of Weight-Space Programming</i></a> (MIT CSAIL, 2026), for the idea.</li>
+    <li>Beaker, <a href="https://www.withbeaker.ai/blog/weight-space-programming"><i>Weight-space programming</i></a> (2026), for the trivial-baseline discipline.</li>
+    <li>Thinking Machines, for <a href="https://tinker-docs.thinkingmachines.ai/">Tinker</a>, Inkling 2 Small and <a href="https://github.com/thinking-machines-lab/tinker-cookbook">tinker-cookbook</a>.</li>
+    <li>Trained weight readers that take weights as numbers rather than text: Langosco et al., <i>Towards Meta-Models for Automated Interpretability</i>; Weight Oracles (arXiv 2610.07334). Cha et al. (arXiv 2611.05798) on auditing weight readers with symmetries; WSPBench, a planted-fault repair benchmark.</li>
   </ul>
-  <p>As far as we know, this is the first trained weight-space programmer that works from weights as text; published results so far use closed frontier models off the shelf.</p>
+  <p>As far as we know, this is the first trained weight-space programmer that works from weights as text.</p>
+</section>
+
+<section id="method" class="col">
+  <h2>Method details</h2>
+  <ul class="notes">
+    <li>Test sets: {{n_test}} networks each, generated before training from seeds disjoint from training and validation. Intervals are 95% bootstrap intervals over networks; differences are paired on the same networks.</li>
+    <li>Sampling: no reasoning, temperature {{rl_temp}}, {{rl_max_tokens}}-token cap, one answer per network. Untrained reasoning reference: effort {{think_effort}}, {{think_cap_tokens}}-token cap.</li>
+    <li>The checkpoint was chosen on validation networks (300 hand-built, 200 gradient-made), never on test.</li>
+    <li>Frontier models were run through OpenRouter on the same prompts, on partial samples of at most {{frontier_max_n}} networks; their APIs do not allow reasoning to be switched off.</li>
+    <li>Costs are estimated from token counts at list prices: supervised {{cost_sft}}, RL {{cost_rl}}, evaluation {{cost_eval}}.</li>
+  </ul>
 </section>
 
 <section id="reproduce" class="col">
   <h2>Reproduce it</h2>
-  <p>Every number on this page is read at build time from <code>results/*.csv</code>, <code>runs/cost_tally.json</code> and the rollout logs under <code>runs/</code>; <code>NOTES.md</code> holds the pre-registrations and every deviation from the plan. The commands, from the README:</p>
+  <p>The code, the frozen test sets and every rollout log are in the repository{{repo_link}}.</p>
   <pre class="code"><code>{{reproduce}}</code></pre>
 </section>
 
 <footer class="col foot">
-  <p>{{byline}} &middot; Built from the WeightGym repository by <code>site/build_data.py</code>. No logos or brand assets of the organisations named here are used.</p>
+  <p>{{byline}}</p>
 </footer>
 
 <script id="data" type="application/json">/*DATA*/</script>

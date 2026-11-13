@@ -41,13 +41,13 @@ from weightgym.eval import paired_diff_ci, summarize  # noqa: E402
 
 BYLINE = "@emeraldant"  # the only place the byline is set
 BYLINE_URL = "https://x.com/emeraldant"
-REPO_URL = ""  # fill in once the repository is public; empty hides the link
+REPO_URL = "https://github.com/emeraldant/WSP-Gym"
 
 HERO_SEED = 3000218  # test_id network replayed in the hero race and the repair figure (see site/README.md)
 IMPROVE_SEED = 42000123  # test_imperfect network replayed in the propose-and-verify figure (gap closed near the mean among improved networks)
 
 SPLITS = [  # (split, short label, long label)
-    ("test_id", "In-distribution", "In-distribution (primary metric)"),
+    ("test_id", "In-distribution", "In-distribution"),
     ("test_larger", "Larger networks", "Larger networks than any in training"),
     ("test_families", "Unseen families", "Function families never trained on"),
     ("test_faults", "Unseen fault types", "Fault types never trained on"),
@@ -262,6 +262,12 @@ def build() -> tuple[dict, dict]:
         trs.append(f"<tr{cls}><th scope=row>{esc(label)}</th><td class=muted>{ncell}</td>{cells}</tr>")
     D["progression"] = prog
     T["table_progress"] = "\n".join(trs)
+    # reader-facing takeaway of the same progression (no internal model names)
+    T["table_takeaway"] = "\n".join([
+        f"<tr><th scope=row>Three times the supervised training data</th><td>In-distribution repair</td><td>{pct(M['sft_mixed']['test_id']['repair_rate'], 0)} &rarr; {pct(M['scale_sft']['test_id']['repair_rate'], 0)}</td></tr>",
+        f"<tr><th scope=row>Gradient-made networks added to training</th><td>Repair on gradient-made networks</td><td>{pct(M['sft_rl']['test_trained']['repair_rate'], 0)} &rarr; {pct(M['scale_rl']['test_trained']['repair_rate'], 0)}</td></tr>",
+        f"<tr><th scope=row>RL on top of supervised training</th><td>Repair, six test sets pooled; healthy networks left alone (larger networks)</td><td>about +{{rl_gain_pooled_0}} points; {pct(M['scale_sft']['test_larger']['clean_ok'], 0)} &rarr; {pct(M['scale_rl']['test_larger']['clean_ok'], 0)}</td></tr>",
+    ])
     T["first_sft_id"] = pct(M["sft"]["test_id"]["repair_rate"], 0)
     T["mixed_id_0"] = pct(M["sft_mixed"]["test_id"]["repair_rate"], 0)
     T["scale_sft_id_0"] = pct(M["scale_sft"]["test_id"]["repair_rate"], 0)
@@ -364,7 +370,7 @@ def build() -> tuple[dict, dict]:
     T["frontier_trained_range"] = f"{100 * min(M[a]['test_trained']['repair_rate'] for a in ('frontier_astra_reasoning', 'frontier_sol_reasoning')):.0f}-{100 * max(M[a]['test_trained']['repair_rate'] for a in ('frontier_astra_reasoning', 'frontier_sol_reasoning')):.0f}%"
     trs = []
     for c in comp:
-        n = f"n={int(c['n_total'])} networks*" if c.get("partial") else f"{int(c['n'])} faulty networks"
+        n = f"partial: {int(c['n_total'])} networks" if c.get("partial") else f"{int(c['n'])} faulty networks"
         tok = f"~{c['tokens']:,.0f}" + (f" ({c['reasoning']:.0f} reasoning)" if c.get("reasoning") else "")
         cell = pct(c["rate"]) + (f" <span class=ci>{ci(c['lo'], c['hi'])}</span>" if not c.get("partial") else "")
         cls = " class=final" if c["key"] == "trained" else ""
@@ -393,8 +399,8 @@ def build() -> tuple[dict, dict]:
         T[f"ver_rand_{key}"] = pct(vd[("baseline_random", s)][8]["fixed"])
     dist = [vd[("scale_rl", s)][8]["distinct"] for s, _ in vsplits]
     T["ver_distinct"] = f"{min(dist):.1f} to {max(dist):.1f}"
-    vrows = [("Final model, one answer (the headline regime)", {s: pct(M["scale_rl"][s]["repair_rate"]) for s, _ in vsplits}, ""),
-             ("Final model, best of 8 verified answers", {s: f"{pct(vd[('scale_rl', s)][8]['fixed'])} <span class=ci>{ci(vd[('scale_rl', s)][8]['lo'], vd[('scale_rl', s)][8]['hi'])}</span>" for s, _ in vsplits}, " class=final"),
+    vrows = [("One answer, no verifier", {s: pct(M["scale_rl"][s]["repair_rate"]) for s, _ in vsplits}, ""),
+             ("Best of 8 verified answers", {s: f"{pct(vd[('scale_rl', s)][8]['fixed'])} <span class=ci>{ci(vd[('scale_rl', s)][8]['lo'], vd[('scale_rl', s)][8]['hi'])}</span>" for s, _ in vsplits}, " class=final"),
              ("8 random valid edits, verified", {s: pct(vd[("baseline_random", s)][8]["fixed"]) for s, _ in vsplits}, ""),
              ("Brute-force search over single sign flips and swaps", {s: pct(M["baseline_search"][s]["repair_rate"]) for s, _ in vsplits}, ""),
              ("Gradient descent on half of the inputs (no edit budget)", {s: pct(M["baseline_gradient"][s]["repair_rate"]) for s, _ in vsplits}, "")]
@@ -426,7 +432,7 @@ def build() -> tuple[dict, dict]:
              imp_rl8_0=pct(ti("rl_proposer x8")["gap_closed"], 0), imp_rand8_0=pct(ti("random x8")["gap_closed"], 0),
              imp_unt8_0=pct(ti("untrained x8")["gap_closed"], 0))
     irows = [("Untrained Inkling 2 Small", "untrained", ""), ("Random valid edits", "random", ""), ("RL-trained Inkling 2 Small", "rl_proposer", " class=final"),
-             ("RL-trained, second seed (30 steps)", "rl_proposer_seed2", "")]
+             ("RL-trained, second, shorter run", "rl_proposer_seed2", "")]
     trs = []
     for label, key, cls in irows:
         a, b = ti(f"{key} x1"), ti(f"{key} x8")
@@ -608,6 +614,8 @@ def build() -> tuple[dict, dict]:
     m = re.search(r"## Reproduce\n\n```bash\n(.*?)```", open(p("README.md")).read(), re.S)
     assert m, "README has no Reproduce block"
     T["reproduce"] = esc(m.group(1).rstrip())
+    T["repo_link"] = f' <a href="{esc(REPO_URL)}">{esc(REPO_URL)}</a>' if REPO_URL else ""
+    T["table_takeaway"] = T["table_takeaway"].replace("{rl_gain_pooled_0}", T["rl_gain_pooled_0"])
     from weightgym.env import REPAIR_THRESHOLD
     T["repair_threshold"] = f"{REPAIR_THRESHOLD}"
 
@@ -621,6 +629,8 @@ def build() -> tuple[dict, dict]:
             for k in ("label", "math500", "lo", "hi", "n"):
                 assert k in r, f"qwen.json row missing {k}"
         CHECKS.append("qwen.json present and well-formed; Qwen section shown")
+    T["limits_llm"] = ("The real-LLM result is one layer of one model, and the edit removes one known failure rather than adding ability."
+                       if D["qwen"] is not None else "There is no evidence here on real LLMs.")
 
     return D, T
 
@@ -755,6 +765,7 @@ def main() -> None:
     D = jsonable(D)
     T["byline"] = esc(BYLINE)
     T["byline_url"] = esc(BYLINE_URL)
+    T["repo_url"] = esc(REPO_URL)
     check_readme(D, T)
     D["fields"] = T_public(T)
     with open(os.path.join(SITE, "data.json"), "w") as f:

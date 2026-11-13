@@ -1,6 +1,8 @@
-# WeightGym showcase page
+# WSP-Gym showcase page
 
-A static page that presents the WeightGym results. `index.html` is self-contained (data, CSS and JS
+A static page that presents the WSP-Gym results (Python package: `weightgym`). It is meant to be served at
+https://emeraldant.github.io/WSP-Gym/ (`og:url` and the `og:image`/`twitter:image` URLs are absolute with that base;
+everything else is relative, so the page also works from disk). `index.html` is self-contained (data, CSS and JS
 inlined); it loads nothing external except optional Google Fonts and falls back to system fonts offline.
 
 ## Rebuild
@@ -67,7 +69,7 @@ The section "A real LLM: Qwen3.5-0.8B" (and its navigator link) is hidden unless
   "summary": "..." }
 ```
 
-`math500`, `value`, `lo` and `hi` are fractions. `bars` (optional) is drawn as a horizontal bar figure in the
+`status` is ignored. `math500`, `value`, `lo` and `hi` are fractions. `caveats` render as plain bullets. `bars` (optional) is drawn as a horizontal bar figure in the
 style of the six-test-set chart (highlighted bars in the trained colour); `caveats` (optional) is shown as a
 "Limits" list. Rerun `build_data.py` after writing the file to inline it (the build checks `rows` and
 `summary`). If it is not inlined, the page still fetches `qwen.json` when served over HTTP. To test the slot
@@ -84,6 +86,7 @@ source site/tools/env.sh
 $TOOLS_PY site/tools/export_clips.py          # all clips and stills, or name them (card = stills)
 $TOOLS_PY site/tools/shoot.py OUT_DIR         # desktop/phone, light/dark screenshots
 $TOOLS_PY site/tools/check_numbers.py         # every %, $ and decimal on the rendered page traced to data.json
+$TOOLS_PY site/tools/wordcount.py [--print]   # visible prose word count (and the text itself)
 ```
 
 The toolchain lives in `site/.tools/` (git-ignored): a venv with Playwright, Pillow and imageio-ffmpeg, the
@@ -92,5 +95,5 @@ packages without root.
 
 ## Byline
 
-Set once, in `BYLINE` at the top of `build_data.py`. `REPO_URL` there is a placeholder for the public
-repository link and is not used on the page yet.
+Set once, in `BYLINE` at the top of `build_data.py`. `REPO_URL` (https://github.com/emeraldant/WSP-Gym) is used
+by the byline link and the Reproduce section.

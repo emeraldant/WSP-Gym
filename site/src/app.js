@@ -1,4 +1,4 @@
-/* WeightGym showcase. Every number drawn here is read from the inlined data (site/data.json).
+/* WSP-Gym showcase. Every number drawn here is read from the inlined data (site/data.json).
    Each animation is a pure function of time t, so it can pause off-screen, replay, honour
    prefers-reduced-motion, and be rendered frame by frame for video export (?clip=<name>). */
 (function () {
@@ -713,20 +713,29 @@
   }
 
   // ---------------------------------------------------------------- Qwen slot (only from site/qwen.json)
+  function wrapText(text, maxChars) {
+    const words = String(text).split(/\s+/), lines = [];
+    let cur = "";
+    for (const w of words) { if (cur && (cur + " " + w).length > maxChars) { lines.push(cur); cur = w; } else cur = cur ? cur + " " + w : w; }
+    if (cur) lines.push(cur);
+    return lines;
+  }
   function drawQwenBars(el, bars) {
-    const W = Math.max(300, cw(el)), narrow = W < 600;
-    const L = narrow ? 8 : 230, R = 64, rowH = narrow ? 64 : 50, top = 6;
+    // labels sit above their bars (they can be long), wrapped to the chart width; the note follows in muted text
+    const W = Math.max(300, cw(el)), L = 8, R = 64, top = 4, LH = 16;
+    const maxChars = Math.max(24, Math.floor((W - L - 8) / 7.2));
+    const rows = bars.map((b) => ({ b, lines: wrapText(b.label + (b.note ? ` (${b.note})` : ""), maxChars) }));
     const max = Math.min(1, Math.ceil(Math.max(...bars.map((b) => b.hi != null ? b.hi : b.value)) * 10 + 0.5) / 10);
-    const H = top + bars.length * rowH + 30;
+    let y = top;
+    rows.forEach((r) => { r.y0 = y + r.lines.length * LH + 4; y = r.y0 + 18 + 16; });
+    const H = y + 24;
     const svg = svgFor(el, W, H, "MATH-500 accuracy by condition: " + bars.map((b) => `${b.label} ${pct1(b.value)}`).join("; "));
     const x = (v) => L + (v / max) * (W - L - R);
     const step = max > 0.5 ? 0.2 : max > 0.25 ? 0.1 : 0.05, ticks = []; for (let v = 0; v <= max + 1e-9; v += step) ticks.push(Math.round(v * 100) / 100);
-    for (const v of ticks) { S("line", { x1: x(v), x2: x(v), y1: top, y2: H - 24, class: "grid" }, svg); T(svg, x(v), H - 8, pct0(v), { "text-anchor": "middle", "font-size": 11 }); }
-    const items = bars.map((b, i) => {
-      const y0 = top + i * rowH + (narrow ? 22 : 8);
-      T(svg, narrow ? L : L - 12, narrow ? y0 - 7 : y0 + 14, b.label, { "text-anchor": narrow ? "start" : "end", "font-size": 13, class: "t-ink" });
-      if (b.note && !narrow) T(svg, L - 12, y0 + 30, b.note, { "text-anchor": "end", "font-size": 10.5 });
-      const r = S("rect", { x: L, y: y0, height: 18, rx: 4, fill: b.highlight ? "var(--trained)" : "var(--gray-series)", "data-tip": `${b.label}: ${pct1(b.value)}${b.lo != null ? ` [${r1(b.lo)}, ${r1(b.hi)}]` : ""}${b.note ? " · " + b.note : ""}` }, svg);
+    for (const v of ticks) { S("line", { x1: x(v), x2: x(v), y1: top, y2: H - 22, class: "grid" }, svg); T(svg, x(v), H - 6, pct0(v), { "text-anchor": "middle", "font-size": 11 }); }
+    const items = rows.map(({ b, lines, y0 }) => {
+      lines.forEach((ln, k) => T(svg, L, y0 - 6 - (lines.length - 1 - k) * LH, ln, Object.assign({ "font-size": 13, class: "t-ink" }, halo)));
+      const r = S("rect", { x: L, y: y0, height: 18, rx: 4, fill: b.highlight ? "var(--trained)" : "var(--gray-series)", "data-tip": `${b.label}: ${pct1(b.value)}${b.lo != null ? ` [${r1(b.lo)}, ${r1(b.hi)}]` : ""}` }, svg);
       if (b.lo != null) {
         S("line", { x1: x(b.lo), x2: x(b.hi), y1: y0 + 9, y2: y0 + 9, stroke: "var(--ink)", "stroke-width": 1.5 }, svg);
         for (const v of [b.lo, b.hi]) S("line", { x1: x(v), x2: x(v), y1: y0 + 4, y2: y0 + 14, stroke: "var(--ink)", "stroke-width": 1.5 }, svg);
@@ -739,14 +748,13 @@
   function renderQwen(q) {
     if (!q || !Array.isArray(q.rows)) return;
     const sec = document.getElementById("qwen"), body = document.querySelector(".qwen-body");
-    sec.querySelector(".qwen-status").textContent = q.status ? `Status: ${q.status}` : "";
     body.querySelector(".qwen-table tbody").innerHTML = q.rows.map((r) =>
       `<tr><th scope=row>${esc(r.label)}</th><td>${pct1(r.math500)}</td><td>[${r1(r.lo)}, ${r1(r.hi)}]</td><td>${esc(r.n)}</td><td class=muted>${esc(r.note || "")}</td></tr>`).join("");
     body.querySelector(".qwen-tablewrap").hidden = !q.rows.length;
     body.querySelector(".qwen-summary").textContent = q.summary || "";
     if (Array.isArray(q.caveats) && q.caveats.length) {
       const cv = body.querySelector(".qwen-caveats");
-      cv.querySelector("ul").innerHTML = q.caveats.map((c) => `<li>${esc(c)}</li>`).join("");
+      cv.innerHTML = q.caveats.map((c) => `<li>${esc(c)}</li>`).join("");
       cv.hidden = false;
     }
     sec.hidden = false; body.hidden = false;
@@ -779,12 +787,12 @@
 
   // ---------------------------------------------------------------- clip mode (video export)
   const CLIPS = {
-    race: { get title() { return `Same number of tokens: one network, or ${DATA.race.n}`; }, sub: () => `Inkling 2 Small before and after post-training on Tinker. Left: ${fmtInt(DATA.race.budget)} tokens of reasoning on one network. Right: ${DATA.race.n} networks answered in ${fmtInt(DATA.race.used)} tokens, ${DATA.race.repaired} repaired. From the logs.`,
+    race: { get title() { return `Same number of tokens: one network, or ${DATA.race.n}`; }, sub: () => `Inkling 2 Small before and after post-training on Tinker. Left: ${fmtInt(DATA.race.budget)} tokens of reasoning on one network. Right: ${DATA.race.n} networks answered in ${fmtInt(DATA.race.used)} tokens, ${DATA.race.repaired} repaired. Same number of generated tokens, not wall-clock time.`,
       foot: () => `All ${Math.round(DATA.headline.trained.n_faulty)} faulty test networks: untrained + reasoning ${pct1(DATA.headline.reasoning.rate)} at ~${fmtInt(Math.round(DATA.headline.reasoning.tokens / 100) * 100)} tokens; trained, no reasoning ${pct1(DATA.headline.trained.rate)} at ~${Math.round(DATA.headline.trained.tokens)} tokens` },
     splits: { title: "Inkling 2 Small, post-trained on Tinker: repair rate on six test sets", sub: () => `Share of broken networks fixed from raw weights, no reasoning tokens. 95% intervals; black tick: statistics-only heuristic.`,
       foot: () => `Weak row: unseen fault types. Frontier closed models fix ${pct0(Math.min(...DATA.comparison.filter((c) => c.partial).map((c) => c.rate)))}-${pct0(Math.max(...DATA.comparison.filter((c) => c.partial).map((c) => c.rate)))} of the in-distribution networks.` },
-    repair: { title: "What the trained model reads, and the edit it writes", sub: () => `A ${DATA.example.n_weights}-weight test network with two outgoing weights swapped. Real values from the test set and the logs.`, foot: () => "" },
-    loop: { title: "RL alone, no labels: propose, verify, keep", sub: () => `The 8 proposals the RL-trained model sampled for one imperfect test network, re-checked with forward passes.`,
+    repair: { title: "What the trained model reads, and the edit it writes", sub: () => `A ${DATA.example.n_weights}-weight test network with two outgoing weights swapped.`, foot: () => "" },
+    loop: { title: "RL alone, no labels: propose, verify, keep", sub: () => `The 8 proposals the RL-trained model sampled for one imperfect test network, each checked with forward passes.`,
       foot: () => `All ${Math.round(DATA.improve.series.trained[1].n)} test networks, 8 proposals: ${gap1(DATA.improve.series.trained[1].gap_closed)} of errors removed (random edits ${gap1(DATA.improve.series.random[1].gap_closed)}).` },
     disguise: { title: "Nothing to memorise: one function, five sets of weights", sub: () => `A compiled circuit from the gym under its own disguise functions. Outputs identical on all ${fmtInt(DATA.disguise.n_inputs)} inputs.`, foot: () => "" },
     card: { title: "", sub: () => "", foot: () => "" },
