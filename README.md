@@ -1,8 +1,9 @@
-# WeightGym
+# WSP-Gym
 
 **Training an open model to repair neural networks by reading their raw weights.**
 
-WeightGym is a fast simulator of small ReLU networks with planted faults. A model is shown a network's
+WSP-Gym is a fast simulator of small ReLU networks with planted faults (a gym for weight-space programming;
+the Python package is `weightgym`). A model is shown a network's
 weights as plain text and one line describing what the network should compute, and must answer with a
 tiny edit (at most 3 operations, each touching one row, one column or one scalar) that makes it work
 again. Edits are scored only by how the edited network behaves.
@@ -171,7 +172,7 @@ that a frontier LLM can read a small network's weights as text and write better 
 and, in their small-network experiments, no tools. Follow-ups asked how much of that is real reading:
 [Beaker](https://www.withbeaker.ai/blog/weight-space-programming) showed the headline edit to a real
 0.8B LLM is matched by banning one token, and others showed some "reads" survive only until the network
-is permuted or rescaled. WeightGym is built around those objections:
+is permuted or rescaled. WSP-Gym is built around those objections:
 
 - **Symmetries are built in.** Every training network is a hand-compiled circuit hidden behind neuron
   permutation, per-neuron rescaling, neuron splitting, distractor neurons (dead neurons, exactly
