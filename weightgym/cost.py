@@ -21,7 +21,7 @@ from .tinker_train import PRICE
 
 BUDGET_USD = 250.0
 STOP_FRACTION = 0.85
-# The scale-up run (NOTES.md, "Pre-registration: scale-up") has its own budget, tallied separately.
+# The final model's run (sft_scale, rl_scale) has its own budget, tallied separately.
 SCALE_UP_BUDGET_USD = 300.0
 SCALE_UP_PREFIXES = ("sft_scale", "rl_scale", "final/scale", "diag/scale", "final_verify")
 

@@ -226,9 +226,8 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   -1 for an invalid answer). Run as 10 chunks of 10 steps with validation after each.
 - **Checkpoint selection** by the mean of the two validation repair rates (300 hand-built and 200
   gradient-made networks): 0.764 after the supervised stage, 0.802 for the selected RL checkpoint
-  (chunk 5 of 0-9). The stopping rule was fixed before RL started. Each test split was evaluated once
-  per checkpoint. Everything about this run was written down before it started; see "Pre-registration:
-  scale-up" in `NOTES.md`.
+  (chunk 5 of 0-9). The stopping rule was fixed before RL started, and each test split was evaluated
+  once per checkpoint.
 - **Earlier models:** the first model is rank 32, 300 supervised steps x 64 hand-built networks and 60
   RL steps; the mixed-source model is the same supervised recipe on 9,600 + 9,600 networks with no RL.
 - **Cost:** about $174 of Tinker usage for the final model (supervised stage $123.50, RL $39.69, the rest
@@ -236,8 +235,7 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   experiments, sweeps and every evaluation. Estimated from token counts at list prices
   (`python -m weightgym.cost`, `runs/cost_tally.json`).
 - **Adapters kept on Tinker** (LoRA sampler weights): the final repair model, the first repair model,
-  the mixed-source model and the two RL-trained proposers (formula tasks, real data); paths are in
-  `NOTES.md`.
+  the mixed-source model and the two RL-trained proposers (formula tasks, real data).
 
 ## Limitations
 
@@ -371,15 +369,27 @@ MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded
 | Layer 23 edit proposed by untrained Inkling 2 Small with reasoning | 38.2% [34.0, 42.4] | 57% | all 500 problems |
 | Layer 23 edit proposed by RL proposer (formula tasks) and untrained Inkling 2 Small with reasoning | 37.4% [33.2, 41.6] | 59% | all 500 problems |
 
+**How the proposers were compared.** Each proposer gives 8 answers per layer for layers 16-23, from the same prompt. Every distinct valid edit is written into Qwen and scored on 64 practice problems (GSM8K-train and MATH-train, none from MATH-500) with an 8,192-token limit. An answer *helps* if it beats 10.7%: the unedited model's 6.2% plus twice its standard deviation over four seeds. Each arm's best helpful edit per layer is then scored on 256 further practice problems, and the best of those get the full MATH-500 run. In the control, the proposer sees the same prompt with the printed weights shuffled, and its answer is still applied to the real weights.
+
+Answers that help, out of 8, for the layers scored so far (layers 21-23; the others are still being scored):
+
+| Proposer | Layer 23 | Layer 22 | Layer 21 | Output tokens per answer |
+|---|---|---|---|---|
+| Untrained Inkling 2 Small, with reasoning | 7 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 4 of 8 | 1,598 |
+| RL proposer trained on formula tasks | 8 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 3 of 8 | 128 |
+| RL proposer trained on real-data networks | 7 of 8 (3 of 8 with shuffled weights) | 1 of 8 | 1 of 8 | 135 |
+| Final repair model | 8 of 8 | 0 of 8 | 0 of 8 | 47 |
+| Untrained Inkling 2 Small, no reasoning | 0 of 8 | 0 of 8 | 0 of 8 | 256 |
+| Random valid edits | 2 of 8 | 3 of 8 | 2 of 8 | - |
+
 - The edit removes one habit; it does not add math ability. Banning the "Wait" token, with no weight change, scores 38.0%.
 - One layer of one model. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.
 - We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the published runs did, is a harder search.
 - GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%.
 <!-- qwen:end -->
 
-How the proposers were compared, the screening on practice problems, the shuffled-weights control and what
-is still running are in `NOTES.md` ("Qwen3.5-0.8B on a local GPU"). The harness first reproduced three
-published numbers: unedited, the one-neuron edit, and the token ban. These runs used rented H100 GPUs on
+The harness first reproduced three published numbers (unedited, the one-neuron edit, and the token ban),
+which are the first three rows of the table. These runs used rented H100 GPUs on
 Modal (about $26) and a local RTX 5080; the proposals themselves cost well under a dollar of Tinker sampling.
 
 ## Benchmark your own model
@@ -435,8 +445,12 @@ uv run python -m weightgym.cost
 
 `rl_chunks.py` exists because Tinker's free checkpoint storage holds 100 GB and one Inkling 2 Small
 training state is 50 GB; it runs the cookbook RL loop in short chunks and keeps only the newest state
-and the best sampler weights. Every number above comes from a JSONL log under `runs/`; `NOTES.md`
-records the pre-registration, every deviation from the original plan, and the surprises along the way.
+and the best sampler weights. Every number above comes from a JSONL log under `runs/`. The primary
+metric, the test sets and the success threshold were fixed before any model was trained.
+
+## Licence
+
+MIT (`LICENSE`). Third-party data and code keep their own terms; see `THIRD_PARTY.md`.
 
 ## Credits and related work
 

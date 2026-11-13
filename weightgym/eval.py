@@ -1,6 +1,6 @@
 """Scoring, summaries and bootstrap confidence intervals.
 
-Metric definitions (fixed before any model was evaluated; see NOTES.md):
+Metric definitions (fixed before any model was evaluated):
 
   repair_rate   fraction of FAULTY episodes whose edit reaches recovery >= 0.95 within budget.
                 This is the primary metric (on the in-distribution test split, both prompt

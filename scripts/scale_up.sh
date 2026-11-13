@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Scale-up run (NOTES.md, "Pre-registration: scale-up"). Stages are separate so a person or agent
+# The final model's training run. Stages are separate so a person or agent
 # checks each result before paying for the next one.
 #
 #   scripts/scale_up.sh sft              # 900-step mixed-source SFT from the base model, auto-resumes

@@ -1,5 +1,5 @@
 """A slice of Qwen3.5-0.8B shown as a small network, so that proposers trained on small networks can be
-benchmarked on a real LLM (pre-registered in NOTES.md, "Step 2").
+benchmarked on a real LLM (README, "Fourth result").
 
 One item per MLP layer. The printed matrix W1 has one row per token of a fixed list and one column per MLP
 neuron: W1[t, j] = (output direction of token t) . (output column of neuron j), i.e. how hard neuron j pushes
@@ -46,11 +46,6 @@ N_SHOWN = 64
 SEED0 = 70_000_000
 K = 8
 ARMS = ("random", "untrained", "untrained_reasoning", "formula_rl_proposer", "real_rl_proposer", "scale_rl")
-SAMPLERS = {  # adapters kept on Tinker (NOTES.md)
-    "formula_rl_proposer": "tinker://d06765d0-0bcf-5c2e-b5c3-9f7adb571970:train:0/sampler_weights/final",
-    "real_rl_proposer": "tinker://410fdc47-dcb9-5775-b02a-caa13cd33513:train:0/sampler_weights/final",
-    "scale_rl": "tinker://df143eaf-cf67-52a8-9906-2027a75938b3:train:0/sampler_weights/final",
-}
 
 
 def _g(v: float) -> str:
@@ -672,10 +667,35 @@ def _readme_section(table: list[dict], summary: str, caveats: list[str], readme:
     if start not in text or end not in text:
         return
     rows = "\n".join(f"| {r['condition']} | {100 * r['acc']:.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] | {100 * r['cut_share']:.0f}% | {r['block']} |" for r in table)
+    cfg, d = _cfg(), distinct_edits()
+    done = [l for l in LAYERS if all(screen_acc(f"edit_{e}") is not None for e, (ll, _) in d.items() if ll == l)]
+    names = (("untrained_reasoning", "Untrained Inkling 2 Small, with reasoning"), ("formula_rl_proposer", "RL proposer trained on formula tasks"),
+             ("real_rl_proposer", "RL proposer trained on real-data networks"), ("scale_rl", "Final repair model"),
+             ("untrained", "Untrained Inkling 2 Small, no reasoning"), ("random", "Random valid edits"))
+    arm_rows = []
+    for arm, label in names:
+        cells = []
+        for l in sorted(done, reverse=True):
+            h = hits(arm, l)
+            ctl = control_hits(arm, l) if l == 23 else None
+            cells.append(f"{h[0]} of {h[1]}" + (f" ({ctl[0]} of {ctl[1]} with shuffled weights)" if ctl else ""))
+        tok = [r["n_out"] for r in _proposal_rows(arm) if r.get("n_out") is not None]
+        arm_rows.append(f"| {label} | " + " | ".join(cells) + f" | {(f'{np.mean(tok):,.0f}' if tok else '-')} |")
+    method = (
+        "**How the proposers were compared.** Each proposer gives 8 answers per layer for layers 16-23, from the same prompt. Every distinct "
+        f"valid edit is written into Qwen and scored on {cfg['screen_n']} practice problems (GSM8K-train and MATH-train, none from MATH-500) with an "
+        f"{cfg['cap']:,}-token limit. An answer *helps* if it beats {100 * cfg['keep_above']:.1f}%: the unedited model's "
+        f"{100 * cfg['unedited_mean']:.1f}% plus twice its standard deviation over four seeds. Each arm's best helpful edit per layer is then "
+        "scored on 256 further practice problems, and the best of those get the full MATH-500 run. In the control, the proposer sees the same "
+        "prompt with the printed weights shuffled, and its answer is still applied to the real weights.\n\n"
+        "Answers that help, out of 8, for the layers scored so far"
+        + ("" if len(done) == len(LAYERS) else f" (layers {min(done)}-{max(done)}; the others are still being scored)") + ":\n\n"
+        "| Proposer | " + " | ".join(f"Layer {l}" for l in sorted(done, reverse=True)) + " | Output tokens per answer |\n|---|" + "---|" * (len(done) + 1) + "\n"
+        + "\n".join(arm_rows))
     body = (f"{start}\n{summary}\n\n"
             "MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):\n\n"
             "| Condition | MATH-500 | Answers cut at the token limit | Problems |\n|---|---|---|---|\n" + rows + "\n\n"
-            + "\n".join(f"- {c}" for c in caveats) + f"\n{end}")
+            + method + "\n\n" + "\n".join(f"- {c}" for c in caveats) + f"\n{end}")
     a, b = text.index(start), text.index(end) + len(end)
     open(readme, "w").write(text[:a] + body + text[b:])
 
