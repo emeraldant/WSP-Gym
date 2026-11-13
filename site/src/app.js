@@ -758,6 +758,8 @@
       `<tr><th scope=row>${esc(r.label)}</th><td>${pct1(r.math500)}</td><td>[${r1(r.lo)}, ${r1(r.hi)}]</td><td>${esc(r.n)}</td><td class=muted>${esc(r.note || "")}</td></tr>`).join("");
     body.querySelector(".qwen-tablewrap").hidden = !q.rows.length;
     body.querySelector(".qwen-summary").textContent = q.summary || "";
+    const ac = body.querySelector(".qwen-across");
+    if (ac && q.across) { ac.textContent = q.across; ac.hidden = false; }
     if (Array.isArray(q.caveats) && q.caveats.length) {
       const cv = body.querySelector(".qwen-caveats");
       cv.innerHTML = q.caveats.map((c) => `<li>${esc(c)}</li>`).join("");

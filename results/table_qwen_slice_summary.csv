@@ -1,0 +1,7 @@
+arm,instances_with_kept_edit,mean_dev_change_points,lo,hi,minus_random,minus_random_lo,minus_random_hi
+formula_rl_proposer,7,7.47,2.15,14.55,-2.78,-7.23,1.03
+random,8,10.25,5.52,15.72,0.0,0.0,0.0
+real_rl_proposer,8,6.88,1.46,14.06,-3.37,-7.67,0.68
+scale_rl,3,1.9,0.2,4.35,-8.35,-13.57,-3.52
+untrained,0,0.0,0.0,0.0,-10.25,-15.72,-5.52
+untrained_reasoning,7,7.71,2.39,15.48,-2.54,-6.84,1.47

@@ -1,0 +1,49 @@
+arm,layer,valid_nonempty,kept,screen_acc,dev_acc,dev_change_points,ops
+formula_rl_proposer,16,8,True,17.19,22.66,12.5,"[{""op"": ""set"", ""tensor"": ""W1"", ""index"": [0, 998], ""value"": 0.0}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [1, 998], ""value"": 0.0}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""col"", ""index"": 1750, ""factor"": 0.0}]"
+formula_rl_proposer,17,8,True,12.5,11.72,1.56,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.5}]"
+formula_rl_proposer,18,8,True,10.94,16.41,6.25,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.2}]"
+formula_rl_proposer,19,8,True,12.5,11.72,1.56,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [5, 1304], ""value"": 5.5}]"
+formula_rl_proposer,20,8,True,10.94,10.55,0.39,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.3}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.3}]"
+formula_rl_proposer,21,8,True,18.75,18.36,8.2,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.5}]"
+formula_rl_proposer,22,8,False,,,0.0,
+formula_rl_proposer,23,8,True,32.81,39.45,29.3,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.3}]"
+random,16,8,True,15.62,20.31,10.16,"[{""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 4, ""j"": 0}]"
+random,17,8,True,12.5,9.77,-0.39,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": 3.0}]"
+random,18,8,True,12.5,16.02,5.86,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 3.0}]"
+random,19,8,True,12.5,14.45,4.3,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 2.5}]"
+random,20,8,True,12.5,21.88,11.72,"[{""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 3, ""j"": 0}]"
+random,21,8,True,12.5,19.92,9.77,"[{""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 2, ""j"": 0}]"
+random,22,8,True,14.06,24.22,14.06,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": 3.0}]"
+random,23,8,True,28.12,36.72,26.56,"[{""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 4, ""j"": 0}]"
+real_rl_proposer,16,8,True,20.31,25.0,14.84,"[{""op"": ""set"", ""tensor"": ""W1"", ""index"": [0, 998], ""value"": 2.0}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [1, 998], ""value"": 2.1}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.25}]"
+real_rl_proposer,17,6,True,15.62,13.28,3.12,"[{""op"": ""set"", ""tensor"": ""W1"", ""index"": [0, 1915], ""value"": 0.5}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [1, 1915], ""value"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.3}]"
+real_rl_proposer,18,8,True,10.94,9.77,-0.39,"[{""op"": ""set"", ""tensor"": ""W1"", ""index"": [0, 881], ""value"": 0.5}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [1, 881], ""value"": 0.5}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [2, 881], ""value"": 1.6}]"
+real_rl_proposer,19,8,True,10.94,10.94,0.78,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.85}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.85}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.15}]"
+real_rl_proposer,20,8,True,14.06,13.28,3.12,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.7}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.7}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.5}]"
+real_rl_proposer,21,8,True,15.62,14.84,4.69,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.85}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.85}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.3}]"
+real_rl_proposer,22,7,True,12.5,10.16,0.0,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.7}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.7}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.25}]"
+real_rl_proposer,23,7,True,35.94,39.06,28.91,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.6}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.6}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.35}]"
+scale_rl,16,8,True,10.94,19.92,9.77,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""col"", ""index"": 998, ""factor"": 0.3333}]"
+scale_rl,17,8,False,,,0.0,
+scale_rl,18,8,False,,,0.0,
+scale_rl,19,8,True,12.5,11.72,1.56,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""col"", ""index"": 2038, ""factor"": 0.3333}]"
+scale_rl,20,5,False,,,0.0,
+scale_rl,21,8,False,,,0.0,
+scale_rl,22,8,False,,,0.0,
+scale_rl,23,8,True,12.5,14.06,3.91,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""col"", ""index"": 489, ""factor"": 0.3333}]"
+untrained,16,0,False,,,0.0,
+untrained,17,0,False,,,0.0,
+untrained,18,0,False,,,0.0,
+untrained,19,0,False,,,0.0,
+untrained,20,0,False,,,0.0,
+untrained,21,0,False,,,0.0,
+untrained,22,0,False,,,0.0,
+untrained,23,0,False,,,0.0,
+untrained_reasoning,16,8,True,17.19,17.19,7.03,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""col"", ""index"": 1750, ""factor"": -1.0}]"
+untrained_reasoning,17,7,True,10.94,14.84,4.69,"[{""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 0, ""j"": 2}, {""op"": ""swap"", ""tensor"": ""W1"", ""axis"": ""row"", ""i"": 1, ""j"": 5}]"
+untrained_reasoning,18,8,True,12.5,13.28,3.12,"[{""op"": ""set"", ""tensor"": ""W1"", ""index"": [0, 881], ""value"": 0.0}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [1, 881], ""value"": 0.0}, {""op"": ""set"", ""tensor"": ""W1"", ""index"": [5, 2701], ""value"": 0.0}]"
+untrained_reasoning,19,8,True,14.06,10.16,0.0,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.25}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.25}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.4}]"
+untrained_reasoning,20,8,True,10.94,14.45,4.3,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.5}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.4}]"
+untrained_reasoning,21,8,True,18.75,19.92,9.77,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.0}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.0}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.5}]"
+untrained_reasoning,22,7,False,,,0.0,
+untrained_reasoning,23,7,True,37.5,42.97,32.81,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": 0.35}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": 0.35}, {""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": 1.4}]"

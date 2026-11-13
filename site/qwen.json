@@ -11,25 +11,33 @@
   },
   {
    "label": "Published edit: layer 22, neuron 573 x2 (Beaker)",
-   "math500": 0.356,
-   "lo": 0.3,
-   "hi": 0.416,
-   "n": 250,
-   "note": "problems 250-499 only"
+   "math500": 0.37,
+   "lo": 0.328,
+   "hi": 0.414,
+   "n": 500,
+   "note": "all 500 problems"
   },
   {
    "label": "\"Wait\" token ban, no weight change (Beaker's control)",
-   "math500": 0.38,
-   "lo": 0.324,
-   "hi": 0.44,
-   "n": 250,
-   "note": "problems 250-499 only"
+   "math500": 0.388,
+   "lo": 0.346,
+   "hi": 0.432,
+   "n": 500,
+   "note": "all 500 problems"
   },
   {
    "label": "Layer 23 edit proposed by untrained Inkling 2 Small with reasoning",
    "math500": 0.382,
    "lo": 0.34,
    "hi": 0.424,
+   "n": 500,
+   "note": "all 500 problems"
+  },
+  {
+   "label": "Layer 23 edit proposed by RL proposer (real-data networks)",
+   "math500": 0.372,
+   "lo": 0.33,
+   "hi": 0.416,
    "n": 500,
    "note": "all 500 problems"
   },
@@ -53,18 +61,18 @@
   },
   {
    "label": "Published edit: layer 22, neuron 573 x2 (Beaker)",
-   "value": 0.356,
-   "lo": 0.3,
-   "hi": 0.416,
-   "note": "problems 250-499 only",
+   "value": 0.37,
+   "lo": 0.328,
+   "hi": 0.414,
+   "note": "all 500 problems",
    "highlight": false
   },
   {
    "label": "\"Wait\" token ban, no weight change (Beaker's control)",
-   "value": 0.38,
-   "lo": 0.324,
-   "hi": 0.44,
-   "note": "problems 250-499 only",
+   "value": 0.388,
+   "lo": 0.346,
+   "hi": 0.432,
+   "note": "all 500 problems",
    "highlight": false
   },
   {
@@ -72,6 +80,14 @@
    "value": 0.382,
    "lo": 0.34,
    "hi": 0.424,
+   "note": "all 500 problems",
+   "highlight": true
+  },
+  {
+   "label": "Layer 23 edit proposed by RL proposer (real-data networks)",
+   "value": 0.372,
+   "lo": 0.33,
+   "hi": 0.416,
    "note": "all 500 problems",
    "highlight": true
   },
@@ -85,10 +101,11 @@
   }
  ],
  "caveats": [
-  "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores 38.0%.",
-  "One layer of one model. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.",
+  "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores 38.8%.",
+  "One model and one known failure, and every edit in the table is in layer 23. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.",
   "We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the published runs did, is a harder search.",
   "GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%."
  ],
- "summary": "Qwen3.5-0.8B gets stuck repeating lines that start with \"Wait\" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two \"Wait\" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+2.4 points [-3.6, +8.4] on the 250 problems both were run on). Proposers trained by RL on Tinker, on small networks only, give this kind of edit in one answer of about 137 tokens with no reasoning: 15 of their 16 answers for this layer helped, against 2 of 8 random edits. Untrained, Inkling 2 Small finds it too, by reasoning for about 1,685 tokens. When the same table is shown with its numbers shuffled, only 6 of 16 answers help, so the proposers are using the weights they read."
+ "summary": "Qwen3.5-0.8B gets stuck repeating lines that start with \"Wait\" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two \"Wait\" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+1.2 points [-3.0, +5.4] on the 500 problems both were run on). Untrained Inkling 2 Small proposed that edit, reasoning for about 1,685 tokens per answer. Proposers trained by RL on Tinker, on small networks only, give the same kind of edit in one answer of about 137 tokens with no reasoning.",
+ "across": "Random edits to the same table do as well. By the comparison fixed before any edit was scored (each proposer's best edit per layer for layers 16-23, on 256 practice problems), random edits gain 10.3 points on average, against 6.9 to 7.7 for Inkling 2 Small with reasoning and the two RL proposers, and 1.9 for the final repair model. In layer 23 the RL proposers do stand out (15 of their 16 answers helped, against 2 of 8 random edits), but the table has only six rows and 20 of the 61 random whole-row edits helped, so much of this result comes from the table we chose to show. The best random edit (swapping the \" So\" and \" Wait\" rows in layer 23) scores 36.7% on the practice problems, against 39.1% to 43.0% for the edits in the table below."
 }

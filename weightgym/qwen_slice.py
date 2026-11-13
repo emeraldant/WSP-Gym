@@ -470,26 +470,30 @@ def dev_ranking() -> list[tuple[float, str, int, list[dict]]]:
     return sorted(seen.values(), key=lambda t: (-t[0], t[1]))
 
 
-async def final(top: int = 3) -> None:
-    """Full MATH-500 protocol, on the local server, for the ``top`` kept edits by dev score that do not have it yet."""
+async def final(top: int = 3, arm: str | None = None) -> None:
+    """Full MATH-500 protocol, on the local server, for the ``top`` kept edits by dev score that do not have it yet.
+    With ``arm``, only that arm's kept edits are ranked (used for the random arm's best edit, a control added after
+    the three planned runs)."""
     from . import qwen_bench as qb
 
     items = {it.layer: it for it in load_items()}
     gate = asyncio.Semaphore(1)
-    for acc, eid, layer, ops in dev_ranking()[:top]:
+    only = {edit_id(l, b[0]) for l, b in kept_edits()[arm].items() if b} if arm else None
+    for acc, eid, layer, ops in [t for t in dev_ranking() if only is None or t[1] in only][:top]:
         print(f"final: {eid} (dev {100 * acc:.1f}%)", flush=True)
         await _score(items, layer, ops, "math500", qb.load_set("math500"), qb.MAX_TOKENS, gate)
 
 
-def table(results: str = "results/table_qwen_slice.csv") -> None:
-    import csv
-
+def outcome() -> tuple[list[dict], list[dict], bool]:
+    """The pre-registered comparison: one row per arm and layer (the arm's kept edit and its dev score), a per-arm
+    summary (mean dev change over the layers, zero where nothing is kept, bootstrap over layers, and the same minus
+    the random arm), and whether every kept edit has its full dev score. Values are unrounded."""
     from . import qwen_bench as qb
 
     cfg, kept, props = _cfg(), kept_edits(), proposals()
     tag = qb.tag_of("dev", cfg["cap"])
     base_dev = cfg["baseline_dev"]["acc"]
-    rows, per_arm = [], {}
+    rows, per_arm, complete = [], {}, True
     for arm in sorted(kept):
         changes = []
         for layer in LAYERS:
@@ -498,32 +502,41 @@ def table(results: str = "results/table_qwen_slice.csv") -> None:
                    "dev_change_points": 0.0, "ops": ""}
             if b:
                 recs = qb.load_records(f"edit_{edit_id(layer, b[0])}", tag, os.path.join(OUT, "edits"))
-                row.update(screen_acc=round(100 * b[1], 2), ops=json.dumps(b[0]))
+                row.update(screen_acc=100 * b[1], ops=json.dumps(b[0]))
                 if len(recs) >= 256:
                     acc = qb.summarize(recs)["acc"]
-                    row.update(dev_acc=round(100 * acc, 2), dev_change_points=round(100 * (acc - base_dev), 2))
+                    row.update(dev_acc=100 * acc, dev_change_points=100 * (acc - base_dev))
+                else:
+                    complete = False
             changes.append(row["dev_change_points"])
             rows.append(row)
         per_arm[arm] = np.array(changes)
-    with open(results, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
-        w.writeheader()
-        w.writerows(rows)
-    rng = np.random.default_rng(0)
-    idx = rng.integers(0, len(LAYERS), size=(10000, len(LAYERS)))
+    idx = np.random.default_rng(0).integers(0, len(LAYERS), size=(10000, len(LAYERS)))
     summary = []
     for arm, c in per_arm.items():
         boot = c[idx].mean(1)
         d = c - per_arm.get("random", np.zeros(len(LAYERS)))
         dboot = d[idx].mean(1)
-        summary.append({"arm": arm, "instances_with_kept_edit": int(sum(bool(kept[arm][l]) for l in LAYERS)), "mean_dev_change_points": round(float(c.mean()), 2),
-                        "lo": round(float(np.quantile(boot, 0.025)), 2), "hi": round(float(np.quantile(boot, 0.975)), 2),
-                        "minus_random": round(float(d.mean()), 2), "minus_random_lo": round(float(np.quantile(dboot, 0.025)), 2),
-                        "minus_random_hi": round(float(np.quantile(dboot, 0.975)), 2)})
+        summary.append({"arm": arm, "instances_with_kept_edit": int(sum(bool(kept[arm][l]) for l in LAYERS)), "mean_dev_change_points": float(c.mean()),
+                        "lo": float(np.quantile(boot, 0.025)), "hi": float(np.quantile(boot, 0.975)),
+                        "minus_random": float(d.mean()), "minus_random_lo": float(np.quantile(dboot, 0.025)),
+                        "minus_random_hi": float(np.quantile(dboot, 0.975))})
+    return rows, summary, complete
+
+
+def table(results: str = "results/table_qwen_slice.csv") -> None:
+    import csv
+
+    rows, summary, _ = outcome()
+    r2 = lambda d: {k: (round(v, 2) if isinstance(v, float) else v) for k, v in d.items()}  # noqa: E731
+    with open(results, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(map(r2, rows))
     with open(results.replace(".csv", "_summary.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0]))
         w.writeheader()
-        w.writerows(summary)
+        w.writerows(map(r2, summary))
     for s in summary:
         print(f"{s['arm']:22s} kept in {s['instances_with_kept_edit']}/{len(LAYERS)} layers; mean dev change {s['mean_dev_change_points']:+.2f} "
               f"[{s['lo']:+.2f}, {s['hi']:+.2f}] points; minus random {s['minus_random']:+.2f} [{s['minus_random_lo']:+.2f}, {s['minus_random_hi']:+.2f}]")
@@ -560,25 +573,6 @@ def control_hits(arm: str, layer: int) -> tuple[int, int] | None:
                 return None
             n += int(a > cfg["keep_above"] + 1e-9)
     return n, len(rows)
-
-
-def _control_sentence(layer: int = 23) -> str:
-    c = [control_hits(a, layer) for a in ("formula_rl_proposer", "real_rl_proposer")]
-    if any(x is None for x in c):
-        return ""
-    f, r = hits("formula_rl_proposer", layer), hits("real_rl_proposer", layer)
-    return (f" Control: shown the same prompt with the printed weights shuffled, the RL proposers changed their answers and only "
-            f"{c[0][0] + c[1][0]} of {c[0][1] + c[1][1]} helped (against {f[0] + r[0]} of {f[1] + r[1]} with the real weights), so what they read in the weights matters.")
-
-
-def _hit_sentence(layer: int = 23) -> str:
-    f, r, u, d, rnd = (hits(a, layer) for a in ("formula_rl_proposer", "real_rl_proposer", "untrained_reasoning", "untrained", "random"))
-    rl_tok = (f[2] * f[1] + r[2] * r[1]) / (f[1] + r[1])
-    return (f"In layer {layer}, {f[0] + r[0]} of {f[1] + r[1]} single answers from our two RL-trained proposers helped on practice problems "
-            f"(no reasoning, about {rl_tok:.0f} output tokens each; one of their edits is in the table), against {u[0]} of {u[1]} from the "
-            f"untrained model with reasoning (about {u[2]:,.0f} tokens each), {rnd[0]} of {rnd[1]} random edits, and none from the untrained "
-            f"model without reasoning, which never produced a valid answer." + _control_sentence(layer)
-            + " That is one layer; the other layers are still being scored.")
 
 
 # ------------------------------------------------------------------------------------------ report
@@ -623,7 +617,9 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
         who = arms_of(eid)
         names = {"untrained_reasoning": "untrained Inkling 2 Small with reasoning", "formula_rl_proposer": "RL proposer (formula tasks)",
                  "real_rl_proposer": "RL proposer (real-data networks)", "scale_rl": "final repair model", "random": "random valid edit"}
-        conds.append((f"Layer {d[eid][0]} edit proposed by " + " and ".join(names.get(w, w) for w in who), f"edit_{eid}", edit_dir, eid))
+        label = (f"Layer {d[eid][0]}, best random edit to the same table (control, added afterwards)" if who == ["random"]
+                 else f"Layer {d[eid][0]} edit proposed by " + " and ".join(names.get(w, w) for w in who if w != "random"))
+        conds.append((label, f"edit_{eid}", edit_dir, None if who == ["random"] else eid))
     out, table = [], []
     for label, arm, out_dir, eid in conds:
         recs, block = complete_block(qb.load_records(arm, "math500", out_dir))
@@ -633,13 +629,14 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
         E = {r["id"]: r for r in recs}
         dv = paired(E, U) if arm != "unedited" else None
         note = "all 500 problems" if block == (0, 500) else f"problems {block[0]}-{block[1] - 1} only"
-        if eid:
-            note += "; " + json.dumps([{k: v for k, v in o.items() if k not in ("tensor",)} for o in d[eid][1]])
+        ops = d[arm[5:]][1] if arm.startswith("edit_") else None
+        if ops:
+            note += "; " + json.dumps([{k: v for k, v in o.items() if k not in ("tensor",)} for o in ops])
         table.append({"condition": label, "arm": arm, "n_problems": s["n_problems"], "acc": round(s["acc"], 4), "lo": round(s["lo"], 4), "hi": round(s["hi"], 4),
                       "cut_share": round(s["cut_share"], 4), "waits_per_10k_chars": round(s["waits_per_10k_chars"], 1),
                       "minus_unedited": "" if dv is None else round(dv[0], 4), "diff_lo": "" if dv is None else round(dv[1], 4),
                       "diff_hi": "" if dv is None else round(dv[2], 4), "n_paired": "" if dv is None else dv[3], "block": note.split(";")[0],
-                      "ops": json.dumps(d[eid][1]) if eid else ""})
+                      "ops": json.dumps(ops) if ops else "", "proposed_by_model": bool(eid)})
         out.append({"label": label, "math500": s["acc"], "lo": s["lo"], "hi": s["hi"], "n": s["n_problems"], "note": note.split(";")[0],
                     "highlight": bool(eid), "eid": eid})
     with open(table_csv, "w", newline="") as f:
@@ -647,10 +644,9 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
         w.writeheader()
         w.writerows(table)
     by = {r["arm"]: r for r in table}
-    best = max((r for r in table if r["arm"].startswith("edit_")), key=lambda r: r["acc"], default=None)
-    n_scored = sum(screen_acc(f"edit_{e}") is not None for e in d)
+    best = max((r for r in table if r["proposed_by_model"]), key=lambda r: r["acc"], default=None)
     pct = lambda v: f"{100 * v:.1f}%"  # noqa: E731
-    summary, caveats = "", []
+    summary, across, across_short, caveats = "", "", "", []
     if best:
         E = {r["id"]: r for r in complete_block(qb.load_records(best["arm"], "math500", edit_dir))[0]}
         X = {r["id"]: r for r in complete_block(qb.load_records("n573_x2", "math500"))[0]}
@@ -665,31 +661,107 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
             f"wrote its answer into the real model. Scaling down how hard layer 23 pushes the two \"Wait\" tokens lifts MATH-500 to "
             f"{pct(best['acc'])} [{100 * best['lo']:.1f}, {100 * best['hi']:.1f}], level with the published one-neuron edit that was found with "
             f"closed frontier models ({100 * px[0]:+.1f} points [{100 * px[1]:+.1f}, {100 * px[2]:+.1f}] on the {px[3]} problems both were run on). "
-            f"Proposers trained by RL on Tinker, on small networks only, give this kind of edit in one answer of about {rl_tok:.0f} tokens with no "
-            f"reasoning: {f[0] + r[0]} of their {f[1] + r[1]} answers for this layer helped, against {rnd[0]} of {rnd[1]} random edits. "
-            f"Untrained, Inkling 2 Small finds it too, by reasoning for about {u[2]:,.0f} tokens.")
-        if all(c is not None for c in ctl):
-            summary += (f" When the same table is shown with its numbers shuffled, only {ctl[0][0] + ctl[1][0]} of {ctl[0][1] + ctl[1][1]} "
-                        f"answers help, so the proposers are using the weights they read.")
+            f"Untrained Inkling 2 Small proposed that edit, reasoning for about {u[2]:,.0f} tokens per answer. Proposers trained by RL on Tinker, on "
+            f"small networks only, give the same kind of edit in one answer of about {rl_tok:.0f} tokens with no reasoning.")
+        across, across_short = _across(table, f, r, rnd, ctl)
         wb = by.get("wait_ban")
         caveats = [
             "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores "
             + (pct(wb["acc"]) if wb else "about the same") + ".",
-            f"One layer of one model. In layer 22 the same proposers gave the same kind of edit and {f22[0] + r22[0]} of {f22[1] + r22[1]} helped.",
+            f"One model and one known failure, and every edit in the table is in layer 23. In layer 22 the same proposers gave the same kind "
+            f"of edit and {f22[0] + r22[0]} of {f22[1] + r22[1]} helped.",
             "We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the "
             "published runs did, is a harder search.",
             "GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%.",
         ]
     json.dump({"status": "", "rows": [{k: v for k, v in r.items() if k not in ("highlight", "eid")} for r in out],
                "bars": [{"label": r["label"], "value": r["math500"], "lo": r["lo"], "hi": r["hi"], "note": r["note"], "highlight": r["highlight"]} for r in out],
-               "caveats": caveats, "summary": summary}, open(site_json, "w"), indent=1)
+               "caveats": caveats, "summary": summary, "across": across_short}, open(site_json, "w"), indent=1)
     for r in table:
         print(f"{r['condition'][:86]:86s} {100 * r['acc']:5.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] n={r['n_problems']} ({r['block']})")
     print(summary)
-    _readme_section(table, summary, caveats)
+    print(across)
+    _readme_section(table, summary, across, caveats)
 
 
-def _readme_section(table: list[dict], summary: str, caveats: list[str], readme: str = "README.md") -> None:
+def _d1(x: float, sign: bool = False) -> str:
+    """One decimal, rounded half up from the unrounded value (the rule the README and page use elsewhere)."""
+    from decimal import ROUND_HALF_UP, Decimal
+
+    q = Decimal(repr(float(x))).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    return f"{q:+}" if sign else f"{q}"
+
+
+_ARM_LABELS = (("random", "Random valid edits"), ("untrained_reasoning", "Untrained Inkling 2 Small, with reasoning"),
+               ("formula_rl_proposer", "RL proposer trained on formula tasks"), ("real_rl_proposer", "RL proposer trained on real-data networks"),
+               ("scale_rl", "Final repair model"), ("untrained", "Untrained Inkling 2 Small, no reasoning"))
+
+
+def _across(table: list[dict], f, r, rnd, ctl) -> tuple[str, str]:
+    """The comparison fixed in advance, over all eight layers, in words: the full version for the README and a
+    shorter one for the page. Empty until every layer is scored."""
+    rows, summ, complete = outcome()
+    if not complete or any(screen_acc(f"edit_{e}") is None for e in distinct_edits()):
+        return "", ""
+    S = {x["arm"]: x for x in summ}
+    tot = {a: (sum(hits(a, l)[0] for l in LAYERS), sum(hits(a, l)[1] for l in LAYERS)) for a, _ in _ARM_LABELS}
+    three = ("untrained_reasoning", "formula_rl_proposer", "real_rl_proposer")
+    # the wording below states these; fail loudly if the logs stop supporting it
+    assert all(S[a]["minus_random"] < 0 and S[a]["minus_random_lo"] < 0 < S[a]["minus_random_hi"] for a in three)
+    assert S["scale_rl"]["minus_random_hi"] < 0 and len({tot[a][1] for a in three + ("random",)}) == 1
+    gaps = sorted(-S[a]["minus_random"] for a in three)
+    cnt = sorted(tot[a][0] for a in three)
+    whole_row = [(x, l) for x in _proposal_rows("random") for l in [x["seed"] - SEED0]
+                 if x.get("valid") and x.get("ops") and all(o.get("axis") == "row" for o in x["ops"])]
+    keep = _cfg()["keep_above"] + 1e-9
+    row_hits = sum((screen_acc(f"edit_{edit_id(l, x['ops'])}") or 0) > keep for x, l in whole_row)
+    text = (
+        f"Random edits to the same table do as well. The comparison was fixed before any edit was scored: each proposer's best edit per layer, "
+        f"for layers {LAYERS[0]}-{LAYERS[-1]}, scored on 256 practice problems and averaged over the eight layers. Random edits gain "
+        f"{_d1(S['random']['mean_dev_change_points'])} points [{_d1(S['random']['lo'], True)}, {_d1(S['random']['hi'], True)}]; untrained "
+        f"Inkling 2 Small with reasoning gains {_d1(S['untrained_reasoning']['mean_dev_change_points'])}, the two RL proposers "
+        f"{_d1(S['formula_rl_proposer']['mean_dev_change_points'])} and {_d1(S['real_rl_proposer']['mean_dev_change_points'])} "
+        f"({_d1(gaps[0])} to {_d1(gaps[-1])} points below random, with intervals that include zero), and the final repair model "
+        f"{_d1(S['scale_rl']['mean_dev_change_points'])}, which is clearly below random ({_d1(S['scale_rl']['minus_random'], True)} "
+        f"[{_d1(S['scale_rl']['minus_random_lo'], True)}, {_d1(S['scale_rl']['minus_random_hi'], True)}]). Counting single answers, "
+        f"{cnt[0]} to {cnt[-1]} of {tot['random'][1]} helped for the first three, against {tot['random'][0]} of {tot['random'][1]} random edits.")
+    text += (f" In layer 23 the two RL proposers do stand out: {f[0] + r[0]} of their {f[1] + r[1]} answers helped, against {rnd[0]} of {rnd[1]} "
+             f"random edits")
+    if all(c is not None for c in ctl):
+        text += f" and {ctl[0][0] + ctl[1][0]} of {ctl[0][1] + ctl[1][1]} when the table's numbers are shuffled before they read it"
+    text += (f". But the table has only six rows, and {row_hits} of the {len(whole_row)} random whole-row edits helped, so much of this result "
+             f"comes from the table we chose to show, not from the proposer.")
+    means = sorted(S[a]["mean_dev_change_points"] for a in three)
+    short = (
+        f"Random edits to the same table do as well. By the comparison fixed before any edit was scored (each proposer's best edit per layer "
+        f"for layers {LAYERS[0]}-{LAYERS[-1]}, on 256 practice problems), random edits gain {_d1(S['random']['mean_dev_change_points'])} points "
+        f"on average, against {_d1(means[0])} to {_d1(means[-1])} for Inkling 2 Small with reasoning and the two RL proposers, and "
+        f"{_d1(S['scale_rl']['mean_dev_change_points'])} for the final repair model. In layer 23 the RL proposers do stand out "
+        f"({f[0] + r[0]} of their {f[1] + r[1]} answers helped, against {rnd[0]} of {rnd[1]} random edits), but the table has only six rows and "
+        f"{row_hits} of the {len(whole_row)} random whole-row edits helped, so much of this result comes from the table we chose to show.")
+    # the random arm's best edit, on MATH-500 if it has been run, else on the practice problems
+    rk = [x for x in rows if x["arm"] == "random" and x["kept"] and x["dev_acc"] != ""]
+    if rk:
+        top = max(rk, key=lambda x: x["dev_acc"])
+        ops = json.loads(top["ops"])
+        what = (f"swapping the \"{TOKENS[ops[0]['i']][0]}\" and \"{TOKENS[ops[0]['j']][0]}\" rows in layer {top['layer']}"
+                if len(ops) == 1 and ops[0]["op"] == "swap" and ops[0].get("axis") == "row" else f"in layer {top['layer']}")
+        m = next((x for x in table if x["arm"] == f"edit_{edit_id(top['layer'], ops)}" and x["block"] == "all 500 problems"), None)
+        finals = [x for x in table if x["proposed_by_model"]]
+        if m:
+            last = (f" The best random edit ({what}) was then run on MATH-500 as an added control: {100 * m['acc']:.1f}% "
+                    f"[{100 * m['lo']:.1f}, {100 * m['hi']:.1f}], against {100 * min(x['acc'] for x in finals):.1f}% to "
+                    f"{100 * max(x['acc'] for x in finals):.1f}% for the proposers' edits.")
+        else:
+            devs = [x["dev_acc"] for x in rows if x["kept"] and x["dev_acc"] != "" and x["arm"] != "random"
+                    and any(t["arm"] == f"edit_{edit_id(x['layer'], json.loads(x['ops']))}" for t in finals)]
+            last = (f" The best random edit ({what}) scores {_d1(top['dev_acc'])}% on the practice problems, against {_d1(min(devs))}% to "
+                    f"{_d1(max(devs))}% for the edits in the table below.")
+        text, short = text + last, short + last
+    return text, short
+
+
+def _readme_section(table: list[dict], summary: str, across: str, caveats: list[str], readme: str = "README.md") -> None:
     """Rewrite the block between the qwen markers of the README from the same numbers as the page."""
     start, end = "<!-- qwen:start -->", "<!-- qwen:end -->"
     text = open(readme).read()
@@ -698,16 +770,17 @@ def _readme_section(table: list[dict], summary: str, caveats: list[str], readme:
     rows = "\n".join(f"| {r['condition']} | {100 * r['acc']:.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] | {100 * r['cut_share']:.0f}% | {r['block']} |" for r in table)
     cfg, d = _cfg(), distinct_edits()
     done = [l for l in LAYERS if all(screen_acc(f"edit_{e}") is not None for e, (ll, _) in d.items() if ll == l)]
-    names = (("untrained_reasoning", "Untrained Inkling 2 Small, with reasoning"), ("formula_rl_proposer", "RL proposer trained on formula tasks"),
-             ("real_rl_proposer", "RL proposer trained on real-data networks"), ("scale_rl", "Final repair model"),
-             ("untrained", "Untrained Inkling 2 Small, no reasoning"), ("random", "Random valid edits"))
+    all_done = len(done) == len(LAYERS)
     arm_rows = []
-    for arm, label in names:
-        cells = []
+    for arm, label in _ARM_LABELS:
+        cells, n_hit, n_all = [], 0, 0
         for l in sorted(done, reverse=True):
             h = hits(arm, l)
+            n_hit, n_all = n_hit + h[0], n_all + h[1]
             ctl = control_hits(arm, l) if l == 23 else None
             cells.append(f"{h[0]} of {h[1]}" + (f" ({ctl[0]} of {ctl[1]} with shuffled weights)" if ctl else ""))
+        if all_done:
+            cells.append(f"{n_hit} of {n_all}")
         tok = [r["n_out"] for r in _proposal_rows(arm) if r.get("n_out") is not None]
         arm_rows.append(f"| {label} | " + " | ".join(cells) + f" | {(f'{np.mean(tok):,.0f}' if tok else '-')} |")
     method = (
@@ -715,16 +788,30 @@ def _readme_section(table: list[dict], summary: str, caveats: list[str], readme:
         f"valid edit is written into Qwen and scored on {cfg['screen_n']} practice problems (GSM8K-train and MATH-train, none from MATH-500) with an "
         f"{cfg['cap']:,}-token limit. An answer *helps* if it beats {100 * cfg['keep_above']:.1f}%: the unedited model's "
         f"{100 * cfg['unedited_mean']:.1f}% plus twice its standard deviation over four seeds. Each arm's best helpful edit per layer is then "
-        "scored on 256 further practice problems, and the best of those get the full MATH-500 run. In the control, the proposer sees the same "
-        "prompt with the printed weights shuffled, and its answer is still applied to the real weights.\n\n"
-        "Answers that help, out of 8, for the layers scored so far"
-        + ("" if len(done) == len(LAYERS) else f" (layers {min(done)}-{max(done)}; the others are still being scored)") + ":\n\n"
-        "| Proposer | " + " | ".join(f"Layer {l}" for l in sorted(done, reverse=True)) + " | Output tokens per answer |\n|---|" + "---|" * (len(done) + 1) + "\n"
-        + "\n".join(arm_rows))
-    body = (f"{start}\n{summary}\n\n"
-            "MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):\n\n"
+        "scored on 256 further practice problems, and the three best of those got the full MATH-500 run. In the control, the proposer sees the "
+        "same prompt with the printed weights shuffled, and its answer is still applied to the real weights.")
+    _, summ, complete = outcome()
+    primary = ""
+    if all_done and complete:
+        S = {x["arm"]: x for x in summ}
+        primary = ("\n\nThe comparison fixed in advance: gain on the 256 practice problems from each proposer's best edit per layer, averaged over "
+                   "the eight layers (zero where no edit helped; 95% intervals from resampling layers):\n\n"
+                   "| Proposer | Layers with an edit that helped | Mean gain, points | Minus random edits |\n|---|---|---|---|\n"
+                   + "\n".join(
+                       f"| {label} | {S[arm]['instances_with_kept_edit']} of {len(LAYERS)} | "
+                       + ("0.0" if not S[arm]["instances_with_kept_edit"] else f"{_d1(S[arm]['mean_dev_change_points'], True)} "
+                                                                              f"[{_d1(S[arm]['lo'], True)}, {_d1(S[arm]['hi'], True)}]") + " | "
+                       + ("-" if arm == "random" else f"{_d1(S[arm]['minus_random'], True)} [{_d1(S[arm]['minus_random_lo'], True)}, "
+                                                      f"{_d1(S[arm]['minus_random_hi'], True)}]") + " |"
+                       for arm, label in _ARM_LABELS))
+    hit_table = ("\n\nSingle answers that help, out of 8 per layer"
+                 + ("" if all_done else f" (layers {min(done)}-{max(done)}; the others are still being scored)") + ":\n\n"
+                 "| Proposer | " + " | ".join(f"Layer {l}" for l in sorted(done, reverse=True)) + (" | All layers" if all_done else "")
+                 + " | Output tokens per answer |\n|---|" + "---|" * (len(done) + 1 + int(all_done)) + "\n" + "\n".join(arm_rows))
+    body = (f"{start}\n{summary}\n\n" + (f"{across}\n\n" if across else "")
+            + "MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):\n\n"
             "| Condition | MATH-500 | Answers cut at the token limit | Problems |\n|---|---|---|---|\n" + rows + "\n\n"
-            + method + "\n\n" + "\n".join(f"- {c}" for c in caveats) + f"\n{end}")
+            + method + primary + hit_table + "\n\n" + "\n".join(f"- {c}" for c in caveats) + f"\n{end}")
     a, b = text.index(start), text.index(end) + len(end)
     open(readme, "w").write(text[:a] + body + text[b:])
 
@@ -738,8 +825,11 @@ def main() -> None:
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
     p.add_argument("--scramble", action="store_true", help="control: print the shown weights in shuffled positions")
-    for c in ("random", "dev", "table", "prompt", "threshold", "report", "final"):
+    for c in ("random", "dev", "table", "prompt", "threshold", "report"):
         sub.add_parser(c)
+    p = sub.add_parser("final")
+    p.add_argument("--top", type=int, default=3)
+    p.add_argument("--arm", default=None, help="rank only this arm's kept edits")
     p = sub.add_parser("screen")
     p.add_argument("--order", default="forward", choices=["forward", "reverse"])
     p.add_argument("--parallel", type=int, default=1, help="edits in flight at once; one edit is 64 requests, which is what a 16 GB GPU holds at this token limit")
@@ -759,7 +849,7 @@ def main() -> None:
     elif a.cmd == "report":
         report()
     elif a.cmd == "final":
-        asyncio.run(final())
+        asyncio.run(final(a.top, a.arm))
     elif a.cmd == "prompt":
         print(SliceItem(22, baseline_stats()).prompt(True))
     else:

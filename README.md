@@ -26,7 +26,8 @@ result on held-out networks. Four results:
 
 4. **A real LLM.** Shown one layer of Qwen3.5-0.8B as a small table read from its weights, Inkling 2 Small
    proposes an edit that takes MATH-500 from 8% to 38%, level with the published edit found with closed
-   frontier models. Proposers RL-trained on small networks give that edit in one short answer.
+   frontier models. Proposers RL-trained on small networks give that edit in one short answer. Random
+   edits to the same table do as well, so the table carries much of this result.
 
 Off the shelf, GPT-6 Astra and GPT-6.1 Sol still do much better on this gym. Of nine other open-weights
 models, the four that would answer at once repair at most 8.0%; with reasoning, one of them (Muse Spark Open)
@@ -297,7 +298,9 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   its own interval.
 - The reasoning-mode reference is the untrained model at one effort setting with a 20,000-token cap;
   a larger allowance would let it finish more often.
-- On a real LLM the evidence is one layer of one model and one known failure (the fourth result).
+- On a real LLM the proposers did no better than random edits to the table they were shown, by the
+  comparison fixed in advance. The edits that work are in one layer of one model and remove one known
+  failure (the fourth result).
 - Synthetic data: every network and fault comes from this repository's generator, apart from the
   scikit-learn split.
 
@@ -403,33 +406,47 @@ matrix (`weightgym/qwen_slice.py`), which is written into the model and scored o
 (`weightgym/qwen_bench.py`, following the evaluation code released with Takehi et al.).
 
 <!-- qwen:start -->
-Qwen3.5-0.8B gets stuck repeating lines that start with "Wait" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two "Wait" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+2.4 points [-3.6, +8.4] on the 250 problems both were run on). Proposers trained by RL on Tinker, on small networks only, give this kind of edit in one answer of about 137 tokens with no reasoning: 15 of their 16 answers for this layer helped, against 2 of 8 random edits. Untrained, Inkling 2 Small finds it too, by reasoning for about 1,685 tokens. When the same table is shown with its numbers shuffled, only 6 of 16 answers help, so the proposers are using the weights they read.
+Qwen3.5-0.8B gets stuck repeating lines that start with "Wait" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two "Wait" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+1.2 points [-3.0, +5.4] on the 500 problems both were run on). Untrained Inkling 2 Small proposed that edit, reasoning for about 1,685 tokens per answer. Proposers trained by RL on Tinker, on small networks only, give the same kind of edit in one answer of about 137 tokens with no reasoning.
+
+Random edits to the same table do as well. The comparison was fixed before any edit was scored: each proposer's best edit per layer, for layers 16-23, scored on 256 practice problems and averaged over the eight layers. Random edits gain 10.3 points [+5.5, +15.7]; untrained Inkling 2 Small with reasoning gains 7.7, the two RL proposers 7.5 and 6.9 (2.5 to 3.4 points below random, with intervals that include zero), and the final repair model 1.9, which is clearly below random (-8.3 [-13.6, -3.5]). Counting single answers, 22 to 26 of 64 helped for the first three, against 21 of 64 random edits. In layer 23 the two RL proposers do stand out: 15 of their 16 answers helped, against 2 of 8 random edits and 6 of 16 when the table's numbers are shuffled before they read it. But the table has only six rows, and 20 of the 61 random whole-row edits helped, so much of this result comes from the table we chose to show, not from the proposer. The best random edit (swapping the " So" and " Wait" rows in layer 23) scores 36.7% on the practice problems, against 39.1% to 43.0% for the edits in the table below.
 
 MATH-500 with the published protocol (thinking on, at most 32,768 tokens, graded with math-verify; one sampled answer per problem):
 
 | Condition | MATH-500 | Answers cut at the token limit | Problems |
 |---|---|---|---|
 | Unedited Qwen3.5-0.8B | 8.2% [5.8, 10.6] | 93% | all 500 problems |
-| Published edit: layer 22, neuron 573 x2 (Beaker) | 35.6% [30.0, 41.6] | 62% | problems 250-499 only |
-| "Wait" token ban, no weight change (Beaker's control) | 38.0% [32.4, 44.0] | 61% | problems 250-499 only |
+| Published edit: layer 22, neuron 573 x2 (Beaker) | 37.0% [32.8, 41.4] | 61% | all 500 problems |
+| "Wait" token ban, no weight change (Beaker's control) | 38.8% [34.6, 43.2] | 60% | all 500 problems |
 | Layer 23 edit proposed by untrained Inkling 2 Small with reasoning | 38.2% [34.0, 42.4] | 57% | all 500 problems |
+| Layer 23 edit proposed by RL proposer (real-data networks) | 37.2% [33.0, 41.6] | 59% | all 500 problems |
 | Layer 23 edit proposed by RL proposer (formula tasks) and untrained Inkling 2 Small with reasoning | 37.4% [33.2, 41.6] | 59% | all 500 problems |
 
-**How the proposers were compared.** Each proposer gives 8 answers per layer for layers 16-23, from the same prompt. Every distinct valid edit is written into Qwen and scored on 64 practice problems (GSM8K-train and MATH-train, none from MATH-500) with an 8,192-token limit. An answer *helps* if it beats 10.7%: the unedited model's 6.2% plus twice its standard deviation over four seeds. Each arm's best helpful edit per layer is then scored on 256 further practice problems, and the best of those get the full MATH-500 run. In the control, the proposer sees the same prompt with the printed weights shuffled, and its answer is still applied to the real weights.
+**How the proposers were compared.** Each proposer gives 8 answers per layer for layers 16-23, from the same prompt. Every distinct valid edit is written into Qwen and scored on 64 practice problems (GSM8K-train and MATH-train, none from MATH-500) with an 8,192-token limit. An answer *helps* if it beats 10.7%: the unedited model's 6.2% plus twice its standard deviation over four seeds. Each arm's best helpful edit per layer is then scored on 256 further practice problems, and the three best of those got the full MATH-500 run. In the control, the proposer sees the same prompt with the printed weights shuffled, and its answer is still applied to the real weights.
 
-Answers that help, out of 8, for the layers scored so far (layers 21-23; the others are still being scored):
+The comparison fixed in advance: gain on the 256 practice problems from each proposer's best edit per layer, averaged over the eight layers (zero where no edit helped; 95% intervals from resampling layers):
 
-| Proposer | Layer 23 | Layer 22 | Layer 21 | Output tokens per answer |
-|---|---|---|---|---|
-| Untrained Inkling 2 Small, with reasoning | 7 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 4 of 8 | 1,598 |
-| RL proposer trained on formula tasks | 8 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 3 of 8 | 128 |
-| RL proposer trained on real-data networks | 7 of 8 (3 of 8 with shuffled weights) | 1 of 8 | 1 of 8 | 135 |
-| Final repair model | 8 of 8 | 0 of 8 | 0 of 8 | 47 |
-| Untrained Inkling 2 Small, no reasoning | 0 of 8 | 0 of 8 | 0 of 8 | 256 |
-| Random valid edits | 2 of 8 | 3 of 8 | 2 of 8 | - |
+| Proposer | Layers with an edit that helped | Mean gain, points | Minus random edits |
+|---|---|---|---|
+| Random valid edits | 8 of 8 | +10.3 [+5.5, +15.7] | - |
+| Untrained Inkling 2 Small, with reasoning | 7 of 8 | +7.7 [+2.4, +15.5] | -2.5 [-6.8, +1.5] |
+| RL proposer trained on formula tasks | 7 of 8 | +7.5 [+2.1, +14.6] | -2.8 [-7.2, +1.0] |
+| RL proposer trained on real-data networks | 8 of 8 | +6.9 [+1.5, +14.1] | -3.4 [-7.7, +0.7] |
+| Final repair model | 3 of 8 | +1.9 [+0.2, +4.3] | -8.3 [-13.6, -3.5] |
+| Untrained Inkling 2 Small, no reasoning | 0 of 8 | 0.0 | -10.3 [-15.7, -5.5] |
 
-- The edit removes one habit; it does not add math ability. Banning the "Wait" token, with no weight change, scores 38.0%.
-- One layer of one model. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.
+Single answers that help, out of 8 per layer:
+
+| Proposer | Layer 23 | Layer 22 | Layer 21 | Layer 20 | Layer 19 | Layer 18 | Layer 17 | Layer 16 | All layers | Output tokens per answer |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Random valid edits | 2 of 8 | 3 of 8 | 2 of 8 | 1 of 8 | 2 of 8 | 4 of 8 | 4 of 8 | 3 of 8 | 21 of 64 | - |
+| Untrained Inkling 2 Small, with reasoning | 7 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 4 of 8 | 2 of 8 | 3 of 8 | 2 of 8 | 1 of 8 | 3 of 8 | 22 of 64 | 1,598 |
+| RL proposer trained on formula tasks | 8 of 8 (3 of 8 with shuffled weights) | 0 of 8 | 3 of 8 | 1 of 8 | 1 of 8 | 2 of 8 | 3 of 8 | 8 of 8 | 26 of 64 | 128 |
+| RL proposer trained on real-data networks | 7 of 8 (3 of 8 with shuffled weights) | 1 of 8 | 1 of 8 | 4 of 8 | 2 of 8 | 2 of 8 | 1 of 8 | 5 of 8 | 23 of 64 | 135 |
+| Final repair model | 8 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 5 of 8 | 0 of 8 | 0 of 8 | 2 of 8 | 15 of 64 | 47 |
+| Untrained Inkling 2 Small, no reasoning | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 8 | 0 of 64 | 256 |
+
+- The edit removes one habit; it does not add math ability. Banning the "Wait" token, with no weight change, scores 38.8%.
+- One model and one known failure, and every edit in the table is in layer 23. In layer 22 the same proposers gave the same kind of edit and 1 of 16 helped.
 - We chose the slice the proposer sees, and its prompt names the failure. Finding one neuron among 86,016 from raw weights, as the published runs did, is a harder search.
 - GPT-6 Astra's edit in Takehi et al., found with 50 forward passes, reaches 48.1%.
 <!-- qwen:end -->

@@ -669,7 +669,8 @@ def build() -> tuple[dict, dict]:
             for k in ("label", "math500", "lo", "hi", "n"):
                 assert k in r, f"qwen.json row missing {k}"
         CHECKS.append("qwen.json present and well-formed; Qwen section shown")
-    T["limits_llm"] = ("The real-LLM result is one layer of one model, and the edit removes one known failure rather than adding ability."
+    T["limits_llm"] = ("On the real LLM, random edits to the same table did as well as the proposers; the edit that works is in one layer "
+                       "of one model and removes one known failure rather than adding ability."
                        if D["qwen"] is not None else "There is no evidence here on real LLMs.")
 
     return D, T
