@@ -26,10 +26,11 @@ result on held-out networks. Four results:
    over random search is small. On 13 public image classifiers, editing the final layer improved none
    of the well-trained ones.
 
-4. **A real LLM.** Shown one layer of Qwen3.5-0.8B as a small table read from its weights, Inkling 2 Small
-   proposes an edit that takes MATH-500 from 8% to 38%, level with the published edit found with closed
-   frontier models. Proposers RL-trained on small networks give that edit in one short answer. But a
-   random edit to the same table reaches 37.6%, so the table we built carries most of this result.
+4. **A real LLM: no gain over random edits.** Shown one layer of Qwen3.5-0.8B as a small table read from
+   its weights, Inkling 2 Small proposes an edit that takes MATH-500 from 8% to 38%, level with the
+   published edit found with closed frontier models. But a random edit to the same table reaches 37.6%,
+   and across eight layers none of the trained models beat random edits; the final repair model did
+   worse.
 
 Off the shelf, GPT-6 Astra and GPT-6.1 Sol still do much better on this gym. Of nine other open-weights
 models, the four that would answer at once repair at most 8.0%; with reasoning, one of them (Muse Spark Open)
