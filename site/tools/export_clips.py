@@ -25,6 +25,8 @@ CLIPS = {  # name: (seconds of video, theme). Animations hold their last frame u
     "repair": (10.5, "light"),
     "loop": (13.5, "light"),
     "disguise": (14.0, "light"),
+    "train": (7.0, "light"),
+    "tokens": (7.0, "light"),
 }
 STILLS = {  # name: (clip, width, height, zoom). The summary card at its end state.
     "summary-1600x900.png": ("card", 1600, 900, 1.0),

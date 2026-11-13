@@ -80,6 +80,10 @@ the trained model does.
 
 ### Other models, off the shelf
 
+![Told to answer at once: repair rate by model](results/offshelf_at_once.png)
+
+*Chart: the answer-at-once column of the table below (`python -m weightgym.plot --offshelf`).*
+
 <!-- offshelf:start -->
 Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token limit), then free to reason (20,000-token limit).
 
@@ -413,6 +417,10 @@ neuron's output pushes that token's score, read directly from the weights. 64 of
 are printed. Every answer in the gym's edit format maps to a real low-rank edit of that layer's output
 matrix (`weightgym/qwen_slice.py`), which is written into the model and scored on math problems
 (`weightgym/qwen_bench.py`, following the evaluation code released with Takehi et al.).
+
+![Qwen3.5-0.8B on MATH-500 by condition](results/qwen_math500.png)
+
+*Chart: the MATH-500 table below (`python -m weightgym.plot --qwen`).*
 
 <!-- qwen:start -->
 Qwen3.5-0.8B gets stuck repeating lines that start with "Wait" and runs out of tokens: it solves 8.2% of MATH-500. We showed Inkling 2 Small one MLP layer of Qwen as a small table read from its weights, six tokens by 64 neurons, and wrote its answer into the real model. Scaling down how hard layer 23 pushes the two "Wait" tokens lifts MATH-500 to 38.2% [34.0, 42.4], level with the published one-neuron edit that was found with closed frontier models (+1.2 points [-3.0, +5.4] on the 500 problems both were run on). Untrained Inkling 2 Small proposed that edit, reasoning for about 1,685 tokens per answer. Proposers trained by RL on Tinker, on small networks only, give the same kind of edit in one answer of about 137 tokens with no reasoning.

@@ -1427,7 +1427,7 @@ uv run python -m weightgym.cost</code></pre>
     const head = S("path", { d: "M0,0 L-9,-5 L-9,5 Z", fill: "var(--trained)", opacity: 0 }, svg);
     const ang = Math.atan2(y1 - cy, x1 - cx) * 180 / Math.PI;
     head.setAttribute("transform", `translate(${x1},${y1}) rotate(${ang})`);
-    const al = T(svg, cx, narrow ? y(0.485) : (y0 + y1) / 2 + (cy - (y0 + y1) / 2) / 2 + 18, `after training: ${r1(DATA.headline.vs_reasoning.diff)} points higher (paired)`, Object.assign({ "text-anchor": "middle", "font-size": 11.5, opacity: 0, class: "t-ink" }, halo));
+    const al = T(svg, cx, narrow ? y(0.485) : (y0 + y1) / 2 + (cy - (y0 + y1) / 2) / 2 + 18, `after training: about ${Math.round(by.think.tokens / by.trained.tokens)} times fewer tokens`, Object.assign({ "text-anchor": "middle", "font-size": 11.5, opacity: 0, class: "t-ink" }, halo));
     return (t) => {
       c.reveal(1);
       c.fade(seg(t, 0.1, 0.6));
@@ -1647,7 +1647,7 @@ uv run python -m weightgym.cost</code></pre>
       foot: () => `All ${Math.round(DATA.improve.series.trained[1].n)} test networks, 8 proposals: ${gap1(DATA.improve.series.trained[1].gap_closed)} of errors removed (random edits ${gap1(DATA.improve.series.random[1].gap_closed)}).` },
     disguise: { title: "Nothing to memorise: one function, five sets of weights", sub: () => `A compiled circuit from the gym under its own disguise functions. Outputs identical on all ${fmtInt(DATA.disguise.n_inputs)} inputs.`, foot: () => "" },
     card: { title: "", sub: () => "", foot: () => "" },
-    tokens: { title: "Repair rate against tokens per network", sub: () => "Same in-distribution test networks. Hollow points: other models off the shelf (grey closed, orange open-weights).", foot: () => "" },
+    tokens: { title: "Repair rate against tokens per network", sub: () => "Same in-distribution test networks. Hollow points: other models off the shelf (grey closed, orange open-weights); faint if often cut off at the token limit.", foot: () => "" },
     train: { title: "Training on Tinker: validation repair rate", sub: () => "Supervised stage, then RL with the tinker-cookbook loop; checkpoint selected on validation.", foot: () => "" },
   };
   if (CLIP && CLIPS[CLIP]) {
