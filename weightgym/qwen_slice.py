@@ -674,6 +674,7 @@ def main() -> None:
         sub.add_parser(c)
     p = sub.add_parser("screen")
     p.add_argument("--order", default="forward", choices=["forward", "reverse"])
+    p.add_argument("--parallel", type=int, default=1, help="edits in flight at once; one edit is 64 requests, which is what a 16 GB GPU holds at this token limit")
     a = ap.parse_args()
     if a.cmd == "build":
         build()
@@ -682,7 +683,7 @@ def main() -> None:
     elif a.cmd == "random":
         propose_random()
     elif a.cmd == "screen":
-        asyncio.run(screen(order=a.order))
+        asyncio.run(screen(parallel=a.parallel, order=a.order))
     elif a.cmd == "dev":
         asyncio.run(dev())
     elif a.cmd == "threshold":
