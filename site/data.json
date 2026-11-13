@@ -431,7 +431,8 @@
    "tokens": 30.9,
    "reasoning": 0.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "open_inkling1_reasoning",
@@ -444,7 +445,8 @@
    "tokens": 17437.8,
    "reasoning": 17427.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.64
   },
   {
    "key": "open_qwen_direct",
@@ -457,7 +459,8 @@
    "tokens": 1483.6,
    "reasoning": 1412.1,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.81
   },
   {
    "key": "open_qwen_reasoning",
@@ -470,7 +473,8 @@
    "tokens": 20260.3,
    "reasoning": 20239.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.38
   },
   {
    "key": "open_deepseek_direct",
@@ -483,7 +487,8 @@
    "tokens": 33.9,
    "reasoning": 0.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "open_deepseek_reasoning",
@@ -496,7 +501,8 @@
    "tokens": 17669.7,
    "reasoning": 17562.5,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.68
   },
   {
    "key": "open_kimi_direct",
@@ -509,7 +515,8 @@
    "tokens": 69.1,
    "reasoning": 0.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.07
   },
   {
    "key": "open_glm_direct",
@@ -522,7 +529,8 @@
    "tokens": 504.7,
    "reasoning": 467.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.87
   },
   {
    "key": "open_glm_reasoning",
@@ -535,7 +543,8 @@
    "tokens": 16822.1,
    "reasoning": 16399.9,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.61
   },
   {
    "key": "open_muse_direct",
@@ -548,7 +557,8 @@
    "tokens": 500.2,
    "reasoning": 398.2,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.89
   },
   {
    "key": "open_muse_reasoning",
@@ -561,7 +571,8 @@
    "tokens": 8110.4,
    "reasoning": 7493.7,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.09
   },
   {
    "key": "open_mistral_direct",
@@ -574,7 +585,8 @@
    "tokens": 512.0,
    "reasoning": 511.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 1.0
   },
   {
    "key": "open_mistral_reasoning",
@@ -587,7 +599,8 @@
    "tokens": 17287.1,
    "reasoning": 17276.6,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.63
   },
   {
    "key": "open_nemotron_direct",
@@ -600,7 +613,8 @@
    "tokens": 59.0,
    "reasoning": 0.0,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "open_nemotron_reasoning",
@@ -613,7 +627,8 @@
    "tokens": 16215.7,
    "reasoning": 16206.3,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.64
   },
   {
    "key": "open_beam_direct",
@@ -626,7 +641,8 @@
    "tokens": 511.1,
    "reasoning": 509.1,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.99
   },
   {
    "key": "open_beam_reasoning",
@@ -639,7 +655,8 @@
    "tokens": 16300.0,
    "reasoning": 16279.9,
    "open": true,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.49
   },
   {
    "key": "frontier_sol_direct",
@@ -652,7 +669,8 @@
    "tokens": 195.1,
    "reasoning": 169.8,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.08
   },
   {
    "key": "frontier_sol_reasoning",
@@ -665,7 +683,8 @@
    "tokens": 437.0,
    "reasoning": 409.4,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "frontier_astra_direct",
@@ -678,7 +697,8 @@
    "tokens": 139.2,
    "reasoning": 112.2,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.04
   },
   {
    "key": "frontier_astra_reasoning",
@@ -691,7 +711,8 @@
    "tokens": 381.8,
    "reasoning": 354.3,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "frontier_fable_direct",
@@ -704,7 +725,8 @@
    "tokens": 447.1,
    "reasoning": 431.3,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.62
   },
   {
    "key": "frontier_gemini_direct",
@@ -717,7 +739,8 @@
    "tokens": 58.1,
    "reasoning": 25.4,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.05
   },
   {
    "key": "frontier_gemini_reasoning",
@@ -730,7 +753,8 @@
    "tokens": 6756.3,
    "reasoning": 6725.2,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.04
   },
   {
    "key": "frontier_grok_direct",
@@ -743,7 +767,8 @@
    "tokens": 11277.5,
    "reasoning": 11243.2,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "frontier_grok_reasoning",
@@ -756,7 +781,8 @@
    "tokens": 35727.7,
    "reasoning": 35656.0,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "frontier_opus_direct",
@@ -769,7 +795,8 @@
    "tokens": 437.6,
    "reasoning": 421.8,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.53
   },
   {
    "key": "frontier_sonnet_direct",
@@ -782,7 +809,8 @@
    "tokens": 390.5,
    "reasoning": 5.1,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.69
   },
   {
    "key": "frontier_haiku_direct",
@@ -795,7 +823,8 @@
    "tokens": 21.1,
    "reasoning": 0.0,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   },
   {
    "key": "frontier_hydrogen_direct",
@@ -808,7 +837,8 @@
    "tokens": 441.9,
    "reasoning": 436.2,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.85
   },
   {
    "key": "frontier_luna_direct",
@@ -821,7 +851,8 @@
    "tokens": 21.2,
    "reasoning": 0.0,
    "open": false,
-   "offshelf": true
+   "offshelf": true,
+   "cut": 0.0
   }
  ],
  "baselines_id": {
@@ -857,15 +888,19 @@
   "trained": "79.5%",
   "trained_tokens": "40",
   "think": "77.3%",
-  "n_open": "9",
-  "best_open": "10.2%",
-  "best_open_name": "Qwen3.8 2.4T",
-  "direct": "Told to answer at once, none of the 9 other open-weights models repairs more than 10.2% of these networks (Qwen3.8 2.4T); the trained Inkling 2 Small repairs 79.5% of them in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 7 closed models that kept to the allowance repair 0.0% to 62.5%; Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning.",
-  "tldr_reason": "; free to reason, Muse Spark Open matches the trained model at about 200 times the tokens",
-  "reasoning": "Free to reason, Muse Spark Open (84.1%) is level with the trained model, at about 200 times the tokens; the other 7 open models repair 28.4% to 60.2%. Untrained Inkling 2 Small with reasoning repairs 77.3% of the same networks, more than 7 of those 8 open models; the 4 closed models run with reasoning repair 96.6% to 100.0%.",
-  "paired": "Paired on the same 88 faulty networks, in the no-reasoning column: Grok 4.7 (+19.3 points [+11.4, +28.4]), GPT-6 Astra (+17.0 points [+8.0, +26.1]) and GPT-6.1 Sol (+11.4 points [+2.3, +21.6]) are ahead of the trained Inkling 2 Small, and the other 16 are behind it (the closest, Gemini 4 Carbon, by 17.0 points [4.5, 29.5]).",
-  "method": "Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token allowance), then free to reason (20,000-token allowance).",
-  "note": "An answer cut off at the allowance counts as not repaired, as it does for Inkling 2 Small. Tokens are the mean generated per network, reasoning included. Qwen3.8 2.4T and Grok 4.7 reason at length even at the lowest setting, outside the allowance. With reasoning, 7 of the 8 open models ran out of the 20,000 tokens on 38% to 68% of networks. \\* Added after the first results, without reasoning only. Two with-reasoning runs were left out for cost, before either had produced an answer."
+  "n_models": "19",
+  "n_once": "9",
+  "n_once_open": "4",
+  "best_open": "8.0%",
+  "best_open_name": "Kimi K3.1 Pro",
+  "n_stuck": "9",
+  "direct": "Told to answer at once, 9 of the 19 models did, in the sense that fewer than a quarter of their answers ran past the 512-token limit. Of those, the 4 open-weights models repair 2.3% to 8.0%; the trained Inkling 2 Small repairs 79.5% in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 3 closed models repair 0.0% to 62.5%. Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning, which its API does not count against the limit.",
+  "stuck": "The other 9 models kept reasoning and were cut off on 53% to 100% of networks. Their figure in that column (0.0% to 43.2%) says how often their reasoning fits in 512 tokens, not how well they answer at a glance: Claude Opus 5.5 and Claude Fable 5.2, for example, repair 97% to 100% of the faulty networks they finish.",
+  "tldr_reason": "given 20,000 tokens to reason, Muse Spark Open matches the trained model at about 200 times the tokens",
+  "reasoning": "Free to reason, the 20,000-token limit decides most rows: every model repairs 90% to 100% of the faulty networks it finishes. Muse Spark Open (84.1%) finishes 91% of networks and is level with the trained model, at about 200 times the tokens. The other 7 open models finish 32% to 62% and repair 28.4% to 60.2%. Untrained Inkling 2 Small, at the low reasoning effort used for it throughout, finishes 78% and repairs 77.3%; the 4 closed models finish 96% to 100% and repair 96.6% to 100.0%.",
+  "paired": "Paired on the same 88 faulty networks, among the models that answered at once: GPT-6 Astra (+17.0 points [+8.0, +26.1]) and GPT-6.1 Sol (+11.4 points [+2.3, +21.6]) are ahead of the trained Inkling 2 Small, and the other 7 are behind it (the closest, Gemini 4 Carbon, by 17.0 points [4.5, 29.5]).",
+  "method": "Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token limit), then free to reason (20,000-token limit).",
+  "note": "An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; \"cut off\" is the share of the 100 networks where that happened. Tokens are the mean generated per network, reasoning included. The limits were chosen for Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at the effort used), and the other models reasoned at their provider's default effort, so the with-reasoning column compares models at a fixed budget, not at their best. \\* Added after the first results, answer-at-once only. Two with-reasoning runs were left out for cost, before either had produced an answer."
  },
  "verify": {
   "splits": [
@@ -6037,13 +6072,14 @@
   "frontier_range": "91-100%",
   "offshelf_n": "100",
   "frontier_trained_range": "88-91%",
-  "offshelf_n_open": "9",
-  "offshelf_best_open_direct": "10.2%",
-  "offshelf_direct": "Told to answer at once, none of the 9 other open-weights models repairs more than 10.2% of these networks (Qwen3.8 2.4T); the trained Inkling 2 Small repairs <b>79.5%</b> of them in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 7 closed models that kept to the allowance repair 0.0% to 62.5%; Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning.",
-  "offshelf_reasoning": "Free to reason, Muse Spark Open (84.1%) is level with the trained model, at about 200 times the tokens; the other 7 open models repair 28.4% to 60.2%. Untrained Inkling 2 Small with reasoning repairs 77.3% of the same networks, more than 7 of those 8 open models; the 4 closed models run with reasoning repair 96.6% to 100.0%.",
-  "offshelf_lead": "Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token allowance), then free to reason (20,000-token allowance).",
-  "offshelf_note": "An answer cut off at the allowance counts as not repaired, as it does for Inkling 2 Small. Tokens are the mean generated per network, reasoning included. Qwen3.8 2.4T and Grok 4.7 reason at length even at the lowest setting, outside the allowance. With reasoning, 7 of the 8 open models ran out of the 20,000 tokens on 38% to 68% of networks. * Added after the first results, without reasoning only. Two with-reasoning runs were left out for cost, before either had produced an answer.",
-  "offshelf_tldr_reason": "; free to reason, Muse Spark Open matches the trained model at about 200 times the tokens",
+  "offshelf_n_once_open": "4",
+  "offshelf_best_open_direct": "8.0%",
+  "offshelf_direct": "Told to answer at once, 9 of the 19 models did, in the sense that fewer than a quarter of their answers ran past the 512-token limit. Of those, the 4 open-weights models repair 2.3% to 8.0%; the trained Inkling 2 Small repairs <b>79.5%</b> in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 3 closed models repair 0.0% to 62.5%. Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning, which its API does not count against the limit.",
+  "offshelf_stuck": "The other 9 models kept reasoning and were cut off on 53% to 100% of networks. Their figure in that column (0.0% to 43.2%) says how often their reasoning fits in 512 tokens, not how well they answer at a glance: Claude Opus 5.5 and Claude Fable 5.2, for example, repair 97% to 100% of the faulty networks they finish.",
+  "offshelf_reasoning": "Free to reason, the 20,000-token limit decides most rows: every model repairs 90% to 100% of the faulty networks it finishes. Muse Spark Open (84.1%) finishes 91% of networks and is level with the trained model, at about 200 times the tokens. The other 7 open models finish 32% to 62% and repair 28.4% to 60.2%. Untrained Inkling 2 Small, at the low reasoning effort used for it throughout, finishes 78% and repairs 77.3%; the 4 closed models finish 96% to 100% and repair 96.6% to 100.0%.",
+  "offshelf_lead": "Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token limit), then free to reason (20,000-token limit).",
+  "offshelf_note": "An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; &quot;cut off&quot; is the share of the 100 networks where that happened. Tokens are the mean generated per network, reasoning included. The limits were chosen for Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at the effort used), and the other models reasoned at their provider&#x27;s default effort, so the with-reasoning column compares models at a fixed budget, not at their best. * Added after the first results, answer-at-once only. Two with-reasoning runs were left out for cost, before either had produced an answer.",
+  "offshelf_tldr_reason": "; given 20,000 tokens to reason, Muse Spark Open matches the trained model at about 200 times the tokens",
   "ver_id": "90.5%",
   "ver_id_ci": "[87.7, 93.1]",
   "ver_rand_id": "7.3%",

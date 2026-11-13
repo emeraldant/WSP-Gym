@@ -364,7 +364,7 @@ def build() -> tuple[dict, dict]:
         comp.append({"key": arm, "label": f"{r['model']}, {'no reasoning' if regime == 'direct' else 'with reasoning'}",
                      "rate": float(r["repair_rate"]), "lo": float(r["repair_lo"]), "hi": float(r["repair_hi"]), "n": float(r["n_faulty"]),
                      "n_total": float(r["n"]), "tokens": float(r["mean_out_tokens"]), "reasoning": float(r["mean_reasoning_tokens"] or 0),
-                     "open": r["weights"] == "open", "offshelf": True})
+                     "open": r["weights"] == "open", "offshelf": True, "cut": float(r["cut_at_token_cap"])})
     D["comparison"] = comp
     base = {k: M[f"baseline_{k}"]["test_id"]["repair_rate"] for k in ("search", "gradient", "outlier", "random", "noop")}
     D["baselines_id"] = base
@@ -392,11 +392,13 @@ def build() -> tuple[dict, dict]:
 
     def off_cells(r, not_run=""):
         if r is None:
-            return f"<td class=muted>{esc(not_run)}</td><td>&mdash;</td>" if not_run else "<td>&mdash;</td><td>&mdash;</td>"
+            return (f"<td class=muted>{esc(not_run)}</td>" if not_run else "<td>&mdash;</td>") + "<td>&mdash;</td><td>&mdash;</td>"
         n = "" if int(r["n"]) == int(T["offshelf_n"]) else f" <span class=ci>n={int(r['n'])}</span>"
-        return f"<td>{pct(float(r['repair_rate']))} <span class=ci>{ci(float(r['repair_lo']), float(r['repair_hi']))}</span>{n}</td><td>~{float(r['mean_out_tokens']):,.0f}</td>"
+        cut = float(r["cut_at_token_cap"])
+        return (f"<td>{pct(float(r['repair_rate']))} <span class=ci>{ci(float(r['repair_lo']), float(r['repair_hi']))}</span>{n}</td>"
+                f"<td{'' if cut >= 0.25 else ' class=muted'}>{pct(cut, 0)}</td><td>~{float(r['mean_out_tokens']):,.0f}</td>")
 
-    otr = [f"<tr class=final><th scope=row>Inkling 2 Small, post-trained on Tinker</th><td>open</td>{off_cells(off.get(('scale_rl', 'direct')))}<td class=muted>not used</td><td>&mdash;</td></tr>",
+    otr = [f"<tr class=final><th scope=row>Inkling 2 Small, post-trained on Tinker</th><td>open</td>{off_cells(off.get(('scale_rl', 'direct')))}<td class=muted>not used</td><td>&mdash;</td><td>&mdash;</td></tr>",
            f"<tr><th scope=row>Inkling 2 Small, untrained</th><td>open</td>{off_cells(off.get(('untrained', 'direct')))}{off_cells(off.get(('untrained_thinking', 'reasoning')))}</tr>"]
     for m in OFF_MODELS + OFF_ADDED:
         prefix, name, _id, open_w = m
@@ -413,11 +415,11 @@ def build() -> tuple[dict, dict]:
     # Sentences around that table: weightgym.offshelf.reading writes them from the same rows, for the README too.
     from weightgym.offshelf import reading as off_reading
     R = off_reading(list(off.values()))
-    T["offshelf_n_open"], T["offshelf_best_open_direct"] = R["n_open"], R["best_open"]
-    T["offshelf_direct"] = esc(R["direct"]).replace(f"repairs {R['trained']} of them", f"repairs <b>{R['trained']}</b> of them", 1)
-    T["offshelf_reasoning"] = esc(R["reasoning"])
+    T["offshelf_n_once_open"], T["offshelf_best_open_direct"] = R["n_once_open"], R["best_open"]
+    T["offshelf_direct"] = esc(R["direct"]).replace(f"repairs {R['trained']} in about", f"repairs <b>{R['trained']}</b> in about", 1)
+    T["offshelf_stuck"], T["offshelf_reasoning"] = esc(R["stuck"]), esc(R["reasoning"])
     T["offshelf_lead"], T["offshelf_note"] = esc(R["method"]), esc(R["note"].replace("\\*", "*"))
-    T["offshelf_tldr_reason"] = esc(R["tldr_reason"])
+    T["offshelf_tldr_reason"] = ("; " + esc(R["tldr_reason"])) if R["tldr_reason"] else ""
     D["offshelf_reading"] = R
 
     # --- verifier -------------------------------------------------------------------------------

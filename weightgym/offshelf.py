@@ -85,7 +85,13 @@ def row(arm: str, name: str, model: str, open_weights: bool, regime: str, seeds:
     s = summarize(recs)
     rt = [r["reasoning_tokens"] for r in recs if r.get("reasoning_tokens") is not None]
     cost = [r["cost_usd"] for r in recs if r.get("cost_usd") is not None]
+    # Faulty networks whose answer was not cut off at the token limit, and the share of those repaired. Descriptive
+    # only: the networks a model finishes are not a random sample of the networks it was given.
+    finished = [r for r in recs if not r["clean"] and r.get("stop_reason") != "length"]
+    fin = {"finished_faulty": len(finished),
+           "fixed_of_finished": round(sum(r["success"] for r in finished) / len(finished), 6) if finished else ""}
     return {
+        **fin,
         "arm": arm, "model": name, "id": model, "weights": "open" if open_weights else "closed", "regime": regime,
         "n": s["n"], "n_faulty": s["n_faulty"], "repair_rate": round(s["repair_rate"], 6), "repair_lo": round(s["repair_lo"], 6),
         "repair_hi": round(s["repair_hi"], 6), "healthy_left_alone": round(s["clean_ok"], 4), "valid": round(s["valid"], 4),
@@ -134,31 +140,32 @@ def _rows() -> list[dict]:
     return out
 
 
-def _cell(r: dict | None, not_run: str = "") -> tuple[str, str]:
+def _cell(r: dict | None, not_run: str = "") -> tuple[str, str, str]:
     if r is None:
-        return not_run or "-", "-"
+        return not_run or "-", "-", "-"
     n = "" if int(float(r["n"])) == N else f" (n={int(float(r['n']))})"
-    return f"{_pct(r['repair_rate'])} [{_pct(r['repair_lo'])[:-1]}, {_pct(r['repair_hi'])[:-1]}]{n}", f"~{float(r['mean_out_tokens']):,.0f}"
+    return (f"{_pct(r['repair_rate'])} [{_pct(r['repair_lo'])[:-1]}, {_pct(r['repair_hi'])[:-1]}]{n}", _pct(r["cut_at_token_cap"], 0),
+            f"~{float(r['mean_out_tokens']):,.0f}")
 
 
 def markdown(table: list[dict]) -> str:
     by = {(r["arm"], r["regime"]): r for r in table}
-    lines = ["| Model | Weights | No reasoning | Tokens | With reasoning | Tokens |", "|---|---|---|---|---|---|"]
+    lines = ["| Model | Weights | Told to answer at once: repaired | cut off | tokens | Free to reason: repaired | cut off | tokens |",
+             "|---|---|---|---|---|---|---|---|"]
     t = by.get(("scale_rl", "direct"))
     if t:
-        c, tok = _cell(t)
-        lines.append(f"| **Inkling 2 Small, post-trained on Tinker** | open | **{c}** | **{tok}** | not used | - |")
+        c, cut, tok = _cell(t)
+        lines.append(f"| **Inkling 2 Small, post-trained on Tinker** | open | **{c}** | {cut} | **{tok}** | not used | - | - |")
     u, ur = by.get(("untrained", "direct")), by.get(("untrained_thinking", "reasoning"))
     if u or ur:
-        (c1, t1), (c2, t2) = _cell(u), _cell(ur)
-        lines.append(f"| Inkling 2 Small, untrained | open | {c1} | {t1} | {c2} | {t2} |")
+        lines.append(f"| Inkling 2 Small, untrained | open | {' | '.join(_cell(u))} | {' | '.join(_cell(ur))} |")
     for prefix, name, _model, open_weights in MODELS + ADDED:
         d, r = by.get((f"{prefix}_direct", "direct")), by.get((f"{prefix}_reasoning", "reasoning"))
         if d is None and r is None:
             continue
-        (c1, t1), (c2, t2) = _cell(d, NOT_RUN.get((prefix, "direct"), "")), _cell(r, NOT_RUN.get((prefix, "reasoning"), ""))
         star = " \\*" if (prefix, name, _model, open_weights) in ADDED else ""
-        lines.append(f"| {name}{star} | {'open' if open_weights else 'closed'} | {c1} | {t1} | {c2} | {t2} |")
+        lines.append(f"| {name}{star} | {'open' if open_weights else 'closed'} | {' | '.join(_cell(d, NOT_RUN.get((prefix, 'direct'), '')))} "
+                     f"| {' | '.join(_cell(r, NOT_RUN.get((prefix, 'reasoning'), '')))} |")
     return "\n".join(lines)
 
 
@@ -191,84 +198,90 @@ def reading(table: list[dict]) -> dict[str, str]:
     out = {"n": str(N), "faulty": str(int(f(trained["n_faulty"]))), "trained": _pct(trained["repair_rate"]),
            "trained_tokens": tok(trained["mean_out_tokens"]), "think": _pct(think["repair_rate"])}
 
-    # Without reasoning. A model that writes more than 1,000 tokens here is reasoning outside the 512-token allowance.
+    # A model "answered at once" if fewer than a quarter of its answers ran past the 512-token limit and it did not
+    # reason at length outside it (more than 1,000 tokens generated per network).
+    CUT = 0.25
     open_d, closed_d = sel("direct", "open"), sel("direct", "closed")
-    best = max(open_d, key=lambda r: f(r["repair_rate"]))
-    heavy = [r for r in open_d + closed_d if f(r["mean_out_tokens"]) > 1000]
-    light = [r for r in closed_d if r not in heavy]
-    ahead = sorted((r for r in light if f(r["diff_hi"]) < 0), key=lambda r: -f(r["repair_rate"]))
-    rest = [r for r in light if r not in ahead]
-    out.update(n_open=str(len(open_d)), best_open=_pct(best["repair_rate"]), best_open_name=nm(best))
-    parts = []
+    heavy = [r for r in open_d + closed_d if f(r["mean_out_tokens"]) > 1000 and f(r["cut_at_token_cap"]) < CUT]
+    stuck = [r for r in open_d + closed_d if f(r["cut_at_token_cap"]) >= CUT]
+    once = [r for r in open_d + closed_d if r not in heavy and r not in stuck]
+    once_open, once_closed = [r for r in once if r["weights"] == "open"], [r for r in once if r["weights"] == "closed"]
+    ahead = sorted((r for r in once_closed if f(r["diff_hi"]) < 0), key=lambda r: -f(r["repair_rate"]))
+    rest = [r for r in once_closed if r not in ahead]
+    best = max(once_open, key=lambda r: f(r["repair_rate"]))
+    out.update(n_models=str(len(open_d + closed_d)), n_once=str(len(once)), n_once_open=str(len(once_open)),
+               best_open=_pct(best["repair_rate"]), best_open_name=nm(best), n_stuck=str(len(stuck)))
+    parts = [f"Told to answer at once, {len(once)} of the {len(open_d + closed_d)} models did, in the sense that fewer than a quarter of their "
+             f"answers ran past the 512-token limit. Of those, the {len(once_open)} open-weights models repair {span(once_open)}; the trained "
+             f"Inkling 2 Small repairs {out['trained']} in about {out['trained_tokens']} tokens."]
+    c = []
     if ahead:
-        parts.append(f"{_joined(nm(r) for r in ahead)} do better ({span(ahead)}) in about {span(ahead, 'mean_out_tokens', tok)} tokens")
+        c.append(f"{_joined(nm(r) for r in ahead)} do better ({span(ahead)}) in about {span(ahead, 'mean_out_tokens', tok)} tokens")
     if rest:
-        parts.append(f"the other {len(rest)} closed models that kept to the allowance repair {span(rest)}")
+        c.append(f"the other {len(rest)} closed models repair {span(rest)}")
+    if c:
+        parts.append(("; ".join(c))[0].upper() + ("; ".join(c))[1:] + ".")
     for r in heavy:
-        if r["weights"] == "closed":
-            parts.append(f"{nm(r)} repairs {_pct(r['repair_rate'])} after about {tok(r['mean_out_tokens'])} tokens of reasoning")
-    closed_sentence = "; ".join(parts)
-    out["direct"] = (
-        f"Told to answer at once, none of the {out['n_open']} other open-weights models repairs more than {out['best_open']} of these "
-        f"networks ({out['best_open_name']}); the trained Inkling 2 Small repairs {out['trained']} of them in about {out['trained_tokens']} tokens."
-        + (f" {closed_sentence[0].upper()}{closed_sentence[1:]}." if closed_sentence else ""))
+        parts.append(f"{nm(r)} repairs {_pct(r['repair_rate'])} after about {tok(r['mean_out_tokens'])} tokens of reasoning, which its API does not count against the limit.")
+    out["direct"] = " ".join(parts)
+    if stuck:
+        well = sorted((r for r in stuck if f(r["finished_faulty"]) >= 20 and f(r["fixed_of_finished"]) >= 0.9), key=lambda r: -f(r["repair_rate"]))
+        out["stuck"] = (
+            f"The other {len(stuck)} models kept reasoning and were cut off on {span(stuck, 'cut_at_token_cap', lambda x: _pct(x, 0))} of networks. "
+            f"Their figure in that column ({span(stuck)}) says how often their reasoning fits in 512 tokens, not how well they answer at a glance"
+            + (f": {_joined(nm(r) for r in well)}, for example, repair {span(well, 'fixed_of_finished', lambda x: _pct(x, 0))} of the faulty networks they finish."
+               if well else "."))
+    else:
+        out["stuck"] = ""
 
-    # With reasoning: each open model against the trained model, paired on the same faulty networks.
+    # With reasoning. The limit decides most rows, so say how often each model finishes as well as how often it repairs.
     open_r, closed_r = sel("reasoning", "open"), sel("reasoning", "closed")
-    full = [r for r in open_r if int(f(r["n"])) == N]
-    short = [r for r in others if int(f(r["n"])) < N]
-    more = [r for r in full if f(r["diff_hi"]) < 0]
-    level = [r for r in full if f(r["diff_lo"]) <= 0 <= f(r["diff_hi"])]
-    below = [r for r in full if f(r["diff_lo"]) > 0]
+    fin = lambda r: 1 - f(r["cut_at_token_cap"])
+    finspan = lambda rs: span([{"x": fin(r)} for r in rs], "x", lambda x: _pct(x, 0))
+    level = [r for r in open_r if f(r["diff_lo"]) <= 0]
+    below = [r for r in open_r if r not in level]
     rated = lambda rs: _joined(f"{nm(r)} ({_pct(r['repair_rate'])})" for r in sorted(rs, key=lambda r: -f(r["repair_rate"])))
-    parts = []
+    allr = open_r + closed_r + [think]
+    parts = [f"Free to reason, the 20,000-token limit decides most rows: every model repairs {span(allr, 'fixed_of_finished', lambda x: _pct(x, 0))} "
+             f"of the faulty networks it finishes."]
     out["tldr_reason"] = ""
-    if more:
-        parts.append(f"{rated(more)} {'repairs' if len(more) == 1 else 'repair'} more than the trained model")
     if level:
-        ratios = sorted(round(f(r["mean_out_tokens"]) / f(trained["mean_out_tokens"]), -1) for r in level + more)
+        ratios = sorted(round(f(r["mean_out_tokens"]) / f(trained["mean_out_tokens"]), -1) for r in level)
         times = f"about {tok(ratios[0])}" if ratios[0] == ratios[-1] else f"{tok(ratios[0])} to {tok(ratios[-1])}"
-        parts.append(f"{rated(level)} {'is' if len(level) == 1 else 'are'} level with {'it' if more else 'the trained model'}")
-        out["tldr_reason"] = (f"; free to reason, {_joined(nm(r) for r in sorted(level + more, key=lambda r: -f(r['repair_rate'])))} "
-                              f"{'matches' if len(level + more) == 1 else 'match'} the trained model at {times} times the tokens")
-        parts[-1] += f", at {times} times the tokens"
+        parts.append(f"{rated(level)} {'finishes' if len(level) == 1 else 'finish'} {finspan(level)} of networks and "
+                     f"{'is' if len(level) == 1 else 'are'} level with the trained model, at {times} times the tokens.")
+        out["tldr_reason"] = (f"given 20,000 tokens to reason, {_joined(nm(r) for r in sorted(level, key=lambda r: -f(r['repair_rate'])))} "
+                              f"{'matches' if len(level) == 1 else 'match'} the trained model at {times} times the tokens")
     if below:
-        parts.append(f"the {'other ' if more or level else ''}{len(below)} open models repair {span(below)}")
-    fewer = [r for r in open_r if f(r["repair_rate"]) < f(think["repair_rate"])]
-    out["reasoning"] = (f"Free to reason, {'; '.join(parts)}. " if parts else "") + (
-        f"Untrained Inkling 2 Small with reasoning repairs {out['think']} of the same networks"
-        + (f", more than {len(fewer)} of those {len(open_r)} open models" if fewer else "")
-        + (f"; the {len(closed_r)} closed models run with reasoning repair {span(closed_r)}." if closed_r else "."))
+        parts.append(f"The {'other ' if level else ''}{len(below)} open models finish {finspan(below)} and repair {span(below)}.")
+    parts.append(f"Untrained Inkling 2 Small, at the low reasoning effort used for it throughout, finishes {_pct(fin(think), 0)} and repairs {out['think']}"
+                 + (f"; the {len(closed_r)} closed models finish {finspan(closed_r)} and repair {span(closed_r)}." if closed_r else "."))
+    out["reasoning"] = " ".join(parts)
 
-    # The no-reasoning column against the trained model, paired on the same faulty networks.
-    d_all = open_d + closed_d
-    d_ahead = [r for r in d_all if f(r["diff_hi"]) < 0]
-    d_tie = [r for r in d_all if f(r["diff_lo"]) <= 0 <= f(r["diff_hi"])]
-    d_behind = [r for r in d_all if f(r["diff_lo"]) > 0]
+    # The models that answered at once against the trained model, paired on the same faulty networks.
     pts = lambda r: f"{-100 * f(r['trained_minus_this']):+.1f} points [{-100 * f(r['diff_hi']):+.1f}, {-100 * f(r['diff_lo']):+.1f}]"
+    p_ahead = sorted((r for r in once if f(r["diff_hi"]) < 0), key=lambda r: f(r["trained_minus_this"]))
+    p_tie = [r for r in once if f(r["diff_lo"]) <= 0 <= f(r["diff_hi"])]
+    p_behind = [r for r in once if f(r["diff_lo"]) > 0]
+    closest = min(p_behind, key=lambda r: f(r["trained_minus_this"]))
     out["paired"] = (
-        f"Paired on the same {out['faulty']} faulty networks, in the no-reasoning column: "
-        + (f"{_joined(f'{nm(r)} ({pts(r)})' for r in sorted(d_ahead, key=lambda r: f(r['trained_minus_this'])))} "
-           f"{'is' if len(d_ahead) == 1 else 'are'} ahead of the trained Inkling 2 Small" if d_ahead else "no model is ahead of the trained Inkling 2 Small")
-        + (f", {_joined(nm(r) for r in d_tie)} cannot be told apart from it" if d_tie else "")
-        + f", and the other {len(d_behind)} are behind it (the closest, "
-        + (lambda r: f"{nm(r)}, by {100 * f(r['trained_minus_this']):.1f} points [{100 * f(r['diff_lo']):.1f}, {100 * f(r['diff_hi']):.1f}]")(min(d_behind, key=lambda r: f(r["trained_minus_this"])))
-        + ").")
+        f"Paired on the same {out['faulty']} faulty networks, among the models that answered at once: "
+        + (f"{_joined(f'{nm(r)} ({pts(r)})' for r in p_ahead)} {'is' if len(p_ahead) == 1 else 'are'} ahead of the trained Inkling 2 Small"
+           if p_ahead else "none is ahead of the trained Inkling 2 Small")
+        + (f", {_joined(nm(r) for r in p_tie)} cannot be told apart from it" if p_tie else "")
+        + f", and the other {len(p_behind)} are behind it (the closest, {nm(closest)}, by {100 * f(closest['trained_minus_this']):.1f} points "
+        f"[{100 * f(closest['diff_lo']):.1f}, {100 * f(closest['diff_hi']):.1f}]).")
     out["method"] = (
         f"Each model was given the first {N} networks of the in-distribution test set ({out['faulty']} of them faulty) through OpenRouter, "
         f"with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token "
-        f"allowance), then free to reason (20,000-token allowance).")
-    note = ["An answer cut off at the allowance counts as not repaired, as it does for Inkling 2 Small. Tokens are the mean generated per "
-            "network, reasoning included."]
-    if heavy:
-        note.append(f"{_joined(nm(r) for r in heavy)} {'reasons' if len(heavy) == 1 else 'reason'} at length even at the lowest setting, outside the allowance.")
-    cut = [r for r in open_r if f(r["cut_at_token_cap"]) >= 0.25]
-    if cut:
-        note.append(f"With reasoning, {len(cut)} of the {len(open_r)} open models ran out of the 20,000 tokens on {span(cut, 'cut_at_token_cap', lambda x: _pct(x, 0))} of networks.")
-    if short:
-        note.append(f"Rows marked n= stopped at the spend limit before all {N} networks.")
-    note.append("\\* Added after the first results, without reasoning only. Two with-reasoning runs were left out for cost, before either had produced an answer.")
-    out["note"] = " ".join(note)
+        f"limit), then free to reason (20,000-token limit).")
+    out["note"] = (
+        "An answer cut off at the limit counts as not repaired, for every model including Inkling 2 Small; \"cut off\" is the share of the "
+        f"{N} networks where that happened. Tokens are the mean generated per network, reasoning included. The limits were chosen for "
+        "Inkling 2 Small (512 tokens is ample for an answer, and its own limit there is 256; 20,000 is where its reasoning mostly finishes at "
+        "the effort used), and the other "
+        "models reasoned at their provider's default effort, so the with-reasoning column compares models at a fixed budget, not at their best. "
+        "\\* Added after the first results, answer-at-once only. Two with-reasoning runs were left out for cost, before either had produced an answer.")
     return out
 
 
@@ -279,7 +292,8 @@ def write_readme(table: list[dict], readme: str = "README.md") -> bool:
         return False
     i, j = s.index(start) + len(start), s.index(end)
     r = reading(table)
-    block = f"{r['method']}\n\n{r['direct']}\n\n{r['reasoning']}\n\n{markdown(table)}\n\n{r['note']}\n\n{r['paired']}"
+    block = (f"{r['method']}\n\n{r['direct']}{' ' + r['stuck'] if r['stuck'] else ''}\n\n{r['reasoning']}\n\n{markdown(table)}\n\n"
+             f"{r['note']}\n\n{r['paired']}")
     open(readme, "w").write(s[:i] + "\n" + block + "\n" + s[j:])
     return True
 

@@ -44,7 +44,7 @@
   <h2 id="tldr-h">TL;DR</h2>
   <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with closed frontier models used off the shelf. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
   <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning: {{vs_think}} points {{vs_think_ci}}, paired on the same {{vs_think_n}} networks.</p>
-  <p>Off the shelf and told to answer at once, none of {{offshelf_n_open}} other open-weights models fixes more than {{offshelf_best_open_direct}} of a sample of the same networks{{offshelf_tldr_reason}}. GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}}. The networks are tiny, and most of the gain comes from the supervised stage.</p>
+  <p>Off the shelf, the {{offshelf_n_once_open}} other open-weights models that would answer at once fix at most {{offshelf_best_open_direct}} of a sample of the same networks{{offshelf_tldr_reason}}. GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}}. The networks are tiny, and most of the gain comes from the supervised stage.</p>
 </section>
 
 <!-- =============================== SUMMARY CARD =============================== -->
@@ -214,7 +214,7 @@
   <div class="fig-head"><span class="fig-title">Repair rate against tokens generated per network</span><button class="replay" type="button">Replay</button></div>
   <div class="chart" data-chart="tokens"></div>
   <ol class="chart-key" data-key="tokens"></ol>
-  <figcaption id="tokens-cap">Log token axis. Hollow points: other models off the shelf on the first {{offshelf_n}} test networks, once without and once with reasoning (grey: closed; coloured: open-weights). Dashed lines: methods that generate no tokens.</figcaption>
+  <figcaption id="tokens-cap">Log token axis. Hollow points: other models off the shelf on the first {{offshelf_n}} test networks, once told to answer at once and once free to reason (grey: closed; coloured: open-weights). Faint: more than a quarter of that model's answers were cut off at the token limit. Dashed lines: methods that generate no tokens.</figcaption>
 </figure>
 <div class="col">
   <p>After training, Inkling 2 Small uses fewer tokens and repairs more networks than its own reasoning mode. GPT-6 Astra and GPT-6.1 Sol are well ahead: off the shelf they repair {{frontier_range}} of the same networks in a few hundred tokens, and {{frontier_trained_range}} of the gradient-made ones. Search with forward passes repairs {{search_id}}, gradient descent {{gradient_id}}.</p>
@@ -226,10 +226,11 @@
   </div>
   <h3 id="offshelf">Other models, off the shelf</h3>
   <p>{{offshelf_direct}}</p>
+  <p>{{offshelf_stuck}}</p>
   <p>{{offshelf_reasoning}}</p>
   <div class="scroll">
   <table class="data">
-    <thead><tr><th scope=col>Model</th><th scope=col>Weights</th><th scope=col>No reasoning</th><th scope=col>Tokens</th><th scope=col>With reasoning</th><th scope=col>Tokens</th></tr></thead>
+    <thead><tr><th scope=col>Model</th><th scope=col>Weights</th><th scope=col>Told to answer at once: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th><th scope=col>Free to reason: repaired</th><th scope=col>Cut off</th><th scope=col>Tokens</th></tr></thead>
     <tbody>{{table_offshelf}}</tbody>
   </table>
   </div>
@@ -356,7 +357,7 @@
     <li>Test sets: {{n_test}} networks each, generated before training from seeds disjoint from training and validation. Intervals are 95% bootstrap intervals over networks; differences are paired on the same networks.</li>
     <li>Sampling: no reasoning, temperature {{rl_temp}}, {{rl_max_tokens}}-token cap, one answer per network. Untrained reasoning reference: effort {{think_effort}}, {{think_cap_tokens}}-token cap.</li>
     <li>The checkpoint was chosen on validation networks (300 hand-built, 200 gradient-made), never on test.</li>
-    <li>Other models were run through OpenRouter on the same prompts, on the first {{offshelf_n}} test networks. Where an API does not allow reasoning to be switched off, its lowest setting was used.</li>
+    <li>Other models were run through OpenRouter on the same prompts, on the first {{offshelf_n}} test networks. Where an API does not allow reasoning to be switched off, its lowest setting was used. An answer cut off at the token limit counts as not repaired for every model.</li>
     <li>Costs are estimated from token counts at list prices: supervised {{cost_sft}}, RL {{cost_rl}}, evaluation {{cost_eval}}.</li>
   </ul>
 </section>

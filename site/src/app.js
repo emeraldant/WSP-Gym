@@ -545,7 +545,8 @@
       const gg = S("g", { opacity: 0 }, g);
       if (!cc.offshelf) S("line", { x1: x(cc.tokens), x2: x(cc.tokens), y1: y(cc.lo), y2: y(cc.hi), stroke: color, "stroke-width": 1.6 }, gg);
       S("circle", { cx: x(Math.min(cc.tokens, 30000)), cy: y(cc.rate), r: ring ? (cc.open ? 4.5 : 5.5) : 7, fill: ring ? "var(--bg)" : color, stroke: ring ? color : "var(--bg)", "stroke-width": ring && cc.open ? 1.6 : 2,
-        "data-tip": `${cc.label}: ${pct1(cc.rate)}, ~${fmtInt(cc.tokens)} tokens${cc.offshelf ? ` (first ${Math.round(cc.n_total)} networks)` : ""}` }, gg);
+        opacity: cc.offshelf && cc.cut >= 0.25 ? 0.38 : 1,
+        "data-tip": `${cc.label}: ${pct1(cc.rate)}, ~${fmtInt(cc.tokens)} tokens${cc.offshelf ? ` (first ${Math.round(cc.n_total)} networks${cc.cut >= 0.005 ? `, ${Math.round(100 * cc.cut)}% of answers cut off` : ""})` : ""}` }, gg);
       pts.push(gg);
       return gg;
     };
