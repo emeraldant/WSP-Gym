@@ -66,6 +66,13 @@ async def call(client: httpx.AsyncClient, body: dict, retries: int = 5) -> dict:
     return {"status": 0, "json": {"error": {"message": "retries exhausted"}}}
 
 
+def _stop_unless_rejected(res: dict, model: str) -> None:
+    """A probe reads "this reasoning setting is not accepted" only from a 400 or 404. Anything else (no credit,
+    bad key, provider down) stops the run, so an arm is never started with a setting chosen by an outage."""
+    if res["status"] not in (400, 404, 422):
+        raise SystemExit(f"{model}: probe failed with {res['status']}: {str(res['json'].get('error') if isinstance(res['json'], dict) else res['json'])[:200]}")
+
+
 async def pick_direct_reasoning(client: httpx.AsyncClient, model: str, arm: str = "probe") -> dict:
     """Find the lowest reasoning setting this model accepts."""
     for setting in DIRECT_REASONING:
@@ -75,6 +82,7 @@ async def pick_direct_reasoning(client: httpx.AsyncClient, model: str, arm: str 
             charge(arm, res["json"]["usage"].get("cost"))
         if res["status"] == 200 and "choices" in res["json"]:
             return setting
+        _stop_unless_rejected(res, model)
     raise SystemExit(f"{model}: no low-reasoning setting accepted")
 
 
@@ -128,6 +136,8 @@ async def main() -> None:
                                         "max_tokens": 2000, "reasoning": {"enabled": True}, "usage": {"include": True}}, retries=2)
             charge(a.arm, (probe["json"].get("usage") or {}).get("cost") if isinstance(probe["json"], dict) else None)
             reasoning = {"enabled": True} if probe["status"] == 200 and "choices" in probe["json"] else None
+            if reasoning is None:
+                _stop_unless_rejected(probe, a.model)
         else:
             reasoning = None
         f = open(out, "a")
