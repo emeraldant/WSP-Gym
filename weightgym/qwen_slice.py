@@ -47,7 +47,7 @@ SEED0 = 70_000_000
 K = 8
 ARMS = ("random", "untrained", "untrained_reasoning", "formula_rl_proposer", "real_rl_proposer", "scale_rl")
 SAMPLERS = {  # adapters kept on Tinker (NOTES.md)
-    "formula_rl_proposer": "tinker://d06765d0-0bfc-5c2e-b5c3-9f7adb571970:train:0/sampler_weights/final",
+    "formula_rl_proposer": "tinker://d06765d0-0bcf-5c2e-b5c3-9f7adb571970:train:0/sampler_weights/final",
     "real_rl_proposer": "tinker://410fdc47-dcb9-5775-b02a-caa13cd33513:train:0/sampler_weights/final",
     "scale_rl": "tinker://df143eaf-cf67-52a8-9906-2027a75938b3:train:0/sampler_weights/final",
 }

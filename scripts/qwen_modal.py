@@ -123,26 +123,33 @@ def _log(entry: dict) -> None:
         f.write(json.dumps(entry) + "\n")
 
 
-def run_batches(batches: list[list[dict]], sink, label: str, est_tokens: float, tok_per_s: float = 12000.0) -> None:
-    """One container per batch. ``sink(key, records)`` stores results as they arrive."""
+def run_batches(batches: list[list[dict]], sink, label: str, est_tokens: float, tok_per_s: float = 12000.0,
+                containers: int | None = None) -> None:
+    """Each batch is one call on a container; at most ``containers`` containers run at once and are reused for
+    later batches (default: one per batch). ``sink(key, records)`` stores results as they arrive."""
     batches = [b for b in batches if b]
     if not batches:
         print(f"[{label}] nothing to do")
         return
-    est = (est_tokens / tok_per_s + STARTUP_S * len(batches)) * PRICE_PER_S
+    containers = min(containers or len(batches), len(batches))
+    est = (est_tokens / tok_per_s + STARTUP_S * containers) * PRICE_PER_S
     if spent() + est > BUDGET_USD:
         raise SystemExit(f"[{label}] refused: spent ${spent():.2f} + estimate ${est:.2f} would pass the ${BUDGET_USD:.0f} budget")
-    print(f"[{label}] {len(batches)} containers on {GPU}, estimate ${est:.2f} (spent so far ${spent():.2f})", flush=True)
-    t0 = time.time()
+    print(f"[{label}] {len(batches)} batches on {containers} {GPU} containers, estimate ${est:.2f} (spent so far ${spent():.2f})", flush=True)
+    t0, first = time.time(), [True] * 64
     with modal.enable_output(), app.run():
-        for res in Qwen().run.map(batches, order_outputs=False, return_exceptions=True):
+        for res in Qwen.with_options(max_containers=containers)().run.map(batches, order_outputs=False, return_exceptions=True):
             if isinstance(res, Exception):
                 print(f"[{label}] a container failed: {res!r}"[:600], flush=True)
                 _log({"label": label, "t": time.time(), "usd": STARTUP_S * PRICE_PER_S, "failed": True})
                 continue
             for o in res["results"]:
                 sink(o["key"], o["records"])
-            usd = (res["seconds"] + res["startup"] + 60) * PRICE_PER_S
+            # start-up and idle time are billed once per container, not once per batch
+            n_logged = sum(1 for x in first if not x)
+            overhead = (res["startup"] + 60) if n_logged < containers else 0
+            first[n_logged] = False
+            usd = (res["seconds"] + overhead) * PRICE_PER_S
             _log({"label": label, "t": time.time(), "gpu": res["gpu"], "seconds": round(res["seconds"]), "startup": round(res["startup"]),
                   "tokens": res["tokens"], "usd": round(usd, 3)})
             print(f"[{label}] container done: {res['tokens'] / 1e6:.2f}M tokens in {res['seconds']:.0f}s "
@@ -228,19 +235,29 @@ def _slice_jobs(edits: dict, set_name: str, rows: list[dict], cap: int) -> list[
 
 def cmd_screen(containers: int, limit: int | None) -> None:
     """Score distinct valid slice edits on the screen rows, taking them from the end of the sorted list (a local
-    worker, ``python -m weightgym.qwen_slice screen``, takes them from the start)."""
+    worker, ``python -m weightgym.qwen_slice screen``, takes them from the start). The first batch also holds the
+    edit-independent baselines: unedited seeds 1-3 on the screen rows, and unedited and neuron 573 x2 on dev."""
+    from weightgym import qwen_bench as qb
     from weightgym import qwen_slice as qs
 
-    cfg = qs._cfg()
+    cfg, cap = qs._cfg(), qs._cfg()["cap"]
+    base = []
+    for arm, edit, set_name, rows, seeds in (("unedited", None, "train", qs.screen_rows(), [0, 1, 2, 3]), ("unedited", None, "dev", qb.load_set("dev"), [0]),
+                                             ("n573_x2", {"name": "x2", "ops": X2}, "dev", qb.load_set("dev"), [0])):
+        todo = pending(arm, set_name, rows, seeds, cap, qb.OUT)
+        if todo:
+            base.append({"key": (arm, qb.tag_of(set_name, cap)), "todo": todo, "ban_wait": False, "cap": cap, "edit": edit})
     edits = dict(sorted(qs.distinct_edits().items())[::-1])
-    jobs = _slice_jobs(edits, "train", qs.screen_rows(), cfg["cap"])[:limit]
-    print(f"{len(edits)} distinct valid edits, {len(jobs)} to score here")
-    # at most 16 adapters are live on one server: each container gets one wave of up to 12 edits
-    waves = [jobs[i:i + 12] for i in range(0, len(jobs), 12)]
-    est = sum(len(j["todo"]) for j in jobs) * cfg["cap"] * 0.9
-    for i in range(0, len(waves), containers):
-        run_batches(waves[i:i + containers], file_sink(os.path.join(qs.OUT, "edits")), f"screen {i // containers}",
-                    est_tokens=est * len(waves[i:i + containers]) / max(1, len(waves)), tok_per_s=9000)
+    jobs = _slice_jobs(edits, "train", qs.screen_rows(), cap)[:limit]
+    print(f"{len(edits)} distinct valid edits, {len(jobs)} to score here, {len(base)} baseline jobs")
+    # at most 16 adapters are live on one server: a batch holds up to 12 edits
+    waves = ([base] if base else []) + [jobs[i:i + 12] for i in range(0, len(jobs), 12)]
+    sinks = {"base": file_sink(qb.OUT), "edit": file_sink(os.path.join(qs.OUT, "edits"))}
+
+    def sink(key, records):
+        sinks["edit" if key[0].startswith("edit_") else "base"](key, records)
+
+    run_batches(waves, sink, "screen", est_tokens=sum(len(j["todo"]) for w in waves for j in w) * cap * 0.92, tok_per_s=15000, containers=containers)
 
 
 def cmd_dev() -> None:
