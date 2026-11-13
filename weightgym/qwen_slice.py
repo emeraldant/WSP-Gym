@@ -370,7 +370,8 @@ async def _score(items: dict[int, SliceItem], layer: int, ops: list[dict], set_n
                 def on_record(rec):
                     f.write(json.dumps(rec, ensure_ascii=False) + "\n")
                     f.flush()
-                await qb.generate_records(todo, eid, False, cap, 256, on_record)
+                # full-length answers need far fewer requests in flight than short ones to fit in GPU memory
+                await qb.generate_records(todo, eid, False, cap, int(os.environ.get("WG_CLIENT_CONCURRENCY", 256)), on_record)
         finally:
             await qb.unload_adapter(eid)
 
@@ -441,7 +442,7 @@ def kept_edits() -> dict[str, dict[int, tuple[list[dict], float] | None]]:
     return out
 
 
-async def dev(parallel: int = 4) -> None:
+async def dev(parallel: int = 1) -> None:
     from . import qwen_bench as qb
 
     cfg, kept = _cfg(), kept_edits()
@@ -450,6 +451,34 @@ async def dev(parallel: int = 4) -> None:
     todo = {edit_id(layer, b[0]): (layer, b[0]) for by in kept.values() for layer, b in by.items() if b}
     print(f"{len(todo)} kept edits to score on dev")
     await asyncio.gather(*(_score(items, l, o, "dev", qb.load_set("dev"), cfg["cap"], gate) for l, o in todo.values()))
+    for acc, eid, layer, ops in dev_ranking():
+        print(f"dev {100 * acc:5.1f}%  {eid}  {json.dumps(ops)[:140]}", flush=True)
+
+
+def dev_ranking() -> list[tuple[float, str, int, list[dict]]]:
+    """Kept edits with a complete dev score, best first: (dev accuracy, edit id, layer, ops)."""
+    from . import qwen_bench as qb
+
+    cfg, seen = _cfg(), {}
+    for by in kept_edits().values():
+        for layer, b in by.items():
+            if b:
+                eid = edit_id(layer, b[0])
+                recs = qb.load_records(f"edit_{eid}", qb.tag_of("dev", cfg["cap"]), os.path.join(OUT, "edits"))
+                if len(recs) >= 256:
+                    seen[eid] = (qb.summarize(recs)["acc"], eid, layer, b[0])
+    return sorted(seen.values(), key=lambda t: (-t[0], t[1]))
+
+
+async def final(top: int = 3) -> None:
+    """Full MATH-500 protocol, on the local server, for the ``top`` kept edits by dev score that do not have it yet."""
+    from . import qwen_bench as qb
+
+    items = {it.layer: it for it in load_items()}
+    gate = asyncio.Semaphore(1)
+    for acc, eid, layer, ops in dev_ranking()[:top]:
+        print(f"final: {eid} (dev {100 * acc:.1f}%)", flush=True)
+        await _score(items, layer, ops, "math500", qb.load_set("math500"), qb.MAX_TOKENS, gate)
 
 
 def table(results: str = "results/table_qwen_slice.csv") -> None:
@@ -709,7 +738,7 @@ def main() -> None:
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
     p.add_argument("--scramble", action="store_true", help="control: print the shown weights in shuffled positions")
-    for c in ("random", "dev", "table", "prompt", "threshold", "report"):
+    for c in ("random", "dev", "table", "prompt", "threshold", "report", "final"):
         sub.add_parser(c)
     p = sub.add_parser("screen")
     p.add_argument("--order", default="forward", choices=["forward", "reverse"])
@@ -729,6 +758,8 @@ def main() -> None:
         set_threshold()
     elif a.cmd == "report":
         report()
+    elif a.cmd == "final":
+        asyncio.run(final())
     elif a.cmd == "prompt":
         print(SliceItem(22, baseline_stats()).prompt(True))
     else:
