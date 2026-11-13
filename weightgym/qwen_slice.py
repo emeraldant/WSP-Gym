@@ -495,6 +495,32 @@ def table(results: str = "results/table_qwen_slice.csv") -> None:
               f"[{s['lo']:+.2f}, {s['hi']:+.2f}] points; minus random {s['minus_random']:+.2f} [{s['minus_random_lo']:+.2f}, {s['minus_random_hi']:+.2f}]")
 
 
+def _proposal_rows(arm: str) -> list[dict]:
+    path = os.path.join(OUT, "proposals", f"{arm}.jsonl")
+    return [r for r in map(json.loads, open(path)) if "seed" in r and r["sample"] < K] if os.path.exists(path) else []
+
+
+def hits(arm: str, layer: int) -> tuple[int, int, float | None]:
+    """(answers that beat the keep threshold on the screen rows, answers given, mean output tokens) for one arm and layer."""
+    cfg = _cfg()
+    rows = [r for r in _proposal_rows(arm) if r["seed"] - SEED0 == layer]
+    n = 0
+    for r in rows:
+        a = screen_acc(f"edit_{edit_id(layer, r['ops'])}") if r.get("valid") and r.get("ops") else None
+        n += int(a is not None and a > cfg["keep_above"] + 1e-9)
+    toks = [r["n_out"] for r in rows if r.get("n_out") is not None]
+    return n, len(rows), (float(np.mean(toks)) if toks else None)
+
+
+def _hit_sentence(layer: int = 23) -> str:
+    f, r, u, d, rnd = (hits(a, layer) for a in ("formula_rl_proposer", "real_rl_proposer", "untrained_reasoning", "untrained", "random"))
+    rl_tok = (f[2] * f[1] + r[2] * r[1]) / (f[1] + r[1])
+    return (f"In layer {layer}, {f[0] + r[0]} of {f[1] + r[1]} single answers from our two RL-trained proposers helped on practice problems "
+            f"(no reasoning, about {rl_tok:.0f} output tokens each; one of their edits is in the table), against {u[0]} of {u[1]} from the "
+            f"untrained model with reasoning (about {u[2]:,.0f} tokens each), {rnd[0]} of {rnd[1]} random edits, and none from the untrained "
+            f"model without reasoning, which never produced a valid answer. That is one layer; the other layers are still being scored.")
+
+
 # ------------------------------------------------------------------------------------------ report
 def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qwen_math500.csv") -> None:
     """MATH-500 numbers for the conditions run so far, from the logs: a CSV for the write-up and the JSON the
@@ -577,7 +603,7 @@ def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qw
             f"({100 * best['minus_unedited']:+.1f} points [{100 * best['diff_lo']:+.1f}, {100 * best['diff_hi']:+.1f}] paired against unedited). "
             f"On the {px[3]} problems where both were run it is level with the published one-neuron edit ({100 * px[0]:+.1f} points "
             f"[{100 * px[1]:+.1f}, {100 * px[2]:+.1f}]), and banning the \"Wait\" token without touching any weight does as well. "
-            f"Our RL-trained proposers suggest the same kind of edit in one answer of about 40 tokens; one of theirs is in the table.")
+            + _hit_sentence())
     caveats = [
         "This is the untrained model's result first. Whether the Tinker-trained proposers beat random edits across layers is not settled: "
         f"{n_scored} of {len(d)} proposed edits have been scored so far, and in layer 23 a random row swap also works.",
