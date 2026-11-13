@@ -15,3 +15,7 @@ cache/
 runs/qwen/logs/
 runs/qwen/repro*.log
 runs/qwen_slice/*.log
+
+# OpenRouter driver logs and the local spend stop
+runs/openrouter_logs/
+runs/openrouter_budget
