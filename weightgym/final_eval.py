@@ -125,6 +125,33 @@ def build_tables(results_dir: str = "results", reference_arm: str = "untrained")
                              "reasoning_rate": round(sum(think[s]["success"] for s in seeds) / len(seeds), 4),
                              "diff": round(d, 4), "lo": round(lo, 4), "hi": round(hi, 4)})
     write_csv(os.path.join(results_dir, "table_vs_reasoning.csv"), vs_reasoning)
+    # The RL stage against the supervised stage it started from, paired on the same faulty networks (seeds in
+    # ascending order, so the bootstrap is reproducible), per split and pooled over the splits in TEST_SPLITS order.
+    rl_vs_sft = []
+    for rl_arm, sft_arm in (("scale_rl", "scale_sft"), ("sft_rl", "sft")):
+        pa, pb, pca, pcb = [], [], [], []
+        for split in TEST_SPLITS:
+            a, b = by_arm.get((rl_arm, split)), by_arm.get((sft_arm, split))
+            if not a or not b:
+                continue
+            fa, fb = {r["seed"]: r for r in a if not r["clean"]}, {r["seed"]: r for r in b if not r["clean"]}
+            ca, cb = {r["seed"]: r for r in a if r["clean"]}, {r["seed"]: r for r in b if r["clean"]}
+            seeds, cseeds = sorted(set(fa) & set(fb)), sorted(set(ca) & set(cb))
+            xa, xb = [fa[s]["success"] for s in seeds], [fb[s]["success"] for s in seeds]
+            ya, yb = [ca[s]["success"] for s in cseeds], [cb[s]["success"] for s in cseeds]
+            d, lo, hi = paired_diff_ci(xa, xb)
+            dc, clo, chi = paired_diff_ci(ya, yb)
+            rl_vs_sft.append({"rl_arm": rl_arm, "sft_arm": sft_arm, "split": split, "n_faulty": len(seeds), "diff": round(d, 4), "lo": round(lo, 4),
+                              "hi": round(hi, 4), "n_healthy": len(cseeds), "healthy_sft": round(sum(yb) / len(yb), 4),
+                              "healthy_rl": round(sum(ya) / len(ya), 4), "healthy_diff": round(dc, 4), "healthy_lo": round(clo, 4), "healthy_hi": round(chi, 4)})
+            pa, pb, pca, pcb = pa + xa, pb + xb, pca + ya, pcb + yb
+        if pa:
+            d, lo, hi = paired_diff_ci(pa, pb)
+            dc, clo, chi = paired_diff_ci(pca, pcb)
+            rl_vs_sft.append({"rl_arm": rl_arm, "sft_arm": sft_arm, "split": "pooled", "n_faulty": len(pa), "diff": round(d, 4), "lo": round(lo, 4),
+                              "hi": round(hi, 4), "n_healthy": len(pca), "healthy_sft": round(sum(pcb) / len(pcb), 4),
+                              "healthy_rl": round(sum(pca) / len(pca), 4), "healthy_diff": round(dc, 4), "healthy_lo": round(clo, 4), "healthy_hi": round(chi, 4)})
+    write_csv(os.path.join(results_dir, "table_rl_vs_sft.csv"), rl_vs_sft)
     write_csv(os.path.join(results_dir, "table_main.csv"), main)
     write_csv(os.path.join(results_dir, "table_breakdown.csv"), detail)
     write_csv(os.path.join(results_dir, "table_paired_diff.csv"), diffs)

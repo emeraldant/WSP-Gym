@@ -89,9 +89,9 @@ Four earlier checkpoints on the same frozen test splits, each evaluated once:
   only, the first model repaired 14% of them; with them in the mix the final model repairs 67%, and 51%
   of networks from an optimiser it never saw.
 - **RL on top of the scale-up added a little repair and a lot of restraint.** Paired on the same
-  networks, RL minus supervised is +2.6 points in-distribution [-0.5, +5.7], +4.6 on larger networks
-  [+0.7, +8.4] and +5.0 on gradient-made ones [+1.0, +8.7]; nothing on unseen fault types. Pooled over
-  the six splits it is +2.7 [+1.2, +4.3] (a post-hoc summary). The clearer effect is on healthy
+  networks, RL minus supervised is +2.6 points in-distribution [-0.5, +5.9], +4.6 on larger networks
+  [+0.7, +8.4] and +5.0 on gradient-made ones [+1.2, +8.7]; nothing on unseen fault types. Pooled over
+  the six splits it is +2.7 [+1.2, +4.2] (a post-hoc summary; `results/table_rl_vs_sft.csv`). The clearer effect is on healthy
   networks: the share correctly left unedited rose from 79% to 94% on larger networks, 58% to 71% on
   unseen families and 86% to 95% on gradient-made ones. On the first, smaller model RL added 6 points.
 - **RL sharpened the model's answers; it did not improve its best guess.** On validation, greedy
@@ -226,7 +226,7 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   scale-up" in `NOTES.md`.
 - **Earlier models:** the first model is rank 32, 300 supervised steps x 64 hand-built networks and 60
   RL steps; the mixed-source model is the same supervised recipe on 9,600 + 9,600 networks with no RL.
-- **Cost:** about $174 of Tinker usage for the final model (supervised stage $124, RL $40, the rest
+- **Cost:** about $174 of Tinker usage for the final model (supervised stage $123.50, RL $39.69, the rest
   evaluation), and about $418 for the whole project including the earlier models, the improve-loop
   experiments, sweeps and every evaluation. Estimated from token counts at list prices
   (`python -m weightgym.cost`, `runs/cost_tally.json`).
