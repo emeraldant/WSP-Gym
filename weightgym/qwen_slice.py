@@ -364,6 +364,31 @@ async def screen(parallel: int = 6, order: str = "forward") -> None:
     await asyncio.gather(*(one(e, l, o) for e, (l, o) in todo))
 
 
+def set_threshold() -> dict:
+    """Keep threshold = mean + 2 SD of the unedited model's accuracy on the screen rows over seeds 0-3; also
+    records the unedited and neuron-573-x2 accuracy on dev. Depends on no edit."""
+    from . import qwen_bench as qb
+
+    cfg = _cfg()
+    ids = {r["id"] for r in screen_rows()}
+    recs = [r for r in qb.load_records("unedited", qb.tag_of("train", cfg["cap"])) if r["id"] in ids]
+    accs = []
+    for s_ in range(4):
+        rs = [r for r in recs if r["sample"] == s_]
+        if len(rs) != len(ids):
+            raise SystemExit(f"unedited seed {s_}: {len(rs)} of {len(ids)} screen rows scored")
+        accs.append(sum(r["correct"] for r in rs) / len(rs))
+    mean, sd = float(np.mean(accs)), float(np.std(accs, ddof=1))
+    cfg.update(seed_accs=accs, unedited_mean=mean, unedited_sd=sd, keep_above=mean + 2 * sd)
+    for arm, key in (("unedited", "baseline_dev"), ("n573_x2", "positive_control_dev")):
+        d = qb.load_records(arm, qb.tag_of("dev", cfg["cap"]))
+        if len(d) >= 256:
+            cfg[key] = {k: v for k, v in qb.summarize(d).items() if k in ("acc", "lo", "hi", "cut_share", "n_answers")}
+    json.dump(cfg, open(os.path.join(OUT, "screen_config.json"), "w"), indent=1)
+    print(f"unedited on the screen rows, seeds 0-3: {[round(100 * a, 1) for a in accs]} -> mean {100 * mean:.1f}%, SD {100 * sd:.1f}, keep above {100 * cfg['keep_above']:.1f}%")
+    return cfg
+
+
 def kept_edits() -> dict[str, dict[int, tuple[list[dict], float] | None]]:
     """arm -> layer -> (edit, screen accuracy) of the arm's best edit that beats the keep threshold, else None
     (the first one sampled wins ties)."""
@@ -447,7 +472,7 @@ def main() -> None:
     p.add_argument("arm")
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
-    for c in ("random", "dev", "table", "prompt"):
+    for c in ("random", "dev", "table", "prompt", "threshold"):
         sub.add_parser(c)
     p = sub.add_parser("screen")
     p.add_argument("--order", default="forward", choices=["forward", "reverse"])
@@ -462,6 +487,8 @@ def main() -> None:
         asyncio.run(screen(order=a.order))
     elif a.cmd == "dev":
         asyncio.run(dev())
+    elif a.cmd == "threshold":
+        set_threshold()
     elif a.cmd == "prompt":
         print(SliceItem(22, baseline_stats()).prompt(True))
     else:
