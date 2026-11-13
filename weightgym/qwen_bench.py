@@ -145,10 +145,57 @@ def is_correct(pred: str | None, gold: str | None) -> bool:
         return False
 
 
-def grade(row: dict, text: str, finish: str) -> dict:
+def grade(row: dict, text: str, finish: str, correct: bool | None = None) -> dict:
     pred = last_boxed(answer_text(text))
-    return {"pred": pred if pred is None or len(pred) <= 200 else pred[:200] + "...", "correct": is_correct(pred, row["answer"]),
+    if correct is None:
+        correct = is_correct(pred, row["answer"])
+    return {"pred": pred if pred is None or len(pred) <= 200 else pred[:200] + "...", "correct": bool(correct),
             "cut": finish == "length", "waits": len(re.findall(r"\bWait\b", text)), "chars": len(text)}
+
+
+class Grader:
+    """math-verify in worker processes with a hard time limit.
+
+    A rare malformed answer makes the symbolic comparison run without end, and math-verify's own signal-based
+    timeout does not stop it. Run in-process that freezes the whole evaluation (it did, on rented GPUs). Here each
+    check runs in a worker process; one that passes ``timeout`` seconds is killed, the answer is counted as wrong
+    (as an unparseable answer is), and the record is marked ``grader_timeout``."""
+
+    def __init__(self, workers: int = 4, timeout: float = 30.0):
+        self.timeout, self.workers = timeout, workers
+        self._free: asyncio.Queue | None = None
+
+    @staticmethod
+    def _new():
+        import multiprocessing
+        from concurrent.futures import ProcessPoolExecutor
+
+        return ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn"))
+
+    async def correct(self, pred: str | None, gold: str | None) -> tuple[bool, bool]:
+        """(correct, timed_out)"""
+        if pred is None or gold is None:
+            return False, False
+        if self._free is None:
+            self._free = asyncio.Queue()
+            for _ in range(self.workers):
+                self._free.put_nowait(self._new())
+        ex = await self._free.get()
+        try:
+            ok = await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(ex, is_correct, pred, gold), self.timeout)
+            return bool(ok), False
+        except Exception:  # noqa: BLE001 - time limit, or a worker that died: count the answer as wrong
+            for proc in list(getattr(ex, "_processes", {}).values()):
+                proc.kill()
+            ex.shutdown(wait=False, cancel_futures=True)
+            ex = self._new()
+            return False, True
+        finally:
+            self._free.put_nowait(ex)
+
+    def close(self) -> None:
+        while self._free is not None and not self._free.empty():
+            self._free.get_nowait().shutdown(wait=False, cancel_futures=True)
 
 
 # ------------------------------------------------------------------------------------------ edits -> adapters
@@ -301,7 +348,8 @@ def merged_checkpoint(name: str, ops: list[dict]) -> str:
 def _client():
     from openai import AsyncOpenAI
 
-    return AsyncOpenAI(base_url=URL, api_key="local", timeout=6 * 3600, max_retries=0)
+    # a request that gets no answer within the limit fails instead of holding a (possibly rented) GPU
+    return AsyncOpenAI(base_url=URL, api_key="local", timeout=float(os.environ.get("WG_REQUEST_TIMEOUT", 5400)), max_retries=0)
 
 
 async def load_adapter(name: str) -> None:
@@ -345,20 +393,27 @@ async def generate_records(todo: list[tuple[dict, int]], model: str = "base", ba
                            concurrency: int = 256, on_record=None) -> list[dict]:
     """Generate and grade one answer for every (row, sample) pair. The seed of a pair is 1000 * row["idx"] + sample,
     so a pair gets the same seed wherever and in whatever order it is run."""
-    client, sem = _client(), asyncio.Semaphore(concurrency)
+    client, sem, grader = _client(), asyncio.Semaphore(concurrency), Grader()
 
     async def one(row, s):
         text, finish, n_tok = await generate(client, model, row["problem"], 1000 * row["idx"] + s, max_tokens, ban_wait, sem)
-        return row, s, text, finish, n_tok
+        ok, timed_out = await grader.correct(last_boxed(answer_text(text)), row["answer"])
+        rec = {"id": row["id"], "sample": s, "finish": finish, "tokens": n_tok, **grade(row, text, finish, ok),
+               "head": text[:300], "tail": text[-600:]}
+        if timed_out:
+            rec["grader_timeout"] = True
+        return rec
 
     out = []
-    for fut in asyncio.as_completed([asyncio.ensure_future(one(row, s)) for row, s in todo]):
-        row, s, text, finish, n_tok = await fut
-        rec = {"id": row["id"], "sample": s, "finish": finish, "tokens": n_tok, **grade(row, text, finish),
-               "head": text[:300], "tail": text[-600:]}
-        out.append(rec)
-        if on_record:
-            on_record(rec)
+    try:
+        for fut in asyncio.as_completed([asyncio.ensure_future(one(row, s)) for row, s in todo]):
+            rec = await fut
+            out.append(rec)
+            if on_record:
+                on_record(rec)
+    finally:
+        grader.close()
+        await client.close()
     return out
 
 

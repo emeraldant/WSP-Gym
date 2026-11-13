@@ -77,5 +77,28 @@
  "positive_control_n573_x2": {
   "acc": 0.296875,
   "cut_share": 0.6875
+ },
+ "seed_accs": [
+  0.0625,
+  0.09375,
+  0.046875,
+  0.046875
+ ],
+ "unedited_mean": 0.0625,
+ "unedited_sd": 0.02209708691207961,
+ "keep_above": 0.10669417382415922,
+ "baseline_dev": {
+  "n_answers": 256,
+  "acc": 0.1015625,
+  "lo": 0.06640625,
+  "hi": 0.140625,
+  "cut_share": 0.90234375
+ },
+ "positive_control_dev": {
+  "n_answers": 256,
+  "acc": 0.32421875,
+  "lo": 0.26953125,
+  "hi": 0.3828125,
+  "cut_share": 0.671875
  }
 }

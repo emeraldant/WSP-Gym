@@ -5,4 +5,4 @@ export VLLM_USE_FLASHINFER_SAMPLER=0   # no CUDA compiler on this machine; use t
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True   # edits are loaded and unloaded as adapters while the server runs
 exec vllm-env/bin/vllm serve ~/wg-qwen/models/base --served-model-name base --port 8011 --host 127.0.0.1 \
   --dtype bfloat16 --max-model-len 40000 --gpu-memory-utilization 0.85 \
-  --enable-lora --max-lora-rank 8 --max-loras 8 --max-cpu-loras 64 --seed 0
+  --enable-lora --max-lora-rank 8 --max-loras ${WG_MAX_LORAS:-64} --max-cpu-loras 256 --seed 0

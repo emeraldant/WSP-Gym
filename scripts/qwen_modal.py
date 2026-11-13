@@ -86,6 +86,7 @@ class Qwen:
         from weightgym import qwen_bench as qb
 
         t0 = time.time()
+        os.environ.setdefault("WG_REQUEST_TIMEOUT", "1200")     # a request with no answer in 20 minutes fails
 
         async def one(job):
             model, edit = "base", job.get("edit")
@@ -124,7 +125,7 @@ def _log(entry: dict) -> None:
 
 
 def run_batches(batches: list[list[dict]], sink, label: str, est_tokens: float, tok_per_s: float = 12000.0,
-                containers: int | None = None) -> None:
+                containers: int | None = None, timeout_s: int = 1500) -> None:
     """Each batch is one call on a container; at most ``containers`` containers run at once and are reused for
     later batches (default: one per batch). ``sink(key, records)`` stores results as they arrive."""
     batches = [b for b in batches if b]
@@ -138,11 +139,13 @@ def run_batches(batches: list[list[dict]], sink, label: str, est_tokens: float, 
     print(f"[{label}] {len(batches)} batches on {containers} {GPU} containers, estimate ${est:.2f} (spent so far ${spent():.2f})", flush=True)
     t0, first = time.time(), [True] * 64
     with modal.enable_output(), app.run():
-        for res in Qwen.with_options(max_containers=containers)().run.map(batches, order_outputs=False, return_exceptions=True):
+        # Guards against paying for a stuck container: every call has a hard time limit, and the first failure
+        # ends the whole run (leaving the ``with`` block stops the app and its containers).
+        for res in Qwen.with_options(max_containers=containers, timeout=timeout_s)().run.map(batches, order_outputs=False, return_exceptions=True):
             if isinstance(res, Exception):
-                print(f"[{label}] a container failed: {res!r}"[:600], flush=True)
-                _log({"label": label, "t": time.time(), "usd": STARTUP_S * PRICE_PER_S, "failed": True})
-                continue
+                print(f"[{label}] a call failed, stopping the run: {res!r}"[:600], flush=True)
+                _log({"label": label, "t": time.time(), "usd": round(timeout_s * PRICE_PER_S, 2), "failed": True})
+                break
             for o in res["results"]:
                 sink(o["key"], o["records"])
             # start-up and idle time are billed once per container, not once per batch
@@ -260,16 +263,20 @@ def cmd_screen(containers: int, limit: int | None) -> None:
     run_batches(waves, sink, "screen", est_tokens=sum(len(j["todo"]) for w in waves for j in w) * cap * 0.92, tok_per_s=15000, containers=containers)
 
 
-def cmd_dev() -> None:
+def cmd_dev(layers: list[int] | None) -> None:
+    """Score each arm's best kept edit per layer on the 256 dev problems (only for the layers given; a layer's
+    best edit is only known once all of its edits have been screened)."""
     from weightgym import qwen_bench as qb
     from weightgym import qwen_slice as qs
 
     cfg = qs._cfg()
-    edits = {qs.edit_id(layer, b[0]): (layer, b[0]) for by in qs.kept_edits().values() for layer, b in by.items() if b}
+    edits = {qs.edit_id(layer, b[0]): (layer, b[0]) for by in qs.kept_edits().values() for layer, b in by.items()
+             if b and (layers is None or layer in layers)}
     jobs = _slice_jobs(edits, "dev", qb.load_set("dev"), cfg["cap"])
-    print(f"{len(edits)} kept edits, {len(jobs)} still to score on dev")
+    print(f"{len(edits)} kept edits, {len(jobs)} still to score on dev", flush=True)
     waves = [jobs[i:i + 12] for i in range(0, len(jobs), 12)]
-    run_batches(waves, file_sink(os.path.join(qs.OUT, "edits")), "dev", est_tokens=sum(len(j["todo"]) for j in jobs) * cfg["cap"] * 0.9, tok_per_s=9000)
+    run_batches(waves, file_sink(os.path.join(qs.OUT, "edits")), "dev", est_tokens=sum(len(j["todo"]) for j in jobs) * cfg["cap"] * 0.9,
+                tok_per_s=15000, timeout_s=1800)
 
 
 def cmd_final(edit_ids: list[str], containers: int) -> None:
@@ -306,7 +313,8 @@ if __name__ == "__main__":
     p = sub.add_parser("screen")
     p.add_argument("--containers", type=int, default=4)
     p.add_argument("--limit", type=int, default=None, help="score at most this many edits here")
-    sub.add_parser("dev")
+    p = sub.add_parser("dev")
+    p.add_argument("--layers", default=None, help="comma-separated layers whose screening is complete")
     p = sub.add_parser("final")
     p.add_argument("edit_ids", nargs="+")
     p.add_argument("--containers", type=int, default=3)
@@ -319,7 +327,7 @@ if __name__ == "__main__":
     elif a.cmd == "screen":
         cmd_screen(a.containers, a.limit)
     elif a.cmd == "dev":
-        cmd_dev()
+        cmd_dev([int(x) for x in a.layers.split(",")] if a.layers else None)
     elif a.cmd == "final":
         cmd_final(a.edit_ids, a.containers)
     else:
