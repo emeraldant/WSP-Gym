@@ -42,7 +42,7 @@
 
 <section class="col tldr" aria-labelledby="tldr-h">
   <h2 id="tldr-h">TL;DR</h2>
-  <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with closed frontier models used off the shelf. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
+  <p>Weight-space programming, a language model reading a network's weights and writing better values with no gradients, had only been shown with models used off the shelf, mostly closed frontier ones. We trained an open-weights model to do it on one task: repairing small ReLU networks that each contain one planted fault.</p>
   <p>Untrained, Inkling 2 Small fixes <b>{{think_id}}</b> of held-out broken networks, and only by reasoning for about <b>{{think_tokens}}</b> tokens per network. After supervised training and RL on Tinker it fixes <b>{{rl_id}}</b> {{rl_id_ci}} in about <b>{{rl_tokens}}</b> tokens, with no reasoning. Training buys speed, not better answers: the untrained model's misses are mostly answers that ran out of its {{think_cap_tokens}}-token limit ({{think_cap}} of networks), and it repairs {{think_finished}} of those it finishes.</p>
   <p>Off the shelf, the {{offshelf_n_once_open}} other open-weights models that would answer at once fix at most {{offshelf_best_open_direct}} of a sample of the same networks{{offshelf_tldr_reason}}. GPT-6 Astra and GPT-6.1 Sol fix {{frontier_range}}. The networks are tiny, and most of the gain comes from the supervised stage.</p>
 </section>
@@ -326,6 +326,7 @@
   <ul>
     <li>Rikiya Takehi, Jayden Teoh, Alex Zhang and Omar Khattab, <a href="https://rikiyat.github.io/blog/weight-space-programming/"><i>Sparks of Weight-Space Programming</i></a> (MIT CSAIL, 2026), for the idea.</li>
     <li>Beaker, <a href="https://www.withbeaker.ai/blog/weight-space-programming"><i>Weight-space programming</i></a> (2026), for the trivial-baseline discipline.</li>
+    <li>Simon Willison, <a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/"><i>Qwen 3.8 27B on my laptop can interpret model weights, too</i></a> (2026): an open model reading small networks off the shelf.</li>
     <li>Thinking Machines, for <a href="https://tinker-docs.thinkingmachines.ai/">Tinker</a>, Inkling 2 Small and <a href="https://github.com/thinking-machines-lab/tinker-cookbook">tinker-cookbook</a>.</li>
     <li>Trained weight readers that take weights as numbers rather than text: Langosco et al., <i>Towards Meta-Models for Automated Interpretability</i>; Weight Oracles (arXiv 2610.07334). Cha et al. (arXiv 2611.05798) on auditing weight readers with symmetries; WSPBench, a planted-fault repair benchmark.</li>
   </ul>

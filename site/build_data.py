@@ -779,7 +779,7 @@ def lint_template(tpl: str) -> None:
     body = FIELD.sub("", body)
     body = re.sub(r"<[^>]+>", " ", body)
     # conventions and names, not results: model names, arXiv ids, the confidence level of intervals
-    body = re.sub(r"GPT-6\.1|arXiv \d{4}\.\d{5}|95% (bootstrap )?intervals?", " ", body)
+    body = re.sub(r"GPT-6\.1|Qwen 3\.8 27B|arXiv \d{4}\.\d{5}|95% (bootstrap )?intervals?", " ", body)
     bad = re.findall(r"[-+]?\d[\d,]*\.?\d*\s?%|\$\s?\d|\b\d+\.\d+\b", body)
     if bad:
         raise SystemExit(f"template contains typed-in numbers (use a template field): {sorted(set(bad))}")

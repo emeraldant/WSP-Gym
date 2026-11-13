@@ -185,7 +185,8 @@ third guess.
   passes. That is a gain in speed, not in accuracy: the untrained model repairs 97.6% of the networks it
   finishes reasoning about. As far as
   we know this is the first *trained* weight-space programmer working from weights as text; published
-  results so far use closed frontier models off the shelf.
+  results so far use models off the shelf, mostly closed frontier ones (an open one, Qwen 3.8 27B, has
+  been shown reading small networks; see the credits).
 - **It carries over to unseen function families (59%) and larger networks (70%)**, so it is not simply
   memorising the training circuits. A statistics-only heuristic repairs 2-8% on these splits.
 - **It carries over to an optimiser it never saw (51% on scikit-learn networks), but loses ground
@@ -528,6 +529,9 @@ MIT (`LICENSE`). Third-party data and code keep their own terms; see `THIRD_PART
 
 - Takehi, Teoh, Zhang, Khattab, *Sparks of Weight-Space Programming* (2026) and its released logs.
 - Beaker, *Weight-space programming* (2026), for the trivial-baseline discipline.
+- Simon Willison, *Qwen 3.8 27B on my laptop can interpret model weights, too* (2026): an open model
+  reading small networks off the shelf. Hu et al., *Exploring Weight-Space Programming* (arXiv
+  2611.09382): GPT-6 Astra edits on more benchmarks, with a random-direction control.
 - Langosco et al., *Towards Meta-Models for Automated Interpretability*, and Weight Oracles
   (arXiv 2610.07334): trained weight readers that take weights as numbers rather than text.
 - Cha et al. (arXiv 2611.05798) for auditing weight readers with function-preserving symmetries;
