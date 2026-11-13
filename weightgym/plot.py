@@ -46,7 +46,7 @@ def main() -> None:
     ap.add_argument("--marker-arm", default="baseline_outlier")
     ap.add_argument("--marker-label", default="Statistics-only heuristic")
     ap.add_argument("--ref-arm", default="untrained_thinking")
-    ap.add_argument("--ref-label", default="Untrained, reasoning for ~{tok:,} tokens")
+    ap.add_argument("--ref-label", default="Untrained, reasoning (~{tok:,} tokens, 20K limit)")
     a = ap.parse_args()
     t = load(a.table)
     arms, labels = a.arms.split(","), a.labels.split(",")
