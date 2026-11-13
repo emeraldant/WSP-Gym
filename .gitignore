@@ -10,3 +10,8 @@ runs/**/logs.log
 runs/**/timing_spans.jsonl
 runs/**/code.diff
 cache/
+
+# driver logs: they print local paths and account names, and hold no results
+runs/qwen/logs/
+runs/qwen/repro*.log
+runs/qwen_slice/*.log
