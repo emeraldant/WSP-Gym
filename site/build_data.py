@@ -354,23 +354,31 @@ def build() -> tuple[dict, dict]:
         {"key": "trained", "label": "Trained Inkling 2 Small, no reasoning", "rate": rl["repair_rate"], "lo": rl["repair_lo"], "hi": rl["repair_hi"], "n": rl["n_faulty"], "tokens": rl["mean_out_tokens"], "open": True},
         {"key": "untrained", "label": "Untrained Inkling 2 Small, no reasoning", "rate": unt["repair_rate"], "lo": unt["repair_lo"], "hi": unt["repair_hi"], "n": unt["n_faulty"], "tokens": unt["mean_out_tokens"], "open": True},
     ]
-    for arm, label in (("frontier_sol_direct", "GPT-6.1 Sol, lowest reasoning setting"), ("frontier_astra_direct", "GPT-6 Astra, lowest reasoning setting"),
-                       ("frontier_sol_reasoning", "GPT-6.1 Sol, default reasoning"), ("frontier_astra_reasoning", "GPT-6 Astra, default reasoning")):
-        r = M[arm]["test_id"]
-        comp.append({"key": arm, "label": label, "rate": r["repair_rate"], "lo": r["repair_lo"], "hi": r["repair_hi"], "n": r["n_faulty"],
-                     "n_total": r["n"], "tokens": r["mean_out_tokens"], "reasoning": mean_reasoning(arm), "open": False, "partial": True})
+    # Other models off the shelf, each on the first 100 test networks (results/table_offshelf.csv, written by
+    # python -m weightgym.offshelf). One point per model and regime.
+    from weightgym.offshelf import ADDED as OFF_ADDED, MODELS as OFF_MODELS, NOT_RUN as OFF_NOT_RUN
+    off = {(r["arm"], r["regime"]): r for r in read_csv("table_offshelf.csv")}
+    for (arm, regime), r in off.items():
+        if not arm.startswith(("open_", "frontier_")):
+            continue
+        comp.append({"key": arm, "label": f"{r['model']}, {'no reasoning' if regime == 'direct' else 'with reasoning'}",
+                     "rate": float(r["repair_rate"]), "lo": float(r["repair_lo"]), "hi": float(r["repair_hi"]), "n": float(r["n_faulty"]),
+                     "n_total": float(r["n"]), "tokens": float(r["mean_out_tokens"]), "reasoning": float(r["mean_reasoning_tokens"] or 0),
+                     "open": r["weights"] == "open", "offshelf": True})
     D["comparison"] = comp
     base = {k: M[f"baseline_{k}"]["test_id"]["repair_rate"] for k in ("search", "gradient", "outlier", "random", "noop")}
     D["baselines_id"] = base
     T.update(search_id=pct(base["search"]), gradient_id=pct(base["gradient"]), random_id=pct(base["random"]), noop_id=pct(base["noop"], 0))
     fr = {c["key"]: c for c in comp}
-    frontier_rates = [c["rate"] for c in comp if c.get("partial")]
+    frontier_rates = [c["rate"] for c in comp if c["key"].startswith(("frontier_sol_", "frontier_astra_"))]
     T["frontier_range"] = f"{100 * min(frontier_rates):.0f}-{100 * max(frontier_rates):.0f}%"
-    T["frontier_max_n"] = f"{max(int(c['n_total']) for c in comp if c.get('partial'))}"
+    T["offshelf_n"] = f"{max(int(c['n_total']) for c in comp if c.get('offshelf'))}"
     T["frontier_trained_range"] = f"{100 * min(M[a]['test_trained']['repair_rate'] for a in ('frontier_astra_reasoning', 'frontier_sol_reasoning')):.0f}-{100 * max(M[a]['test_trained']['repair_rate'] for a in ('frontier_astra_reasoning', 'frontier_sol_reasoning')):.0f}%"
     trs = []
     for c in comp:
-        n = f"partial: {int(c['n_total'])} networks" if c.get("partial") else f"{int(c['n'])} faulty networks"
+        if c.get("offshelf"):
+            continue
+        n = f"{int(c['n'])} faulty networks"
         tok = f"~{c['tokens']:,.0f}" + (f" ({c['reasoning']:.0f} reasoning)" if c.get("reasoning") else "")
         cell = pct(c["rate"]) + (f" <span class=ci>{ci(c['lo'], c['hi'])}</span>" if not c.get("partial") else "")
         cls = " class=final" if c["key"] == "trained" else ""
@@ -381,6 +389,36 @@ def build() -> tuple[dict, dict]:
                      ("random", "Random valid edit"), ("noop", "Never edit")):
         trs.append(f"<tr><th scope=row>{esc(label)}</th><td>{pct(base[k])}</td><td>&mdash;</td><td class=muted>{int(rl['n_faulty'])} faulty networks</td></tr>")
     T["table_compare"] = "\n".join(trs)
+
+    def off_cells(r, not_run=""):
+        if r is None:
+            return f"<td class=muted>{esc(not_run)}</td><td>&mdash;</td>" if not_run else "<td>&mdash;</td><td>&mdash;</td>"
+        n = "" if int(r["n"]) == int(T["offshelf_n"]) else f" <span class=ci>n={int(r['n'])}</span>"
+        return f"<td>{pct(float(r['repair_rate']))} <span class=ci>{ci(float(r['repair_lo']), float(r['repair_hi']))}</span>{n}</td><td>~{float(r['mean_out_tokens']):,.0f}</td>"
+
+    otr = [f"<tr class=final><th scope=row>Inkling 2 Small, post-trained on Tinker</th><td>open</td>{off_cells(off.get(('scale_rl', 'direct')))}<td class=muted>not used</td><td>&mdash;</td></tr>",
+           f"<tr><th scope=row>Inkling 2 Small, untrained</th><td>open</td>{off_cells(off.get(('untrained', 'direct')))}{off_cells(off.get(('untrained_thinking', 'reasoning')))}</tr>"]
+    for m in OFF_MODELS + OFF_ADDED:
+        prefix, name, _id, open_w = m
+        d_, r_ = off.get((f"{prefix}_direct", "direct")), off.get((f"{prefix}_reasoning", "reasoning"))
+        if d_ is None and r_ is None:
+            continue
+        star = " *" if m in OFF_ADDED else ""
+        otr.append(f"<tr><th scope=row>{esc(name)}{star}</th><td>{'open' if open_w else 'closed'}</td>"
+                   f"{off_cells(d_, OFF_NOT_RUN.get((prefix, 'direct'), ''))}{off_cells(r_, OFF_NOT_RUN.get((prefix, 'reasoning'), ''))}</tr>")
+    T["table_offshelf"] = "\n".join(otr)
+    D["offshelf_same"] = {k: {"rate": float(off[a]["repair_rate"]), "lo": float(off[a]["repair_lo"]), "hi": float(off[a]["repair_hi"]), "tokens": float(off[a]["mean_out_tokens"])}
+                          for k, a in (("trained", ("scale_rl", "direct")), ("untrained", ("untrained", "direct")), ("think", ("untrained_thinking", "reasoning"))) if a in off}
+
+    # Sentences around that table: weightgym.offshelf.reading writes them from the same rows, for the README too.
+    from weightgym.offshelf import reading as off_reading
+    R = off_reading(list(off.values()))
+    T["offshelf_n_open"], T["offshelf_best_open_direct"] = R["n_open"], R["best_open"]
+    T["offshelf_direct"] = esc(R["direct"]).replace(f"repairs {R['trained']} of them", f"repairs <b>{R['trained']}</b> of them", 1)
+    T["offshelf_reasoning"] = esc(R["reasoning"])
+    T["offshelf_lead"], T["offshelf_note"] = esc(R["method"]), esc(R["note"].replace("\\*", "*"))
+    T["offshelf_tldr_reason"] = esc(R["tldr_reason"])
+    D["offshelf_reading"] = R
 
     # --- verifier -------------------------------------------------------------------------------
     ver = read_csv("table_verify.csv")

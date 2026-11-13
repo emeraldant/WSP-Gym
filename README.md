@@ -28,7 +28,8 @@ result on held-out networks. Four results:
    proposes an edit that takes MATH-500 from 8% to 38%, level with the published edit found with closed
    frontier models. Proposers RL-trained on small networks give that edit in one short answer.
 
-Frontier closed models still do much better on this gym; see the comparison below.
+Off the shelf, GPT-6 Astra and GPT-6.1 Sol still do much better on this gym, and no other open-weights
+model we tried comes close without reasoning; see [other models, off the shelf](#other-models-off-the-shelf).
 
 ![Repair rate by test split](results/repair_rate.png)
 
@@ -60,9 +61,6 @@ For scale, on the same in-distribution test networks:
 |---|---|---|
 | Untrained Inkling 2 Small, free to reason (20K-token cap) | 75.6% [71.3, 79.6] | ~10,600 |
 | **Trained Inkling 2 Small, no reasoning** | **82.9%** [79.4, 86.5] | **~38** |
-| GPT-6.1 Sol, lowest reasoning setting (n=86)\* | 90.8% | ~200 (171 reasoning) |
-| GPT-6 Astra, lowest reasoning setting (n=95)\* | 96.4% | ~140 (113 reasoning) |
-| GPT-6.1 Sol / GPT-6 Astra, default reasoning (n=54 each)\* | 100% / 100% | ~450 / ~400 |
 | Brute-force search over single sign flips and swaps, **using forward passes** | 65.2% | — |
 | Gradient descent on half of the inputs (ignores the edit budget) | 61.4% | — |
 | Statistics-only heuristic (most unusual row / column / scalar) | 4.0% | — |
@@ -72,8 +70,50 @@ For scale, on the same in-distribution test networks:
 +7.3 points [+2.4, +12.3] (`results/table_vs_reasoning.csv`). The untrained model runs out of its
 20,000-token allowance on 22% of networks.
 
-\* Frontier models were run through OpenRouter on the same prompts; the account ran out of credit before
-100 networks, so these are partial samples. Their APIs do not allow reasoning to be switched off entirely.
+### Other models, off the shelf
+
+<!-- offshelf:start -->
+Each model was given the first 100 networks of the in-distribution test set (88 of them faulty) through OpenRouter, with the same two prompts as Inkling 2 Small: told to answer at once (the lowest reasoning setting its API accepts, 512-token allowance), then free to reason (20,000-token allowance).
+
+Told to answer at once, none of the 9 other open-weights models repairs more than 10.2% of these networks (Qwen3.8 2.4T); the trained Inkling 2 Small repairs 79.5% of them in about 40 tokens. GPT-6 Astra and GPT-6.1 Sol do better (90.9% to 96.6%) in about 139 to 195 tokens; the other 7 closed models that kept to the allowance repair 0.0% to 62.5%; Grok 4.7 repairs 98.9% after about 11,278 tokens of reasoning.
+
+Free to reason, Muse Spark Open (84.1%) is level with the trained model, at about 200 times the tokens; the other 7 open models repair 28.4% to 60.2%. Untrained Inkling 2 Small with reasoning repairs 77.3% of the same networks, more than 7 of those 8 open models; the 4 closed models run with reasoning repair 96.6% to 100.0%.
+
+| Model | Weights | No reasoning | Tokens | With reasoning | Tokens |
+|---|---|---|---|---|---|
+| **Inkling 2 Small, post-trained on Tinker** | open | **79.5% [70.5, 87.5]** | **~40** | not used | - |
+| Inkling 2 Small, untrained | open | 0.0% [0.0, 0.0] | ~224 | 77.3% [68.2, 85.2] | ~10,797 |
+| Inkling (first generation, larger) | open | 3.4% [0.0, 8.0] | ~31 | 30.7% [21.6, 40.9] | ~17,438 |
+| Qwen3.8 2.4T | open | 10.2% [4.5, 17.0] | ~1,484 | 60.2% [50.0, 70.5] | ~20,260 |
+| DeepSeek V4 Pro | open | 2.3% [0.0, 5.7] | ~34 | 30.7% [21.6, 39.8] | ~17,670 |
+| Kimi K3.1 Pro | open | 8.0% [2.3, 13.6] | ~69 | not run (cost) | - |
+| GLM-5.3 | open | 2.3% [0.0, 5.7] | ~505 | 36.4% [26.1, 46.6] | ~16,822 |
+| Muse Spark Open | open | 0.0% [0.0, 0.0] | ~500 | 84.1% [76.1, 92.0] | ~8,110 |
+| Mistral Large 4 | open | 0.0% [0.0, 0.0] | ~512 | 30.7% [21.6, 40.9] | ~17,287 |
+| Nemotron 3 Ultra | open | 3.4% [0.0, 8.0] | ~59 | 28.4% [19.3, 37.5] | ~16,216 |
+| Beam 1.0 | open | 0.0% [0.0, 0.0] | ~511 | 50.0% [39.8, 60.2] | ~16,300 |
+| GPT-6.1 Sol | closed | 90.9% [84.1, 96.6] | ~195 | 100.0% [100.0, 100.0] | ~437 |
+| GPT-6 Astra | closed | 96.6% [92.0, 100.0] | ~139 | 100.0% [100.0, 100.0] | ~382 |
+| Claude Fable 5.2 | closed | 37.5% [27.3, 47.7] | ~447 | not run (cost) | - |
+| Gemini 4 Carbon | closed | 62.5% [52.3, 72.7] | ~58 | 96.6% [92.0, 100.0] | ~6,756 |
+| Grok 4.7 | closed | 98.9% [96.6, 100.0] | ~11,278 | 96.6% [92.0, 100.0] | ~35,728 |
+| Claude Opus 5.5 \* | closed | 43.2% [33.0, 53.4] | ~438 | not run | - |
+| Claude Sonnet 5.5 \* | closed | 5.7% [1.1, 11.4] | ~390 | not run | - |
+| Claude Haiku 5.5 \* | closed | 0.0% [0.0, 0.0] | ~21 | not run | - |
+| Gemini 4 Hydrogen \* | closed | 3.4% [0.0, 8.0] | ~442 | not run | - |
+| GPT-6 Luna \* | closed | 3.4% [0.0, 8.0] | ~21 | not run | - |
+
+An answer cut off at the allowance counts as not repaired, as it does for Inkling 2 Small. Tokens are the mean generated per network, reasoning included. Qwen3.8 2.4T and Grok 4.7 reason at length even at the lowest setting, outside the allowance. With reasoning, 7 of the 8 open models ran out of the 20,000 tokens on 38% to 68% of networks. \* Added after the first results, without reasoning only. Two with-reasoning runs were left out for cost, before either had produced an answer.
+
+Paired on the same 88 faulty networks, in the no-reasoning column: Grok 4.7 (+19.3 points [+11.4, +28.4]), GPT-6 Astra (+17.0 points [+8.0, +26.1]) and GPT-6.1 Sol (+11.4 points [+2.3, +21.6]) are ahead of the trained Inkling 2 Small, and the other 16 are behind it (the closest, Gemini 4 Carbon, by 17.0 points [4.5, 29.5]).
+<!-- offshelf:end -->
+
+The list of models and the rules were written down before any of them was run, apart from GPT-6 Astra and
+GPT-6.1 Sol, which were already part-run and were completed to the same 100 networks, and the five marked
+\*. One answer per network at the provider's default temperature, through one API route; a different
+route, a larger allowance or a different prompt could move any row. Every row with its settings, token
+counts and paired difference is in `results/table_offshelf.csv`; the answers are under `runs/final/`
+(`open_*`, `frontier_*`), and `scripts/baselines_openrouter.sh` reruns them.
 
 ### How it got there
 
@@ -144,9 +184,10 @@ third guess.
   public benchmark of small ReLU networks with exactly checkable tasks was found to test on; the
   nearest, WSPBench, would need conversion.
 - **Fault types it never saw remain the weak row (20%)** and neither more data nor RL moved it.
-- **Frontier models are far ahead.** GPT-6 Astra and GPT-6.1 Sol repair 91-100% of the same networks
-  with a few hundred reasoning tokens, and about 90% of the gradient-made ones. This gym, at this size,
-  is near ceiling for them. The open/closed gap on this skill is large; post-training closes part of it.
+- **GPT-6 Astra and GPT-6.1 Sol are far ahead.** Off the shelf they repair 91-100% of the same networks
+  in a few hundred tokens, and about 90% of the gradient-made ones. This gym, at this size, is near
+  ceiling for them. The nine other open-weights models we tried repair at most 10.2% without reasoning;
+  post-training closes part of the open/closed gap on this skill, it does not close it.
 - **Most of the gain is supervised.** The supervised stage trains on synthetic faults whose inverse
   edit is known because we planted it. RL's contribution is described above.
 - **Pure RL from the base model failed on this task.** At all but the lowest learning rate it learned
@@ -245,8 +286,8 @@ list in a strict DSL (`scale`, `swap`, `set`, `add`); see `weightgym/edits.py`.
   is the best way to repair a network.
 - Poor transfer to unseen fault types (20%), and a clear drop on networks from an optimiser it never
   saw (51%, with 28% of healthy ones wrongly edited).
-- Frontier closed models solve the gym almost completely; it does not discriminate between them, and
-  their rows here are partial samples.
+- GPT-6 Astra and GPT-6.1 Sol solve the gym almost completely off the shelf; it does not discriminate
+  between them. The comparison with other models is 100 networks and one answer per model and setting.
 - One training seed for the final model. The RL stage's gain in-distribution (+2.6 points) is inside
   its own interval.
 - The reasoning-mode reference is the untrained model at one effort setting with a 20,000-token cap;

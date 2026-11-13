@@ -5,6 +5,7 @@
 #
 #   scripts/baselines_openrouter.sh            run everything, cheapest arms first
 #   scripts/baselines_openrouter.sh reasoning  only the reasoning arms (the no-reasoning arms are running or done)
+#   scripts/baselines_openrouter.sh added      only the models added later, no-reasoning arms
 #   scripts/baselines_openrouter.sh credits    print the key's usage and limit as OpenRouter reports them
 #
 # The key is read from WEIGHTGYM_API_KEY or from ~/.openrouter_key and is never printed or logged.
@@ -37,6 +38,16 @@ ALL="frontier_sol=openai/gpt-6.1-sol frontier_astra=openai/gpt-6-astra frontier_
      open_qwen=qwen/qwen3.8-2.4t-a95b open_deepseek=deepseek/deepseek-v4-pro-0813 open_kimi=moonshotai/kimi-k3.1-pro
      open_glm=z-ai/glm-5.3 open_muse=meta/muse-spark-open open_mistral=mistralai/mistral-large-4-0
      open_nemotron=nvidia/nemotron-3-ultra-550b-a55b open_beam=reflection/beam-1.0-501b-a23b"
+# Added later (Nov 13, after the first list had been scored), no-reasoning arms only.
+ADDED="frontier_opus=anthropic/claude-opus-5.5 frontier_sonnet=anthropic/claude-sonnet-5.5
+       frontier_haiku=anthropic/claude-haiku-5.5 frontier_hydrogen=google/gemini-4-hydrogen frontier_luna=openai/gpt-6-luna"
+if [ "$1" = added ]; then
+  echo "[$(date +%H:%M)] no-reasoning arms, models added later"
+  for kv in $ADDED; do d "${kv%%=*}" "${kv#*=}" & done
+  wait
+  echo "[$(date +%H:%M)] done"; for kv in $ADDED; do tail -q -n 2 "runs/openrouter_logs/${kv%%=*}_direct.log" | cut -c1-300; done
+  exit
+fi
 model() { for kv in $ALL; do [ "${kv%%=*}" = "$1" ] && echo "${kv#*=}"; done; }
 stage() {  # run the reasoning arms named, in parallel; Sol and Astra without the explicit-reasoning flag
   local pids=()
@@ -55,7 +66,8 @@ if [ "$1" != reasoning ]; then
   for kv in $ALL; do d "${kv%%=*}" "${kv#*=}" & done
 fi
 echo "[$(date +%H:%M)] reasoning arms, stage 1"; stage frontier_sol frontier_astra open_beam open_mistral open_nemotron open_glm frontier_gemini frontier_grok
-echo "[$(date +%H:%M)] reasoning arms, stage 2"; stage open_inkling1 open_muse open_deepseek open_qwen
+echo "[$(date +%H:%M)] reasoning arms, stage 2"; stage open_muse open_inkling1 open_deepseek
+echo "[$(date +%H:%M)] reasoning arms, stage 3"; stage open_qwen
 # Not run, to keep the cost down (decided before either had produced a reasoning answer): the reasoning arms of
 # the two most expensive models, Kimi K3.1 Pro and Claude Fable 5.2. Their no-reasoning arms are run above.
 #   stage open_kimi frontier_fable

@@ -534,7 +534,7 @@
       hlines: [
         { y: base.search, label: `${narrow ? "Search" : "Forward-pass search"} ${pct1(base.search)}` },
         { y: base.gradient, label: `${narrow ? "Gradient" : "Gradient descent"} ${pct1(base.gradient)}`, below: true },
-        { y: base.outlier, label: `${narrow ? "Heuristic" : "Statistics-only heuristic"} ${pct1(base.outlier)}` },
+        { y: base.outlier, label: `${narrow ? "Heuristic" : "Statistics-only heuristic"} ${pct1(base.outlier)}`, anchor: narrow ? "end" : "start" },
       ],
       series: [],
     });
@@ -543,14 +543,17 @@
     const pts = [];
     const dot = (cc, color, ring) => {
       const gg = S("g", { opacity: 0 }, g);
-      if (!cc.partial) S("line", { x1: x(cc.tokens), x2: x(cc.tokens), y1: y(cc.lo), y2: y(cc.hi), stroke: color, "stroke-width": 1.6 }, gg);
-      S("circle", { cx: x(cc.tokens), cy: y(cc.rate), r: ring ? 5.5 : 7, fill: ring ? "var(--bg)" : color, stroke: ring ? color : "var(--bg)", "stroke-width": 2,
-        "data-tip": `${cc.label}: ${pct1(cc.rate)}, ~${fmtInt(cc.tokens)} tokens${cc.partial ? ` (partial sample, n=${Math.round(cc.n_total)})` : ""}` }, gg);
+      if (!cc.offshelf) S("line", { x1: x(cc.tokens), x2: x(cc.tokens), y1: y(cc.lo), y2: y(cc.hi), stroke: color, "stroke-width": 1.6 }, gg);
+      S("circle", { cx: x(Math.min(cc.tokens, 30000)), cy: y(cc.rate), r: ring ? (cc.open ? 4.5 : 5.5) : 7, fill: ring ? "var(--bg)" : color, stroke: ring ? color : "var(--bg)", "stroke-width": ring && cc.open ? 1.6 : 2,
+        "data-tip": `${cc.label}: ${pct1(cc.rate)}, ~${fmtInt(cc.tokens)} tokens${cc.offshelf ? ` (first ${Math.round(cc.n_total)} networks)` : ""}` }, gg);
       pts.push(gg);
       return gg;
     };
-    const fr = comp.filter((c) => c.partial);
-    fr.forEach((f) => dot(f, "var(--ink-2)", true));
+    const off = comp.filter((c) => c.offshelf);
+    const fr = off.filter((c) => /^frontier_(sol|astra)_/.test(c.key));
+    const gOff = S("g", { opacity: 0 }, g);
+    off.filter((c) => c.open).concat(off.filter((c) => !c.open)).forEach((f) => { const d = dot(f, f.open ? "var(--untrained)" : "var(--ink-2)", true); pts.pop(); d.setAttribute("opacity", 1); gOff.appendChild(d); });
+    pts.push(gOff);
     const keyEl = fig.querySelector('[data-key="tokens"]'), key = [];
     const lab = (gg, n, px, py, text, attrs, kx, ky) => {
       if (!narrow) { T(gg, px, py, text, Object.assign({ "font-size": 12 }, attrs, halo)); return; }
@@ -561,14 +564,16 @@
     };
     const gfl = S("g", { opacity: 0 }, g);
     const fx = Math.max(...fr.map((f) => x(f.tokens)));
-    lab(gfl, 1, fx + 10, y(0.985), "GPT-6 Astra / GPT-6.1 Sol (partial samples)", { "font-size": 11.5 }, fx + 16, y(1));
+    lab(gfl, 1, fx + 10, y(0.985), "GPT-6 Astra / GPT-6.1 Sol", { "font-size": 11.5 }, fx + 16, y(1));
     pts.push(gfl);
     const dT = dot(by.trained, "var(--trained)");
     lab(dT, 2, x(by.trained.tokens) + 12, y(by.trained.rate) + 4, `Post-trained on Tinker, no reasoning: ${pct1(by.trained.rate)}, ~${Math.round(by.trained.tokens)} tokens`, { class: "t-strong" }, x(by.trained.tokens) + 16, y(by.trained.rate) - 2);
     const dR = dot(by.think, "var(--untrained)");
     lab(dR, 3, x(by.think.tokens) - 12, y(by.think.rate) - 10, `Untrained, reasoning: ${pct1(by.think.rate)}, ~${fmtInt(Math.round(by.think.tokens / 100) * 100)} tokens`, { class: "t-strong", "text-anchor": "end" }, x(by.think.tokens) - 16, y(by.think.rate) - 12);
     const dU = dot(by.untrained, "var(--untrained)");
-    lab(dU, 4, x(by.untrained.tokens) + 11, y(by.untrained.rate) + 1, `Untrained, told to answer at once: ${pct1(by.untrained.rate)}`, { "font-size": 11.5, class: "t-ink" }, x(by.untrained.tokens) + 16, y(by.untrained.rate) - 12);
+    // Several off-the-shelf rings sit beside this point, so its label goes above it on a short leader.
+    if (!narrow) S("line", { x1: x(by.untrained.tokens), x2: x(by.untrained.tokens), y1: y(by.untrained.rate) - 9, y2: y(0.105), stroke: "var(--ink-2)", "stroke-width": 1 }, dU);
+    lab(dU, 4, x(by.untrained.tokens), y(0.12), `Untrained, told to answer at once: ${pct1(by.untrained.rate)}`, { "font-size": 11.5, class: "t-ink", "text-anchor": "middle" }, x(by.untrained.tokens) - 16, y(by.untrained.rate) - 12);
     if (keyEl) { keyEl.innerHTML = key.join(""); keyEl.hidden = !key.length; }
     // arrow from untrained-with-reasoning to trained
     const x0 = x(by.think.tokens), y0 = y(by.think.rate) + 10, x1 = x(by.trained.tokens) + 4, y1 = y(by.trained.rate) + 12;
@@ -579,7 +584,7 @@
     const head = S("path", { d: "M0,0 L-9,-5 L-9,5 Z", fill: "var(--trained)", opacity: 0 }, svg);
     const ang = Math.atan2(y1 - cy, x1 - cx) * 180 / Math.PI;
     head.setAttribute("transform", `translate(${x1},${y1}) rotate(${ang})`);
-    const al = T(svg, cx, narrow ? y(0.42) : (y0 + y1) / 2 + (cy - (y0 + y1) / 2) / 2 + 18, `after training: ${r1(DATA.headline.vs_reasoning.diff)} points higher (paired)`, Object.assign({ "text-anchor": "middle", "font-size": 11.5, opacity: 0, class: "t-ink" }, halo));
+    const al = T(svg, cx, narrow ? y(0.485) : (y0 + y1) / 2 + (cy - (y0 + y1) / 2) / 2 + 18, `after training: ${r1(DATA.headline.vs_reasoning.diff)} points higher (paired)`, Object.assign({ "text-anchor": "middle", "font-size": 11.5, opacity: 0, class: "t-ink" }, halo));
     return (t) => {
       c.reveal(1);
       c.fade(seg(t, 0.1, 0.6));
@@ -790,13 +795,13 @@
     race: { get title() { return `Same number of tokens: one network, or ${DATA.race.n}`; }, sub: () => `Inkling 2 Small before and after post-training on Tinker. Left: ${fmtInt(DATA.race.budget)} tokens of reasoning on one network. Right: ${DATA.race.n} networks answered in ${fmtInt(DATA.race.used)} tokens, ${DATA.race.repaired} repaired. Same number of generated tokens, not wall-clock time.`,
       foot: () => `All ${Math.round(DATA.headline.trained.n_faulty)} faulty test networks: untrained + reasoning ${pct1(DATA.headline.reasoning.rate)} at ~${fmtInt(Math.round(DATA.headline.reasoning.tokens / 100) * 100)} tokens; trained, no reasoning ${pct1(DATA.headline.trained.rate)} at ~${Math.round(DATA.headline.trained.tokens)} tokens` },
     splits: { title: "Inkling 2 Small, post-trained on Tinker: repair rate on six test sets", sub: () => `Share of broken networks fixed from raw weights, no reasoning tokens. 95% intervals; black tick: statistics-only heuristic.`,
-      foot: () => `Weak row: unseen fault types. Frontier closed models fix ${pct0(Math.min(...DATA.comparison.filter((c) => c.partial).map((c) => c.rate)))}-${pct0(Math.max(...DATA.comparison.filter((c) => c.partial).map((c) => c.rate)))} of the in-distribution networks.` },
+      foot: () => `Weak row: unseen fault types. GPT-6 Astra and GPT-6.1 Sol fix ${pct0(Math.min(...DATA.comparison.filter((c) => /^frontier_(sol|astra)_/.test(c.key)).map((c) => c.rate)))}-${pct0(Math.max(...DATA.comparison.filter((c) => /^frontier_(sol|astra)_/.test(c.key)).map((c) => c.rate)))} of the in-distribution networks.` },
     repair: { title: "What the trained model reads, and the edit it writes", sub: () => `A ${DATA.example.n_weights}-weight test network with two outgoing weights swapped.`, foot: () => "" },
     loop: { title: "RL alone, no labels: propose, verify, keep", sub: () => `The 8 proposals the RL-trained model sampled for one imperfect test network, each checked with forward passes.`,
       foot: () => `All ${Math.round(DATA.improve.series.trained[1].n)} test networks, 8 proposals: ${gap1(DATA.improve.series.trained[1].gap_closed)} of errors removed (random edits ${gap1(DATA.improve.series.random[1].gap_closed)}).` },
     disguise: { title: "Nothing to memorise: one function, five sets of weights", sub: () => `A compiled circuit from the gym under its own disguise functions. Outputs identical on all ${fmtInt(DATA.disguise.n_inputs)} inputs.`, foot: () => "" },
     card: { title: "", sub: () => "", foot: () => "" },
-    tokens: { title: "Repair rate against tokens per network", sub: () => "Same in-distribution test networks. Hollow points: frontier models, partial samples.", foot: () => "" },
+    tokens: { title: "Repair rate against tokens per network", sub: () => "Same in-distribution test networks. Hollow points: other models off the shelf (grey closed, orange open-weights).", foot: () => "" },
     train: { title: "Training on Tinker: validation repair rate", sub: () => "Supervised stage, then RL with the tinker-cookbook loop; checkpoint selected on validation.", foot: () => "" },
   };
   if (CLIP && CLIPS[CLIP]) {
