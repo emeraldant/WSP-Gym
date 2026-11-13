@@ -217,7 +217,7 @@
   <figcaption id="tokens-cap">Log token axis. Hollow points: other models off the shelf on the first {{offshelf_n}} test networks, once told to answer at once and once free to reason (grey: closed; coloured: open-weights). Faint: more than a quarter of that model's answers were cut off at the token limit. Dashed lines: methods that generate no tokens.</figcaption>
 </figure>
 <div class="col">
-  <p>After training, Inkling 2 Small uses fewer tokens and repairs more networks than its own reasoning mode. GPT-6 Astra and GPT-6.1 Sol are well ahead: off the shelf they repair {{frontier_range}} of the same networks in a few hundred tokens, and {{frontier_trained_range}} of the gradient-made ones. Search with forward passes repairs {{search_id}}, gradient descent {{gradient_id}}.</p>
+  <p>After training, Inkling 2 Small uses far fewer tokens than its own reasoning mode, and repairs more networks only because that mode runs out of its token limit. GPT-6 Astra and GPT-6.1 Sol are well ahead: off the shelf they repair {{frontier_range}} of the same networks in a few hundred tokens, and {{frontier_trained_range}} of the gradient-made ones. Search with forward passes repairs {{search_id}}, gradient descent {{gradient_id}}.</p>
   <div class="scroll">
   <table class="data">
     <thead><tr><th scope=col>Method</th><th scope=col>Repair rate</th><th scope=col>Tokens per network</th><th scope=col>Sample</th></tr></thead>

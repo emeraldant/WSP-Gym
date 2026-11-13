@@ -672,6 +672,9 @@ def build() -> tuple[dict, dict]:
             for k in ("label", "math500", "lo", "hi", "n"):
                 assert k in r, f"qwen.json row missing {k}"
         CHECKS.append("qwen.json present and well-formed; Qwen section shown")
+        rnd = [r for r in q["rows"] if "best random edit" in r["label"]]
+        if rnd:  # the README's opening list quotes this figure by hand
+            assert f"random edit to the same table reaches {100 * rnd[0]['math500']:.1f}%" in open(p("README.md")).read(), "README intro: random-edit figure"
     T["limits_llm"] = ("On the real LLM, random edits to the same table did as well as the proposers; the edit that works is in one layer "
                        "of one model and removes one known failure rather than adding ability."
                        if D["qwen"] is not None else "There is no evidence here on real LLMs.")
