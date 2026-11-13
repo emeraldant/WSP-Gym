@@ -113,7 +113,7 @@ def build_tables(results_dir: str = "results", reference_arm: str = "untrained")
     vs_reasoning = []
     think = {r["seed"]: r for r in by_arm.get(("untrained_thinking", "test_id"), []) if not r["clean"]}
     for (arm, split), recs in by_arm.items():
-        if split != "test_id" or not think or arm.startswith(("baseline_", "untrained", "frontier_")):
+        if split != "test_id" or not think or arm.startswith(("baseline_", "untrained", "frontier_", "open_")):
             continue
         a = {r["seed"]: r for r in recs if not r["clean"]}
         seeds = sorted(set(a) & set(think))
