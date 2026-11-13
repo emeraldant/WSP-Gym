@@ -522,13 +522,39 @@ def hits(arm: str, layer: int) -> tuple[int, int, float | None]:
     return n, len(rows), (float(np.mean(toks)) if toks else None)
 
 
+def control_hits(arm: str, layer: int) -> tuple[int, int] | None:
+    """(answers that beat the keep threshold, answers given) for answers given under shuffled weights; None if unscored."""
+    path = os.path.join(OUT, "control_scrambled", f"{arm}.jsonl")
+    if not os.path.exists(path):
+        return None
+    cfg, item, n = _cfg(), SliceItem(layer), 0
+    rows = [r for r in map(json.loads, open(path)) if r.get("seed") == SEED0 + layer and r.get("sample", 99) < K]
+    for r in rows:
+        if r.get("valid") and r.get("ops"):
+            a = screen_acc(f"edit_{edit_id(layer, item.validate(r['ops']))}")
+            if a is None:
+                return None
+            n += int(a > cfg["keep_above"] + 1e-9)
+    return n, len(rows)
+
+
+def _control_sentence(layer: int = 23) -> str:
+    c = [control_hits(a, layer) for a in ("formula_rl_proposer", "real_rl_proposer")]
+    if any(x is None for x in c):
+        return ""
+    f, r = hits("formula_rl_proposer", layer), hits("real_rl_proposer", layer)
+    return (f" Control: shown the same prompt with the printed weights shuffled, the RL proposers changed their answers and only "
+            f"{c[0][0] + c[1][0]} of {c[0][1] + c[1][1]} helped (against {f[0] + r[0]} of {f[1] + r[1]} with the real weights), so what they read in the weights matters.")
+
+
 def _hit_sentence(layer: int = 23) -> str:
     f, r, u, d, rnd = (hits(a, layer) for a in ("formula_rl_proposer", "real_rl_proposer", "untrained_reasoning", "untrained", "random"))
     rl_tok = (f[2] * f[1] + r[2] * r[1]) / (f[1] + r[1])
     return (f"In layer {layer}, {f[0] + r[0]} of {f[1] + r[1]} single answers from our two RL-trained proposers helped on practice problems "
             f"(no reasoning, about {rl_tok:.0f} output tokens each; one of their edits is in the table), against {u[0]} of {u[1]} from the "
             f"untrained model with reasoning (about {u[2]:,.0f} tokens each), {rnd[0]} of {rnd[1]} random edits, and none from the untrained "
-            f"model without reasoning, which never produced a valid answer. That is one layer; the other layers are still being scored.")
+            f"model without reasoning, which never produced a valid answer." + _control_sentence(layer)
+            + " That is one layer; the other layers are still being scored.")
 
 
 # ------------------------------------------------------------------------------------------ report
