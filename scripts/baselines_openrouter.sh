@@ -49,6 +49,8 @@ echo "[$(date +%H:%M)] no-reasoning arms, all models"
 for kv in $ALL; do d "${kv%%=*}" "${kv#*=}" & done; wait
 echo "[$(date +%H:%M)] reasoning arms, stage 1"; stage frontier_sol frontier_astra open_beam open_mistral open_nemotron open_glm frontier_gemini frontier_grok
 echo "[$(date +%H:%M)] reasoning arms, stage 2"; stage open_inkling1 open_muse open_deepseek open_qwen
-echo "[$(date +%H:%M)] reasoning arms, stage 3"; stage open_kimi frontier_fable
+# Not run, to keep the cost down (decided before either had produced a reasoning answer): the reasoning arms of
+# the two most expensive models, Kimi K3.1 Pro and Claude Fable 5.2. Their no-reasoning arms are run above.
+#   stage open_kimi frontier_fable
 echo "[$(date +%H:%M)] done"
 tail -q -n 2 runs/openrouter_logs/*.log | cut -c1-300
