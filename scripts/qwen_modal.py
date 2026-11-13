@@ -279,6 +279,24 @@ def cmd_dev(layers: list[int] | None) -> None:
                 tok_per_s=15000, timeout_s=1800)
 
 
+def cmd_control(layer: int) -> None:
+    """Score on the screen rows the answers the proposers gave when shown shuffled weights (weightgym/qwen_slice.py,
+    ``scramble``), for one layer. Edits already scored are skipped."""
+    from weightgym import qwen_slice as qs
+
+    cfg, d, edits = qs._cfg(), os.path.join(qs.OUT, "control_scrambled"), {}
+    item = qs.SliceItem(layer)
+    for fn in sorted(os.listdir(d)):
+        for r in map(json.loads, open(os.path.join(d, fn))):
+            if r.get("seed") == qs.SEED0 + layer and r.get("sample", 99) < qs.K and r.get("valid") and r.get("ops"):
+                edits[qs.edit_id(layer, r["ops"])] = (layer, item.validate(r["ops"]))
+    jobs = _slice_jobs(edits, "train", qs.screen_rows(), cfg["cap"])
+    print(f"{len(edits)} distinct control edits in layer {layer}, {len(jobs)} still to score", flush=True)
+    waves = [jobs[i:i + 12] for i in range(0, len(jobs), 12)]
+    run_batches(waves, file_sink(os.path.join(qs.OUT, "edits")), "control", est_tokens=sum(len(j["todo"]) for j in jobs) * cfg["cap"] * 0.92,
+                tok_per_s=15000, containers=1, timeout_s=1500)
+
+
 def cmd_final(edit_ids: list[str], containers: int) -> None:
     """Full MATH-500 protocol for chosen slice edits."""
     from weightgym import qwen_bench as qb
@@ -319,6 +337,8 @@ if __name__ == "__main__":
     p = sub.add_parser("final")
     p.add_argument("edit_ids", nargs="+")
     p.add_argument("--containers", type=int, default=3)
+    p = sub.add_parser("control")
+    p.add_argument("--layer", type=int, default=23)
     sub.add_parser("ledger")
     a = ap.parse_args()
     if a.cmd == "repro":
@@ -329,6 +349,8 @@ if __name__ == "__main__":
         cmd_screen(a.containers, a.limit)
     elif a.cmd == "dev":
         cmd_dev([int(x) for x in a.layers.split(",")] if a.layers else None)
+    elif a.cmd == "control":
+        cmd_control(a.layer)
     elif a.cmd == "final":
         cmd_final(a.edit_ids, a.containers)
     else:

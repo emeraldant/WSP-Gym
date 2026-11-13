@@ -93,7 +93,11 @@ class SliceItem:
     family = "qwen_slice"
     source = "Qwen/Qwen3.5-0.8B"
 
-    def __init__(self, layer: int, baseline: dict | None = None):
+    def __init__(self, layer: int, baseline: dict | None = None, scramble: bool = False):
+        # scramble=True is a control: the prompt prints the shown weights in shuffled positions (same numbers,
+        # same labels, same task text), while answers are still applied to the real weights. If a proposer answers
+        # the same way, the weights it was shown did not inform its answer.
+        self.scramble = scramble
         z = np.load(os.path.join(SLICES, f"layer{layer:02d}.npz"))
         self.layer, self.seed = layer, SEED0 + layer
         self.W, self.U, self.shown = z["W"].astype(np.float64), z["U"].astype(np.float64), z["shown"]
@@ -107,6 +111,11 @@ class SliceItem:
         if direct not in self._prompt:
             W = self.net.Ws[0]
             T, n = W.shape
+            if self.scramble:
+                W = W.copy()
+                block = W[:, self.shown].ravel()
+                np.random.default_rng([self.seed, 99]).shuffle(block)
+                W[:, self.shown] = block.reshape(T, len(self.shown))
             b = self.baseline
             s = [
                 "You are improving a real, public language model, Qwen3.5-0.8B (24 layers), by editing the weights of one "
@@ -289,17 +298,18 @@ def propose_random() -> None:
     print("wrote", path)
 
 
-async def propose(arm: str, sampler: str | None, reasoning: bool) -> None:
+async def propose(arm: str, sampler: str | None, reasoning: bool, scramble: bool = False) -> None:
     import tinker
 
     from .llm import INKLING, LLMPolicy, evaluate
 
-    items = load_items(baseline_stats())
+    items = [SliceItem(layer, baseline_stats(), scramble) for layer in LAYERS]
     if reasoning:
         policy = await LLMPolicy(tinker.ServiceClient(), INKLING, sampler, 0.1, 20000).start()
     else:
         policy = await LLMPolicy(tinker.ServiceClient(), INKLING, sampler, 0.0, 256).start()
-    recs = await evaluate(policy, items, os.path.join(OUT, "proposals", f"{arm}.jsonl"), K, 16, tag=f"qwen_slice/{arm}", direct=not reasoning)
+    out = os.path.join(OUT, "control_scrambled" if scramble else "proposals", f"{arm}.jsonl")
+    recs = await evaluate(policy, items, out, K, 16, tag=f"qwen_slice/{arm}" + ("/scrambled" if scramble else ""), direct=not reasoning)
     print(arm, "valid", sum(bool(r["valid"]) for r in recs), "of", len(recs), "| non-empty", sum(bool(r.get("ops")) for r in recs))
 
 
@@ -633,6 +643,7 @@ def main() -> None:
     p.add_argument("arm")
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
+    p.add_argument("--scramble", action="store_true", help="control: print the shown weights in shuffled positions")
     for c in ("random", "dev", "table", "prompt", "threshold", "report"):
         sub.add_parser(c)
     p = sub.add_parser("screen")
@@ -641,7 +652,7 @@ def main() -> None:
     if a.cmd == "build":
         build()
     elif a.cmd == "propose":
-        asyncio.run(propose(a.arm, None if a.sampler == "base" else a.sampler, a.reasoning))
+        asyncio.run(propose(a.arm, None if a.sampler == "base" else a.sampler, a.reasoning, a.scramble))
     elif a.cmd == "random":
         propose_random()
     elif a.cmd == "screen":
