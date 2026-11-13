@@ -495,6 +495,110 @@ def table(results: str = "results/table_qwen_slice.csv") -> None:
               f"[{s['lo']:+.2f}, {s['hi']:+.2f}] points; minus random {s['minus_random']:+.2f} [{s['minus_random_lo']:+.2f}, {s['minus_random_hi']:+.2f}]")
 
 
+# ------------------------------------------------------------------------------------------ report
+def report(site_json: str = "site/qwen.json", table_csv: str = "results/table_qwen_math500.csv") -> None:
+    """MATH-500 numbers for the conditions run so far, from the logs: a CSV for the write-up and the JSON the
+    showcase page reads. Paired differences are over the problems both conditions were run on."""
+    import csv
+
+    from . import qwen_bench as qb
+
+    cfg = _cfg()
+    rows500 = qb.load_set("math500")
+    order = [r["id"] for r in rows500]
+    U = {r["id"]: r for r in qb.load_records("unedited", "math500")}
+    props, d = proposals(), distinct_edits()
+
+    def arms_of(eid):
+        return sorted({arm for arm, by in props.items() for l, es in by.items() for o in es if edit_id(l, o) == eid})
+
+    def complete_block(recs):
+        """Use all 500 problems if present, else the largest complete half (so a partly finished run is not biased
+        toward the answers that finish first)."""
+        have = {r["id"] for r in recs}
+        for lo, hi in ((0, 500), (250, 500), (0, 250)):
+            ids = order[lo:hi]
+            if all(i in have for i in ids):
+                return [r for r in recs if r["id"] in set(ids)], (lo, hi)
+        return [], None
+
+    def paired(a, b):
+        ids = [i for i in order if i in a and i in b]
+        x = np.array([float(a[i]["correct"]) - float(b[i]["correct"]) for i in ids])
+        boot = x[np.random.default_rng(0).integers(0, len(x), (10000, len(x)))].mean(1)
+        return float(x.mean()), float(np.quantile(boot, 0.025)), float(np.quantile(boot, 0.975)), len(ids)
+
+    conds = [("Unedited Qwen3.5-0.8B", "unedited", qb.OUT, None),
+             ("Published edit: layer 22, neuron 573 x2 (Beaker)", "n573_x2", qb.OUT, None),
+             ("\"Wait\" token ban, no weight change (Beaker's control)", "wait_ban", qb.OUT, None)]
+    edit_dir = os.path.join(OUT, "edits")
+    finals = sorted(a[5:] for a in os.listdir(edit_dir) if a.startswith("edit_") and qb.load_records(a, "math500", edit_dir))
+    for eid in finals:
+        who = arms_of(eid)
+        names = {"untrained_reasoning": "untrained Inkling 2 Small with reasoning", "formula_rl_proposer": "RL proposer (formula tasks)",
+                 "real_rl_proposer": "RL proposer (real-data networks)", "scale_rl": "final repair model", "random": "random valid edit"}
+        conds.append((f"Layer {d[eid][0]} edit proposed by " + " and ".join(names.get(w, w) for w in who), f"edit_{eid}", edit_dir, eid))
+    out, table = [], []
+    for label, arm, out_dir, eid in conds:
+        recs, block = complete_block(qb.load_records(arm, "math500", out_dir))
+        if not recs:
+            continue
+        s = qb.summarize(recs)
+        E = {r["id"]: r for r in recs}
+        dv = paired(E, U) if arm != "unedited" else None
+        note = "all 500 problems" if block == (0, 500) else f"problems {block[0]}-{block[1] - 1} only"
+        if eid:
+            note += "; " + json.dumps([{k: v for k, v in o.items() if k not in ("tensor",)} for o in d[eid][1]])
+        table.append({"condition": label, "arm": arm, "n_problems": s["n_problems"], "acc": round(s["acc"], 4), "lo": round(s["lo"], 4), "hi": round(s["hi"], 4),
+                      "cut_share": round(s["cut_share"], 4), "waits_per_10k_chars": round(s["waits_per_10k_chars"], 1),
+                      "minus_unedited": "" if dv is None else round(dv[0], 4), "diff_lo": "" if dv is None else round(dv[1], 4),
+                      "diff_hi": "" if dv is None else round(dv[2], 4), "n_paired": "" if dv is None else dv[3], "block": note.split(";")[0],
+                      "ops": json.dumps(d[eid][1]) if eid else ""})
+        out.append({"label": label, "math500": s["acc"], "lo": s["lo"], "hi": s["hi"], "n": s["n_problems"], "note": note.split(";")[0],
+                    "highlight": bool(eid), "eid": eid})
+    with open(table_csv, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(table[0]))
+        w.writeheader()
+        w.writerows(table)
+    by = {r["arm"]: r for r in table}
+    best = max((r for r in table if r["arm"].startswith("edit_")), key=lambda r: r["acc"], default=None)
+    n_scored = sum(screen_acc(f"edit_{e}") is not None for e in d)
+    pct = lambda v: f"{100 * v:.1f}%"  # noqa: E731
+    summary = ""
+    if best:
+        E = {r["id"]: r for r in complete_block(qb.load_records(best["arm"], "math500", edit_dir))[0]}
+        X = {r["id"]: r for r in complete_block(qb.load_records("n573_x2", "math500"))[0]}
+        px = paired(E, X)
+        summary = (
+            f"Qwen3.5-0.8B loops on lines that start with \"Wait\" and runs out of tokens: unedited it solves {pct(by['unedited']['acc'])} of MATH-500. "
+            f"We showed Inkling 2 Small one MLP layer of Qwen as a small table read from the weights (six tokens by 64 neurons) and wrote its "
+            f"answer into the real model. The best edit so far, proposed by the untrained model with reasoning, scales down layer 23's push on "
+            f"the two \"Wait\" tokens and reaches {pct(best['acc'])} [{100 * best['lo']:.1f}, {100 * best['hi']:.1f}] "
+            f"({100 * best['minus_unedited']:+.1f} points [{100 * best['diff_lo']:+.1f}, {100 * best['diff_hi']:+.1f}] paired against unedited). "
+            f"On the {px[3]} problems where both were run it is level with the published one-neuron edit ({100 * px[0]:+.1f} points "
+            f"[{100 * px[1]:+.1f}, {100 * px[2]:+.1f}]), and banning the \"Wait\" token without touching any weight does as well. "
+            f"Our RL-trained proposers suggest the same kind of edit in one answer of about 40 tokens; one of theirs is in the table.")
+    caveats = [
+        "This is the untrained model's result first. Whether the Tinker-trained proposers beat random edits across layers is not settled: "
+        f"{n_scored} of {len(d)} proposed edits have been scored so far, and in layer 23 a random row swap also works.",
+        "The edit removes one habit; it does not add math ability. Banning the \"Wait\" token, with no weight change, scores the same (Beaker's finding).",
+        "We chose what the proposer sees: the six tokens of the table include the two \"Wait\" tokens, and the prompt names the failure. "
+        "The proposer chose the layer rows, the direction and the size of the change.",
+        "One model, one failure mode, one sampled answer per problem (the published protocol averages four). "
+        "The published edit and the token ban were run on 250 of the 500 problems here.",
+        "The two edits given the full MATH-500 run were picked by their score on 256 held-out practice problems before layers 16-21 had been screened.",
+        "For reference, not re-run here: Takehi et al. report 48.1% for GPT-6 Astra's edit with 50 forward passes (51.1% in Beaker's re-run); "
+        "Beaker's best runs reach 37.4-39.5%.",
+    ]
+    status = f"In progress: layers 22-23 screened ({n_scored} of {len(d)} edits scored); layers 16-21 running on a local GPU."
+    json.dump({"status": status, "rows": [{k: v for k, v in r.items() if k not in ("highlight", "eid")} for r in out],
+               "bars": [{"label": r["label"], "value": r["math500"], "lo": r["lo"], "hi": r["hi"], "note": r["note"], "highlight": r["highlight"]} for r in out],
+               "caveats": caveats, "summary": summary}, open(site_json, "w"), indent=1)
+    for r in table:
+        print(f"{r['condition'][:86]:86s} {100 * r['acc']:5.1f}% [{100 * r['lo']:.1f}, {100 * r['hi']:.1f}] n={r['n_problems']} ({r['block']})")
+    print(summary)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -503,7 +607,7 @@ def main() -> None:
     p.add_argument("arm")
     p.add_argument("sampler")
     p.add_argument("--reasoning", action="store_true")
-    for c in ("random", "dev", "table", "prompt", "threshold"):
+    for c in ("random", "dev", "table", "prompt", "threshold", "report"):
         sub.add_parser(c)
     p = sub.add_parser("screen")
     p.add_argument("--order", default="forward", choices=["forward", "reverse"])
@@ -520,6 +624,8 @@ def main() -> None:
         asyncio.run(dev())
     elif a.cmd == "threshold":
         set_threshold()
+    elif a.cmd == "report":
+        report()
     elif a.cmd == "prompt":
         print(SliceItem(22, baseline_stats()).prompt(True))
     else:
