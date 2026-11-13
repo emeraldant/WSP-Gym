@@ -291,7 +291,8 @@ def cmd_final(edit_ids: list[str], containers: int) -> None:
         for i, part in enumerate(split(j["todo"], containers)):
             if part:
                 batches[i].append({**j, "todo": part})
-    run_batches(batches, file_sink(os.path.join(qs.OUT, "edits")), "final", est_tokens=sum(len(j["todo"]) for j in jobs) * 24000, tok_per_s=9000)
+    run_batches(batches, file_sink(os.path.join(qs.OUT, "edits")), "final", est_tokens=sum(len(j["todo"]) for j in jobs) * 22000, tok_per_s=9000,
+                timeout_s=2700)
     qb.table(os.path.join(qs.OUT, "edits"), "results/table_qwen_slice_edits.csv")
 
 
