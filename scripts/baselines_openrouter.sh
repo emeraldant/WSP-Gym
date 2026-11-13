@@ -4,6 +4,7 @@
 # (Nov 13, 2026). Resumable: episodes already answered are skipped.
 #
 #   scripts/baselines_openrouter.sh            run everything, cheapest arms first
+#   scripts/baselines_openrouter.sh reasoning  only the reasoning arms (the no-reasoning arms are running or done)
 #   scripts/baselines_openrouter.sh credits    print the key's usage and limit as OpenRouter reports them
 #
 # The key is read from WEIGHTGYM_API_KEY or from ~/.openrouter_key and is never printed or logged.
@@ -38,19 +39,26 @@ ALL="frontier_sol=openai/gpt-6.1-sol frontier_astra=openai/gpt-6-astra frontier_
      open_nemotron=nvidia/nemotron-3-ultra-550b-a55b open_beam=reflection/beam-1.0-501b-a23b"
 model() { for kv in $ALL; do [ "${kv%%=*}" = "$1" ] && echo "${kv#*=}"; done; }
 stage() {  # run the reasoning arms named, in parallel; Sol and Astra without the explicit-reasoning flag
+  local pids=()
   for a in "$@"; do
     case $a in frontier_sol|frontier_astra) r "$a" "$(model "$a")" & ;; *) r "$a" "$(model "$a")" $ON & ;; esac
+    pids+=($!)
   done
-  wait
+  wait "${pids[@]}"
 }
 # The order is by expected cost only (every arm runs either way): if the spend stop is reached, it is reached in
 # the last, most expensive arms, and a later run resumes them.
-echo "[$(date +%H:%M)] no-reasoning arms, all models"
-for kv in $ALL; do d "${kv%%=*}" "${kv#*=}" & done; wait
+# The no-reasoning arms run alongside the reasoning stages: a model that reasons at length whatever it is told
+# would otherwise hold everything up.
+if [ "$1" != reasoning ]; then
+  echo "[$(date +%H:%M)] no-reasoning arms, all models"
+  for kv in $ALL; do d "${kv%%=*}" "${kv#*=}" & done
+fi
 echo "[$(date +%H:%M)] reasoning arms, stage 1"; stage frontier_sol frontier_astra open_beam open_mistral open_nemotron open_glm frontier_gemini frontier_grok
 echo "[$(date +%H:%M)] reasoning arms, stage 2"; stage open_inkling1 open_muse open_deepseek open_qwen
 # Not run, to keep the cost down (decided before either had produced a reasoning answer): the reasoning arms of
 # the two most expensive models, Kimi K3.1 Pro and Claude Fable 5.2. Their no-reasoning arms are run above.
 #   stage open_kimi frontier_fable
+wait
 echo "[$(date +%H:%M)] done"
 tail -q -n 2 runs/openrouter_logs/*.log | cut -c1-300
