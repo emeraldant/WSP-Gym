@@ -1,0 +1,11 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+0 403 7000001 591 0.0
+50 403 7000066 422 0.0
+100 403 7000129 1736 0.1
+150 403 7000191 1452 0.1
+200 403 7000256 600 0.0
+250 403 7000314 1075 0.0
+300 403 7000376 1421 0.1
+350 403 7000443 848 0.1
+400 403 7000496 603 0.0
+done test_trained 403 mean N 880.5459057071961

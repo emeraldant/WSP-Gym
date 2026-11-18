@@ -1,0 +1,12 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+seed disjointness verified: 6712 data seeds, training seeds {'trained': (70000000, 70007999), 'compiled': (71000000, 71007999)}
+/home/user/wsp-gym/discovery/experiments/scripts/R2A_feat.py:113: RuntimeWarning: invalid value encountered in scalar divide
+  paths[j] / paths.sum(), psgn]
+trained 1 19.5 cpu_total 20
+trained 0 20.4 cpu_total 40
+trained 2 20.0 cpu_total 60
+trained 3 22.6 cpu_total 83
+trained 4 19.3 cpu_total 102
+trained 5 20.9 cpu_total 123
+trained 6 20.1 cpu_total 143
+trained 7 22.8 cpu_total 166

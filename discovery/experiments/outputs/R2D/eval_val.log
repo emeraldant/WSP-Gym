@@ -1,0 +1,7 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+0 236 2000000 805 0.0
+50 236 2000065 482 0.0
+100 236 2000127 1048 0.0
+150 236 2000187 1200 0.1
+200 236 2000243 1051 0.1
+done val 236 mean N 870.0847457627119
