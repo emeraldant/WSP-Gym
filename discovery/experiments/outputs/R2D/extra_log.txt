@@ -1,0 +1,51 @@
+
+##### test_trained (n faulty=403)
+sample0 accepted by 'improved' verifier: 0.789; accepted & truly repaired 0.653; FALSE accept 0.136; true repairs not accepted 0.000; model@1 true repair 0.653
+[improved-verifier, first] B= 10 | rand: rich 3.1 casc 65.8 d +62.7 [+58.1, +67.1] | heur: rich 11.4 casc 65.5 d +54.1 [+48.9, +59.1]
+[improved-verifier, best ] B= 10 | rand: rich 5.4 casc 66.8 d +61.3 [+56.8, +65.6] | heur: rich 18.6 casc 68.2 d +49.6 [+44.7, +54.6]
+[improved-verifier, first] B= 25 | rand: rich 4.6 casc 66.0 d +61.5 [+56.9, +65.8] | heur: rich 17.4 casc 66.3 d +48.9 [+43.7, +54.1]
+[improved-verifier, best ] B= 25 | rand: rich 12.6 casc 68.8 d +56.2 [+52.0, +60.3] | heur: rich 34.0 casc 72.5 d +38.5 [+33.5, +43.2]
+[improved-verifier, first] B= 50 | rand: rich 5.6 casc 66.2 d +60.6 [+56.0, +64.9] | heur: rich 19.4 casc 66.3 d +46.9 [+41.7, +52.1]
+[improved-verifier, best ] B= 50 | rand: rich 21.1 casc 71.4 d +50.3 [+46.3, +54.2] | heur: rich 48.1 casc 76.7 d +28.5 [+24.1, +32.8]
+[improved-verifier, first] B=100 | rand: rich 6.8 casc 66.3 d +59.4 [+54.9, +63.7] | heur: rich 19.9 casc 66.7 d +46.9 [+41.7, +52.1]
+[improved-verifier, best ] B=100 | rand: rich 34.5 casc 75.5 d +40.9 [+37.2, +44.6] | heur: rich 63.5 casc 82.9 d +19.4 [+15.4, +23.3]
+[held-out A/B] B=25   rand | rich: found-on-sel 14.6, repaired on other half 11.9, P(ok|found) 0.815 | cascade: found 69.7, other half 67.8, P(ok|found) 0.973 | held-out cascade-rich diff +56.0 [+51.6, +60.1] | undefined-half-recovery frac 0.005
+[held-out A/B] B=25   heur | rich: found-on-sel 35.5, repaired on other half 32.9, P(ok|found) 0.927 | cascade: found 73.3, other half 71.5, P(ok|found) 0.975 | held-out cascade-rich diff +38.6 [+33.6, +43.4] | undefined-half-recovery frac 0.005
+[held-out A/B] B=100  rand | rich: found-on-sel 37.3, repaired on other half 31.9, P(ok|found) 0.854 | cascade: found 76.7, other half 73.8, P(ok|found) 0.961 | held-out cascade-rich diff +41.9 [+38.1, +45.6] | undefined-half-recovery frac 0.005
+[held-out A/B] B=100  heur | rich: found-on-sel 65.6, repaired on other half 59.7, P(ok|found) 0.909 | cascade: found 83.5, other half 80.1, P(ok|found) 0.960 | held-out cascade-rich diff +20.5 [+16.6, +24.6] | undefined-half-recovery frac 0.005
+[held-out A/B] B=full rand | rich: found-on-sel 92.2, repaired on other half 83.3, P(ok|found) 0.904 | cascade: found 96.0, other half 91.5, P(ok|found) 0.952 | held-out cascade-rich diff +8.2 [+6.0, +10.4] | undefined-half-recovery frac 0.005
+[held-out A/B] B=full heur | rich: found-on-sel 92.2, repaired on other half 84.4, P(ok|found) 0.915 | cascade: found 96.0, other half 91.4, P(ok|found) 0.952 | held-out cascade-rich diff +7.1 [+4.8, +9.6] | undefined-half-recovery frac 0.005
+
+##### test_id (n faulty=422)
+sample0 accepted by 'improved' verifier: 0.884; accepted & truly repaired 0.822; FALSE accept 0.062; true repairs not accepted 0.000; model@1 true repair 0.822
+[improved-verifier, first] B= 10 | rand: rich 4.6 casc 82.8 d +78.2 [+74.6, +81.8] | heur: rich 23.2 casc 83.9 d +60.7 [+55.7, +65.6]
+[improved-verifier, best ] B= 10 | rand: rich 6.9 casc 83.4 d +76.5 [+73.0, +80.1] | heur: rich 31.8 casc 86.0 d +54.3 [+49.5, +59.2]
+[improved-verifier, first] B= 25 | rand: rich 7.4 casc 83.2 d +75.8 [+72.3, +79.4] | heur: rich 29.4 casc 84.8 d +55.5 [+50.5, +60.4]
+[improved-verifier, best ] B= 25 | rand: rich 14.9 casc 85.1 d +70.2 [+66.8, +73.7] | heur: rich 46.0 casc 88.6 d +42.7 [+37.9, +47.4]
+[improved-verifier, first] B= 50 | rand: rich 9.6 casc 83.4 d +73.8 [+70.2, +77.3] | heur: rich 31.8 casc 85.3 d +53.6 [+48.6, +58.8]
+[improved-verifier, best ] B= 50 | rand: rich 25.2 casc 87.0 d +61.8 [+58.4, +65.2] | heur: rich 57.3 casc 92.4 d +35.1 [+30.6, +39.6]
+[improved-verifier, first] B=100 | rand: rich 11.8 casc 83.6 d +71.8 [+68.2, +75.4] | heur: rich 33.4 casc 85.5 d +52.1 [+47.2, +57.1]
+[improved-verifier, best ] B=100 | rand: rich 39.4 casc 89.5 d +50.1 [+46.8, +53.5] | heur: rich 68.5 casc 93.4 d +24.9 [+20.9, +28.9]
+[held-out A/B] B=25   rand | rich: found-on-sel 16.3, repaired on other half 14.4, P(ok|found) 0.882 | cascade: found 85.4, other half 84.8, P(ok|found) 0.993 | held-out cascade-rich diff +70.4 [+66.9, +73.9] | undefined-half-recovery frac 0.001
+[held-out A/B] B=25   heur | rich: found-on-sel 48.1, repaired on other half 45.4, P(ok|found) 0.943 | cascade: found 89.1, other half 88.4, P(ok|found) 0.992 | held-out cascade-rich diff +43.0 [+38.3, +47.7] | undefined-half-recovery frac 0.001
+[held-out A/B] B=100  rand | rich: found-on-sel 41.4, repaired on other half 37.4, P(ok|found) 0.901 | cascade: found 89.8, other half 88.9, P(ok|found) 0.990 | held-out cascade-rich diff +51.6 [+48.3, +54.8] | undefined-half-recovery frac 0.001
+[held-out A/B] B=100  heur | rich: found-on-sel 69.8, repaired on other half 66.5, P(ok|found) 0.952 | cascade: found 93.5, other half 92.8, P(ok|found) 0.992 | held-out cascade-rich diff +26.3 [+22.3, +30.5] | undefined-half-recovery frac 0.001
+[held-out A/B] B=full rand | rich: found-on-sel 92.4, repaired on other half 86.0, P(ok|found) 0.931 | cascade: found 98.3, other half 96.9, P(ok|found) 0.985 | held-out cascade-rich diff +10.9 [+8.4, +13.5] | undefined-half-recovery frac 0.001
+[held-out A/B] B=full heur | rich: found-on-sel 92.4, repaired on other half 87.0, P(ok|found) 0.941 | cascade: found 98.3, other half 97.0, P(ok|found) 0.987 | held-out cascade-rich diff +10.1 [+7.6, +12.9] | undefined-half-recovery frac 0.001
+
+##### test_external (n faulty=415)
+sample0 accepted by 'improved' verifier: 0.692; accepted & truly repaired 0.523; FALSE accept 0.169; true repairs not accepted 0.000; model@1 true repair 0.523
+[improved-verifier, first] B= 10 | rand: rich 4.6 casc 53.4 d +48.8 [+44.2, +53.4] | heur: rich 13.7 casc 55.7 d +41.9 [+36.9, +47.0]
+[improved-verifier, best ] B= 10 | rand: rich 6.4 casc 54.6 d +48.1 [+43.6, +52.7] | heur: rich 18.6 casc 58.8 d +40.2 [+35.4, +45.3]
+[improved-verifier, first] B= 25 | rand: rich 7.4 casc 54.4 d +47.0 [+42.4, +51.5] | heur: rich 22.7 casc 57.8 d +35.2 [+30.1, +40.0]
+[improved-verifier, best ] B= 25 | rand: rich 13.7 casc 57.6 d +43.8 [+39.5, +48.1] | heur: rich 37.6 casc 66.0 d +28.4 [+24.1, +33.0]
+[improved-verifier, first] B= 50 | rand: rich 9.9 casc 55.1 d +45.2 [+40.7, +49.6] | heur: rich 27.2 casc 58.1 d +30.8 [+26.0, +35.7]
+[improved-verifier, best ] B= 50 | rand: rich 23.1 casc 61.3 d +38.3 [+34.3, +42.2] | heur: rich 52.8 casc 71.6 d +18.8 [+15.2, +22.7]
+[improved-verifier, first] B=100 | rand: rich 12.5 casc 55.9 d +43.4 [+38.9, +47.8] | heur: rich 29.4 casc 58.8 d +29.4 [+24.6, +34.2]
+[improved-verifier, best ] B=100 | rand: rich 36.8 casc 67.5 d +30.6 [+27.1, +34.2] | heur: rich 73.5 casc 82.2 d +8.7 [+6.0, +11.6]
+[held-out A/B] B=25   rand | rich: found-on-sel 14.8, repaired on other half 12.7, P(ok|found) 0.856 | cascade: found 58.2, other half 56.8, P(ok|found) 0.975 | held-out cascade-rich diff +44.1 [+39.8, +48.4] | undefined-half-recovery frac 0.006
+[held-out A/B] B=25   heur | rich: found-on-sel 38.3, repaired on other half 36.6, P(ok|found) 0.956 | cascade: found 66.7, other half 65.4, P(ok|found) 0.980 | held-out cascade-rich diff +28.8 [+24.5, +33.3] | undefined-half-recovery frac 0.006
+[held-out A/B] B=100  rand | rich: found-on-sel 37.8, repaired on other half 34.2, P(ok|found) 0.905 | cascade: found 68.1, other half 65.9, P(ok|found) 0.967 | held-out cascade-rich diff +31.6 [+28.2, +35.2] | undefined-half-recovery frac 0.006
+[held-out A/B] B=100  heur | rich: found-on-sel 74.2, repaired on other half 71.4, P(ok|found) 0.963 | cascade: found 82.8, other half 80.6, P(ok|found) 0.974 | held-out cascade-rich diff +9.2 [+6.4, +12.3] | undefined-half-recovery frac 0.006
+[held-out A/B] B=full rand | rich: found-on-sel 91.9, repaired on other half 87.0, P(ok|found) 0.947 | cascade: found 95.4, other half 92.3, P(ok|found) 0.967 | held-out cascade-rich diff +5.3 [+3.4, +7.3] | undefined-half-recovery frac 0.006
+[held-out A/B] B=full heur | rich: found-on-sel 91.9, repaired on other half 88.6, P(ok|found) 0.963 | cascade: found 95.4, other half 92.8, P(ok|found) 0.972 | held-out cascade-rich diff +4.2 [+2.4, +6.3] | undefined-half-recovery frac 0.006

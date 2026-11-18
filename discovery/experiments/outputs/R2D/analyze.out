@@ -1,0 +1,78 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+feature cols kept 17 of 18
+val cands (205340, 18) pos rate 0.0053
+test_trained: n_faulty=403 mean N=881 oracle coverage(m>0)=0.921 planted-inverse reproduces clean acc=1.000 mean m=4.5 | model@1=0.653 best8=0.772 | heuristic per-ep AUROC=0.819 median first-success rank heur=46
+test_id: n_faulty=422 mean N=866 oracle coverage(m>0)=0.919 planted-inverse reproduces clean acc=1.000 mean m=5.2 | model@1=0.822 best8=0.905 | heuristic per-ep AUROC=0.801 median first-success rank heur=26
+test_external: n_faulty=415 mean N=681 oracle coverage(m>0)=0.923 planted-inverse reproduces clean acc=1.000 mean m=4.3 | model@1=0.523 best8=0.651 | heuristic per-ep AUROC=0.833 median first-success rank heur=35
+
+=== budget table: repair rate (%) among faulty; diffs vs rich alone with paired bootstrap 95% CI (pts) ===
+test_trained  B=10    n=403 | rich_rand 5.5 casc_rand 66.8 diff +61.3 [+56.8, +65.6] | rich_heur 18.6 casc_heur 68.2 diff +49.6 [+44.7, +54.6] | model@1 65.3
+test_trained  B=25    n=403 | rich_rand 12.3 casc_rand 68.9 diff +56.6 [+52.3, +60.7] | rich_heur 34.0 casc_heur 72.5 diff +38.5 [+33.5, +43.2] | model@1 65.3
+test_trained  B=50    n=403 | rich_rand 21.3 casc_rand 71.5 diff +50.2 [+46.2, +54.1] | rich_heur 48.1 casc_heur 76.7 diff +28.5 [+24.1, +32.8] | model@1 65.3
+test_trained  B=100   n=403 | rich_rand 34.5 casc_rand 75.4 diff +40.9 [+37.3, +44.5] | rich_heur 63.5 casc_heur 82.9 diff +19.4 [+15.4, +23.3] | model@1 65.3
+test_trained  B=full  n=403 | rich_rand 92.1 casc_rand 96.0 diff +4.0 [+2.2, +6.0] | rich_heur 92.1 casc_heur 96.0 diff +4.0 [+2.2, +6.0] | model@1 65.3
+test_id       B=10    n=422 | rich_rand 6.7 casc_rand 83.4 diff +76.7 [+73.2, +80.2] | rich_heur 31.8 casc_heur 86.0 diff +54.3 [+49.5, +59.2] | model@1 82.2
+test_id       B=25    n=422 | rich_rand 14.6 casc_rand 84.9 diff +70.3 [+66.9, +73.7] | rich_heur 46.0 casc_heur 88.6 diff +42.7 [+37.9, +47.4] | model@1 82.2
+test_id       B=50    n=422 | rich_rand 24.8 casc_rand 86.8 diff +62.1 [+58.7, +65.4] | rich_heur 57.3 casc_heur 92.4 diff +35.1 [+30.6, +39.6] | model@1 82.2
+test_id       B=100   n=422 | rich_rand 39.4 casc_rand 89.5 diff +50.1 [+46.8, +53.4] | rich_heur 68.5 casc_heur 93.4 diff +24.9 [+20.9, +28.9] | model@1 82.2
+test_id       B=full  n=422 | rich_rand 91.9 casc_rand 98.1 diff +6.2 [+4.0, +8.5] | rich_heur 91.9 casc_heur 98.1 diff +6.2 [+4.0, +8.5] | model@1 82.2
+test_external B=10    n=415 | rich_rand 6.4 casc_rand 54.5 diff +48.1 [+43.6, +52.6] | rich_heur 18.6 casc_heur 58.8 diff +40.2 [+35.4, +45.3] | model@1 52.3
+test_external B=25    n=415 | rich_rand 13.9 casc_rand 57.6 diff +43.7 [+39.4, +47.9] | rich_heur 37.6 casc_heur 66.0 diff +28.4 [+24.1, +33.0] | model@1 52.3
+test_external B=50    n=415 | rich_rand 23.4 casc_rand 61.6 diff +38.2 [+34.3, +42.2] | rich_heur 52.8 casc_heur 71.6 diff +18.8 [+15.2, +22.7] | model@1 52.3
+test_external B=100   n=415 | rich_rand 37.3 casc_rand 67.8 diff +30.5 [+27.0, +34.0] | rich_heur 73.5 casc_heur 82.2 diff +8.7 [+6.0, +11.6] | model@1 52.3
+test_external B=full  n=415 | rich_rand 92.3 casc_rand 95.9 diff +3.6 [+1.9, +5.5] | rich_heur 92.3 casc_heur 95.9 diff +3.6 [+1.9, +5.5] | model@1 52.3
+
+=== PRIMARY (test_trained, B=25, k=1) ===
+n faulty = 403
+rich random exact expectation:  12.3  cascade: 68.9  diff +56.6 [+52.3, +60.7]
+rich heuristic order:           34.0  cascade: 72.5  diff +38.5 [+33.5, +43.2]
+Monte Carlo check (50 seeds): rich 12.5, cascade 68.9, diff +56.4 [+52.1, +60.5]
+
+Primary by fault (test_trained, B=25): fault n rich_rand casc_rand rich_heur casc_heur model@1
+  bias_shift            67  14.8  65.6  26.9  68.7  61.2
+  label_swap            20   5.5  90.5  35.0  90.0  90.0
+  scale_out_col         61  17.6  66.0  19.7  65.6  60.7
+  sign_flip_in          71   7.9  66.6  40.8  71.8  64.8
+  sign_flip_out         65  12.0  81.3  52.3  86.2  80.0
+  swap_out_cols         66  10.1  63.5  22.7  68.2  59.1
+  weight_corrupt        53  14.8  62.6  41.5  67.9  56.6
+by depth (hidden layers):
+  depth 1: n=331 rich_rand 12.6 casc_rand 74.1 rich_heur 36.0 casc_heur 77.3 model 71.0
+  depth 2: n=72 rich_rand 10.8 casc_rand 45.0 rich_heur 25.0 casc_heur 50.0 model 38.9
+
+=== SECONDARY: cascade with k=8 samples first (raw cost 1/sample, and distinct-answer cache) ===
+test_trained  B=10    raw    | best-of-k 77.2 | rich_rand 5.5 casc8_rand 77.4 d +71.9 [+67.7, +75.8] | rich_heur 18.6 casc8_heur 78.2 d +59.6 [+54.6, +64.5] | casc8_rand vs casc1_rand +10.6 [+7.7, +13.7]
+test_trained  B=10    dedupe | best-of-k 77.2 | rich_rand 5.5 casc8_rand 77.9 d +72.4 [+68.3, +76.2] | rich_heur 18.6 casc8_heur 78.4 d +59.8 [+54.8, +64.8] | casc8_rand vs casc1_rand +11.1 [+8.2, +14.2]
+test_trained  B=25    raw    | best-of-k 77.2 | rich_rand 12.3 casc8_rand 78.8 d +66.5 [+62.5, +70.2] | rich_heur 34.0 casc8_heur 80.9 d +46.9 [+41.9, +51.9] | casc8_rand vs casc1_rand +9.9 [+7.2, +12.9]
+test_trained  B=25    dedupe | best-of-k 77.2 | rich_rand 12.3 casc8_rand 79.2 d +66.9 [+63.0, +70.6] | rich_heur 34.0 casc8_heur 81.4 d +47.4 [+42.4, +52.1] | casc8_rand vs casc1_rand +10.4 [+7.6, +13.3]
+test_trained  B=50    raw    | best-of-k 77.2 | rich_rand 21.3 casc8_rand 80.7 d +59.3 [+55.5, +63.0] | rich_heur 48.1 casc8_heur 83.6 d +35.5 [+30.8, +40.0] | casc8_rand vs casc1_rand +9.1 [+6.6, +11.9]
+test_trained  B=50    dedupe | best-of-k 77.2 | rich_rand 21.3 casc8_rand 81.0 d +59.7 [+55.9, +63.3] | rich_heur 48.1 casc8_heur 84.1 d +36.0 [+31.3, +40.4] | casc8_rand vs casc1_rand +9.5 [+6.9, +12.2]
+test_trained  B=100   raw    | best-of-k 77.2 | rich_rand 34.5 casc8_rand 83.4 d +48.9 [+45.3, +52.5] | rich_heur 63.5 casc8_heur 87.8 d +24.3 [+19.9, +29.0] | casc8_rand vs casc1_rand +8.0 [+5.7, +10.5]
+test_trained  B=100   dedupe | best-of-k 77.2 | rich_rand 34.5 casc8_rand 83.7 d +49.1 [+45.6, +52.7] | rich_heur 63.5 casc8_heur 89.1 d +25.6 [+21.3, +30.0] | casc8_rand vs casc1_rand +8.2 [+5.9, +10.7]
+test_trained  B=full  raw    | best-of-k 77.2 | rich_rand 92.1 casc8_rand 98.5 d +6.5 [+4.2, +8.9] | rich_heur 92.1 casc8_heur 98.5 d +6.5 [+4.2, +8.9] | casc8_rand vs casc1_rand +2.5 [+1.0, +4.0]
+test_trained  B=full  dedupe | best-of-k 77.2 | rich_rand 92.1 casc8_rand 98.5 d +6.5 [+4.2, +8.9] | rich_heur 92.1 casc8_heur 98.5 d +6.5 [+4.2, +8.9] | casc8_rand vs casc1_rand +2.5 [+1.0, +4.0]
+test_id       B=10    raw    | best-of-k 90.5 | rich_rand 6.7 casc8_rand 90.7 d +84.0 [+81.1, +86.8] | rich_heur 31.8 casc8_heur 91.0 d +59.2 [+54.5, +64.0] | casc8_rand vs casc1_rand +7.3 [+4.9, +9.9]
+test_id       B=10    dedupe | best-of-k 90.5 | rich_rand 6.7 casc8_rand 91.1 d +84.4 [+81.6, +87.2] | rich_heur 31.8 casc8_heur 91.5 d +59.7 [+55.0, +64.5] | casc8_rand vs casc1_rand +7.7 [+5.4, +10.3]
+test_id       B=25    raw    | best-of-k 90.5 | rich_rand 14.6 casc8_rand 91.7 d +77.1 [+74.1, +79.9] | rich_heur 46.0 casc8_heur 92.4 d +46.4 [+41.5, +51.4] | casc8_rand vs casc1_rand +6.7 [+4.5, +9.1]
+test_id       B=25    dedupe | best-of-k 90.5 | rich_rand 14.6 casc8_rand 92.0 d +77.4 [+74.5, +80.2] | rich_heur 46.0 casc8_heur 93.1 d +47.2 [+42.4, +51.9] | casc8_rand vs casc1_rand +7.1 [+4.9, +9.5]
+test_id       B=50    raw    | best-of-k 90.5 | rich_rand 24.8 casc8_rand 92.8 d +68.1 [+65.1, +71.1] | rich_heur 57.3 casc8_heur 95.0 d +37.7 [+32.9, +42.4] | casc8_rand vs casc1_rand +6.0 [+4.0, +8.2]
+test_id       B=50    dedupe | best-of-k 90.5 | rich_rand 24.8 casc8_rand 93.0 d +68.3 [+65.4, +71.2] | rich_heur 57.3 casc8_heur 95.3 d +37.9 [+33.2, +42.7] | casc8_rand vs casc1_rand +6.2 [+4.2, +8.4]
+test_id       B=100   raw    | best-of-k 90.5 | rich_rand 39.4 casc8_rand 94.3 d +54.9 [+51.9, +58.0] | rich_heur 68.5 casc8_heur 96.2 d +27.7 [+23.5, +32.0] | casc8_rand vs casc1_rand +4.8 [+3.2, +6.7]
+test_id       B=100   dedupe | best-of-k 90.5 | rich_rand 39.4 casc8_rand 94.4 d +55.1 [+52.0, +58.1] | rich_heur 68.5 casc8_heur 96.2 d +27.7 [+23.5, +32.0] | casc8_rand vs casc1_rand +5.0 [+3.3, +6.8]
+test_id       B=full  raw    | best-of-k 90.5 | rich_rand 91.9 casc8_rand 99.3 d +7.3 [+5.0, +10.0] | rich_heur 91.9 casc8_heur 99.3 d +7.3 [+5.0, +10.0] | casc8_rand vs casc1_rand +1.2 [+0.2, +2.4]
+test_id       B=full  dedupe | best-of-k 90.5 | rich_rand 91.9 casc8_rand 99.3 d +7.3 [+5.0, +10.0] | rich_heur 91.9 casc8_heur 99.3 d +7.3 [+5.0, +10.0] | casc8_rand vs casc1_rand +1.2 [+0.2, +2.4]
+test_external B=10    raw    | best-of-k 65.1 | rich_rand 6.4 casc8_rand 65.4 d +59.0 [+54.5, +63.4] | rich_heur 18.6 casc8_heur 66.3 d +47.7 [+41.9, +53.3] | casc8_rand vs casc1_rand +10.9 [+7.9, +14.0]
+test_external B=10    dedupe | best-of-k 65.1 | rich_rand 6.4 casc8_rand 66.1 d +59.7 [+55.2, +64.0] | rich_heur 18.6 casc8_heur 68.0 d +49.4 [+43.9, +54.7] | casc8_rand vs casc1_rand +11.5 [+8.6, +14.7]
+test_external B=25    raw    | best-of-k 65.1 | rich_rand 13.9 casc8_rand 67.7 d +53.9 [+49.5, +58.1] | rich_heur 37.6 casc8_heur 72.5 d +34.9 [+30.1, +40.0] | casc8_rand vs casc1_rand +10.2 [+7.4, +13.1]
+test_external B=25    dedupe | best-of-k 65.1 | rich_rand 13.9 casc8_rand 68.3 d +54.4 [+50.1, +58.5] | rich_heur 37.6 casc8_heur 73.5 d +35.9 [+31.1, +40.7] | casc8_rand vs casc1_rand +10.7 [+8.0, +13.6]
+test_external B=50    raw    | best-of-k 65.1 | rich_rand 23.4 casc8_rand 70.7 d +47.3 [+43.2, +51.3] | rich_heur 52.8 casc8_heur 76.9 d +24.1 [+19.8, +28.4] | casc8_rand vs casc1_rand +9.1 [+6.6, +11.8]
+test_external B=50    dedupe | best-of-k 65.1 | rich_rand 23.4 casc8_rand 71.2 d +47.8 [+43.7, +51.7] | rich_heur 52.8 casc8_heur 77.6 d +24.8 [+20.7, +29.2] | casc8_rand vs casc1_rand +9.6 [+7.1, +12.2]
+test_external B=100   raw    | best-of-k 65.1 | rich_rand 37.3 casc8_rand 75.2 d +37.9 [+34.3, +41.5] | rich_heur 73.5 casc8_heur 84.3 d +10.8 [+7.5, +14.5] | casc8_rand vs casc1_rand +7.5 [+5.3, +9.7]
+test_external B=100   dedupe | best-of-k 65.1 | rich_rand 37.3 casc8_rand 75.6 d +38.3 [+34.7, +41.8] | rich_heur 73.5 casc8_heur 85.5 d +12.0 [+8.9, +15.4] | casc8_rand vs casc1_rand +7.8 [+5.6, +10.1]
+test_external B=full  raw    | best-of-k 65.1 | rich_rand 92.3 casc8_rand 97.3 d +5.1 [+3.1, +7.2] | rich_heur 92.3 casc8_heur 97.3 d +5.1 [+3.1, +7.2] | casc8_rand vs casc1_rand +1.4 [+0.5, +2.7]
+test_external B=full  dedupe | best-of-k 65.1 | rich_rand 92.3 casc8_rand 97.3 d +5.1 [+3.1, +7.2] | rich_heur 92.3 casc8_heur 97.3 d +5.1 [+3.1, +7.2] | casc8_rand vs casc1_rand +1.4 [+0.5, +2.7]
+
+=== expected evaluations to a verified repair (uncapped, early stop; networks with no repair counted as N evals) ===
+test_trained  rich_rand 309.0 casc1_rand 125.7 | rich_heur 146.0 casc1_heur 70.9 | median rich_rand 223.3 casc1_rand 1.0
+test_id       rich_rand 264.0 casc1_rand 46.7 | rich_heur 139.3 casc1_heur 28.0 | median rich_rand 176.2 casc1_rand 1.0
+test_external rich_rand 248.7 casc1_rand 136.7 | rich_heur 110.6 casc1_heur 69.6 | median rich_rand 195.7 casc1_rand 1.0

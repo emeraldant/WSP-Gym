@@ -12,10 +12,20 @@ RNG = np.random.default_rng(0)
 NEG_FRAC = 0.3
 NSTAT = len(F.SPEC_NAMES) + 11  # static episode features length
 
-def load_train(src):
-    rows = []
-    for f in sorted(glob.glob(f"{OUT}/train_{src}_*.pkl")): rows += pickle.load(open(f, "rb"))
-    return rows
+def iter_train(src):
+    for f in sorted(glob.glob(f"{OUT}/train_{src}_*.pkl")):
+        for r in pickle.load(open(f, "rb")): yield r
+
+def load_lite(src, off):
+    """memory-light training set: positives + NEG_FRAC of negatives of faulty eps; per-episode static feats and clean flag"""
+    rng = np.random.default_rng(1)
+    Xs, ys, es, stat, clean = [], [], [], [], []
+    for i, r in enumerate(iter_train(src)):
+        stat.append(r["ep_static"]); clean.append(r["clean"])
+        if r["clean"] or len(r["y"]) == 0: continue
+        keep = (r["y"] == 1) | (rng.random(len(r["y"])) < NEG_FRAC)
+        Xs.append(r["X"][keep]); ys.append(r["y"][keep]); es.append(np.full(keep.sum(), off + i))
+    return dict(X=np.vstack(Xs), y=np.concatenate(ys), eid=np.concatenate(es), stat=np.array(stat), clean=np.array(clean), off=off, n=len(clean), src=src)
 
 def load_sp(s): return pickle.load(open(f"{OUT}/split_{s}.pkl", "rb"))
 
@@ -51,15 +61,28 @@ def ep_feats(r, s):
 
 GRID = [dict(it=300, lr=lr, leaf=leaf, l2=l2) for lr, leaf, l2 in itertools.product([0.05, 0.1], [15, 63], [0.0, 1.0])]
 
-def select_rank(train_rows, val_rows, log, name):
-    X, y = stack(train_rows, NEG_FRAC)
+def select_rank(lites, val_rows, log, name):
+    X = np.vstack([l["X"] for l in lites]); y = np.concatenate([l["y"] for l in lites])
     log(f"[{name}] ranker train rows {len(y)} pos {int(y.sum())}")
     best = None
     for p in GRID:
         t = time.time(); m = fit_rank(X, y, p); h = top1_hit(m, val_rows)
         log(f"[{name}] grid {p} val top1 repair {h:.4f} ({time.time()-t:.0f}s)")
         if best is None or h > best[0]: best = (h, p, m)
+    del X
     return best
+
+def oof_abstain_feats(lites, p, k=3):
+    """3-fold (by episode) out-of-fold ranker scores -> abstain-head features, streaming over cached chunks"""
+    X = np.vstack([l["X"] for l in lites]); y = np.concatenate([l["y"] for l in lites]); eid = np.concatenate([l["eid"] for l in lites])
+    ms = [fit_rank(X[eid % k != f], y[eid % k != f], p) for f in range(k)]
+    del X
+    feats, clean = [], []
+    for l in lites:
+        for i, r in enumerate(iter_train(l["src"])):
+            s = scores(ms[(l["off"] + i) % k], r)
+            feats.append(ep_feats(r, s)); clean.append(int(r["clean"]))
+    return np.array(feats), np.array(clean)
 
 def oof_scores(train_rows, p, k=3):
     """Out-of-fold ranker scores for faulty training eps (for abstain-head features); clean eps scored by the full-model-free fold models."""
@@ -103,19 +126,18 @@ if __name__ == "__main__":
     logf = open(f"{OUT}/main.log", "w")
     def log(*a):
         s = " ".join(str(x) for x in a); print(s, flush=True); logf.write(s + "\n"); logf.flush()
-    sets = {"trained": load_train("trained"), "compiled": load_train("compiled")}
-    log("train episodes:", {k: len(v) for k, v in sets.items()}, "clean frac", {k: float(np.mean([r['clean'] for r in v])) for k, v in sets.items()})
+    sets = {"trained": load_lite("trained", 0), "compiled": load_lite("compiled", 8000)}
+    log("train episodes:", {k: v["n"] for k, v in sets.items()}, "clean frac", {k: float(v["clean"].mean()) for k, v in sets.items()})
     val = {"val": load_sp("val"), "val_trained": load_sp("val_trained")}
     tests = {s: load_sp(s) for s in ["test_trained", "test_id", "test_external", "test_larger", "test_faults"]}
     eps = {s: load_split(f"data/{s}.jsonl")[1] for s in tests}
-    arms = {"trained_only": (sets["trained"], val["val_trained"]), "compiled_only": (sets["compiled"], val["val"]),
-            "mixed": (sets["trained"] + sets["compiled"], val["val"] + val["val_trained"])}
+    arms = {"trained_only": ([sets["trained"]], val["val_trained"]), "compiled_only": ([sets["compiled"]], val["val"]),
+            "mixed": ([sets["trained"], sets["compiled"]], val["val"] + val["val_trained"])}
     results, models = {}, {}
     for arm, (tr, va) in arms.items():
         h, p, m = select_rank(tr, va, log, arm)
         log(f"[{arm}] chosen {p} val top1 repair (faulty) {h:.4f}")
-        sc_tr = oof_scores(tr, p)
-        Xa, ya = abstain_xy(tr, sc_tr)
+        Xa, ya = oof_abstain_feats(tr, p)
         sc_va = [scores(m, r) for r in va]; Xv, yv = abstain_xy(va, sc_va)
         bestA = None
         for lr, leaf in itertools.product([0.05, 0.1], [7, 15]):
