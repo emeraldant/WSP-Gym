@@ -11,7 +11,7 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 P = dict(TOLW=0.07, TOLB=0.09, CAP=4.0, LAM=3.0, ATTACH_RC=2.0, PAIR_RC=2.0, EMIT=0.10, BIAS_MIN=0.3, COLSEL=0.35,
-         OUTL=1.5, GRAD=0.05, REVIVE=0.5, STRAY_RC=6.0, STRAY_FRAC=0.4)
+         OUTL=1.5, GRAD=0.05, REVIVE=0.5, DEAD=0.25, STRAY_RC=6.0, STRAY_FRAC=0.4)
 
 
 def fit_row(u, b, t, bt, P=P, allow_neg=True):
@@ -164,6 +164,8 @@ def analyze(net, canon, hi=1, P=P):
                 cc = (1.0 - _cos(ssum, Cn[:, g])) if Wn.shape[0] == Cn.shape[0] else 0.0
                 cost[k, g] = rc + P["LAM"] * cc
                 fitc[(k, g)] = (c, r, rb, rc)
+        if K < m:  # pad with dummy clusters so every canonical neuron gets a (possibly empty) slot
+            cost = np.vstack([cost, np.full((m - K, m), 1e3)])
         rk, cg = linear_sum_assignment(cost)
         assigned = {int(g): int(k) for k, g in zip(rk, cg)}
         used = set(assigned.values())
@@ -171,6 +173,9 @@ def analyze(net, canon, hi=1, P=P):
         row_anoms_candidates = []
         for g in range(m):
             k = assigned[g]
+            if k >= K:
+                groups.append([])
+                continue
             c_rep, r, rb, rc = fitc[(k, g)]
             mem = []
             for p in clusters[k]:
@@ -188,57 +193,6 @@ def analyze(net, canon, hi=1, P=P):
                     e = int(out[np.argmax(np.abs(r[out]))])
                     anomalies.append(dict(strength=abs(r[e]) / s, kind="entry_in", layer=l, ops=[{"op": "set", "tensor": f"W{l+1}", "index": [int(rep), e], "value": float(round(s * Wc[g][e], 2))}]))
         strays = [p for k, cl in enumerate(clusters) if k not in used and len(cl) == 1 for p in cl]
-        if l == 0:
-            for j in strays:
-                if UB[0][j] > P["REVIVE"]:
-                    anomalies.append(dict(strength=float(UB[0][j]) / 2.0 + 0.5, kind="revived", layer=0, j=j,
-                                          ops=[{"op": "set", "tensor": "b1", "index": int(j), "value": float(round(b[j] - UB[0][j] - 1.0, 2))}]))
-        # ---- D clusters (size>=2): sum must vanish
-        for k, cl in enumerate(clusters):
-            if k in used or len(cl) < 2:
-                continue
-            ssum = sum(relscale[p] * Wn[:, p] for p in cl)
-            if all(UB[l][p] <= 0.0 for p in cl):
-                continue  # certainly dead cluster: harmless whatever its columns
-            if (np.abs(ssum) > P["TOLW"] * P["OUTL"]).any():
-                st = float(np.linalg.norm(ssum))
-                rep = reps[k]
-                done = False
-                best = None
-                for j in strays:
-                    opts, rc = stray_options(j, A, b, A[rep], b[rep], P)
-                    for o in opts:
-                        if o[0] == "plain":
-                            continue
-                        res = ssum + o[1] * Wn[:, j]
-                        if np.linalg.norm(res) < P["STRAY_FRAC"] * st and (best is None or np.linalg.norm(res) < best[0]):
-                            c_w = fit_row(A[j], b[j], A[rep], b[rep], P)[1]
-                            best = (np.linalg.norm(res), o, j, c_w)
-                if best is not None:
-                    _, o, j, c_w = best
-                    anomalies.append(dict(strength=st, kind="stray", layer=l, ops=_row_ops(o[0], j, l, o[1], A[rep], b[rep], abs(c_w), o[2] if len(o) > 2 else None)))
-                else:
-                    p0 = cl[0]
-                    v = np.where(np.abs(ssum) > 0.02, -ssum / relscale[p0], 0.0)
-                    anomalies.append(dict(strength=st, kind="pair", layer=l + 1, ops=[{"op": "add", "tensor": f"W{l+2}", "axis": "col", "index": int(p0), "vector": [float(round(x, 2)) for x in v]}]))
-        # ---- stray pairs: a cancel pair/cluster member whose row deviates -> two singleton strays whose columns cancel
-        resolved = set()
-        for q in strays:
-            for j in strays:
-                if j == q:
-                    continue
-                opts, rc = stray_options(j, A, b, A[q], b[q], P)
-                c_w = fit_row(A[j], b[j], A[q], b[q], P)[1]
-                for o in opts:
-                    if o[0] == "plain":
-                        continue
-                    S_ = o[1] * Wn[:, j] + Wn[:, q]
-                    if (np.abs(S_) <= P["TOLW"] * P["OUTL"]).all():
-                        contrib = float(np.linalg.norm(Wn[:, q]))
-                        anomalies.append(dict(strength=contrib, kind="strayfix", layer=l,
-                                              ops=_row_ops(o[0], j, l, o[1], A[q], b[q], abs(c_w), o[2] if len(o) > 2 else None)))
-                        resolved.add(j); resolved.add(q)
-        anomalies[:] = [a for a in anomalies if not (a["kind"] == "revived" and a.get("j") in resolved)]
         # ---- column residuals of canonical groups at next layer
         An = np.zeros((Wn.shape[0], len(groups)))
         for g, mem in enumerate(groups):
@@ -260,6 +214,62 @@ def analyze(net, canon, hi=1, P=P):
             jmap = {int(g): int(j) for j, g in zip(rj2, cg2)}
         else:
             fits, jmap = None, None
+        rows_ok = np.array(sorted(jmap.values())) if jmap is not None else np.arange(Wn.shape[0])
+        Wn_full = Wn
+        Wn = Wn[rows_ok]
+        if l == 0:
+            for j in strays:
+                if UB[0][j] > P["REVIVE"]:
+                    anomalies.append(dict(strength=float(UB[0][j]) / 2.0 + 0.5, kind="revived", layer=0, j=j,
+                                          ops=[{"op": "set", "tensor": "b1", "index": int(j), "value": float(round(b[j] - UB[0][j] - 1.0, 2))}]))
+        # ---- D clusters (size>=2): sum must vanish
+        for k, cl in enumerate(clusters):
+            if k in used or len(cl) < 2:
+                continue
+            ssum = sum(relscale[p] * Wn[:, p] for p in cl)
+            if all(UB[l][p] <= P["DEAD"] for p in cl):
+                continue  # certainly dead cluster: harmless whatever its columns
+            if (np.abs(ssum) > P["TOLW"] * P["OUTL"]).any():
+                st = float(np.linalg.norm(ssum))
+                rep = reps[k]
+                done = False
+                best = None
+                for j in strays:
+                    opts, rc = stray_options(j, A, b, A[rep], b[rep], P)
+                    for o in opts:
+                        if o[0] == "plain":
+                            continue
+                        res = ssum + o[1] * Wn[:, j]
+                        if np.linalg.norm(res) < P["STRAY_FRAC"] * st and (best is None or np.linalg.norm(res) < best[0]):
+                            c_w = fit_row(A[j], b[j], A[rep], b[rep], P)[1]
+                            best = (np.linalg.norm(res), o, j, c_w)
+                if best is not None:
+                    _, o, j, c_w = best
+                    anomalies.append(dict(strength=st, kind="stray", layer=l, ops=_row_ops(o[0], j, l, o[1], A[rep], b[rep], abs(c_w), o[2] if len(o) > 2 else None)))
+                else:
+                    p0 = cl[0]
+                    v = np.where(np.abs(ssum) > 0.02, -ssum / relscale[p0], 0.0)
+                    vfull = np.zeros(Wn_full.shape[0]); vfull[rows_ok] = v; v = vfull
+                    anomalies.append(dict(strength=st, kind="pair", layer=l + 1, ops=[{"op": "add", "tensor": f"W{l+2}", "axis": "col", "index": int(p0), "vector": [float(round(x, 2)) for x in v]}]))
+        # ---- stray pairs: a cancel pair/cluster member whose row deviates -> two singleton strays whose columns cancel
+        resolved = set()
+        for q in strays:
+            for j in strays:
+                if j == q:
+                    continue
+                opts, rc = stray_options(j, A, b, A[q], b[q], P)
+                c_w = fit_row(A[j], b[j], A[q], b[q], P)[1]
+                for o in opts:
+                    if o[0] == "plain":
+                        continue
+                    S_ = o[1] * Wn[:, j] + Wn[:, q]
+                    if (np.abs(S_) <= P["TOLW"] * P["OUTL"]).all():
+                        contrib = float(np.linalg.norm(Wn[:, q]))
+                        anomalies.append(dict(strength=contrib, kind="strayfix", layer=l,
+                                              ops=_row_ops(o[0], j, l, o[1], A[q], b[q], abs(c_w), o[2] if len(o) > 2 else None)))
+                        resolved.add(j); resolved.add(q)
+        anomalies[:] = [a for a in anomalies if not (a["kind"] == "revived" and a.get("j") in resolved)]
+        Wn = Wn_full
         if fits is not None:
             _col_anoms(net, l + 1, fits, jmap, groups, strays, A, b, l, Wc, bc, anomalies, P)
         groups_prev = groups
