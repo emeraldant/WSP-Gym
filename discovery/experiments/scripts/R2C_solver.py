@@ -4,8 +4,8 @@ no forward passes (only interval range analysis).  Structure inferred from the w
  lattice residuals of rows/columns (off-lattice entries), cancel-pair consistency, sign-consistency checks."""
 import numpy as np
 
-P = dict(TAU=0.06, LAM=0.4, CAP=9.0, OFF=0.15, CL=0.3, DEAD=0.1, EMIT=0.2, W_ROW=1.0, W_COL=1.0, W_CL=1.0,
-         W_DEAD=1.0, W_SIGN=0.0, ONOFF=1.0, ZTOL=0.12)
+P = dict(TAU=0.06, LAM=0.4, CAP=9.0, OFF=0.15, CL=0.3, DEAD=0.1, EMIT=0.2, W_ROW=1.0, W_COL=0.8, W_CL=1.0,
+         W_DEAD=1.0, W_SIGN=0.0, ONOFF=1.0, ZTOL=0.12, DF_AMB=0.0, SW_MIN=0.25, NONPAR=0.0, NEAR=0.0, HALF_LO=0.4, HALF_W=0.3, SW_FRAC=0.35, W_SW=1.0)
 
 
 def unit_est(v, P=P, umin=0.25, umax=8.0):
@@ -48,6 +48,16 @@ def _off(x, P=P):
     return r
 
 
+def IV_prev_up(net, l, hi):
+    lo = np.zeros(net.Ws[0].shape[1]); up = np.full_like(lo, float(hi))
+    for k in range(l):
+        W, b = net.Ws[k], net.bs[k]
+        ub = b + np.clip(W, 0, None) @ up + np.clip(W, None, 0) @ lo
+        lb = b + np.clip(W, 0, None) @ lo + np.clip(W, None, 0) @ up
+        lo, up = np.maximum(lb, 0), np.maximum(ub, 0)
+    return up, lo
+
+
 def analyze(net, hi=1, P=P):
     L = net.n_layers
     IV = intervals(net, hi)
@@ -65,7 +75,7 @@ def analyze(net, hi=1, P=P):
             if last:
                 U[j] = 1.0
             else:
-                U[j] = unit_est(row, P)
+                U[j] = unit_est(A[j], P) if np.abs(A[j]).max() > 0.25 else unit_est(row, P)
             N[j] = row / U[j]
         # ---- row-level lattice anomalies (this layer's rows in canonical coordinates of previous layer)
         if not last:
@@ -115,7 +125,7 @@ def analyze(net, hi=1, P=P):
                 # --- cluster consistency anomalies
                 if cancel:
                     continue
-                if nonpar:
+                if nonpar and P["NONPAR"] > 0:
                     # copies with the same row but non-parallel columns: planted fault on a member column
                     k = int(np.argmax(res))
                     p = cl[k]
@@ -124,9 +134,11 @@ def analyze(net, hi=1, P=P):
                     target = -np.sum(others, axis=0) if len(cl) == 2 else None
                     anoms.append(dict(strength=P["W_CL"] * 1.0, kind="cl_nonpar", layer=l, cl=cl, k=p, res=res,
                                       tgt=target, Wn_layer=l + 1, U=U))
-                else:
+                elif not nonpar:
                     # parallel; mixed signs but non-zero sum -> scaled/flipped cancel member
-                    if (lam > 0).any() and (lam < 0).any():
+                    al = np.abs(lam); rr = al / max(al.min(), 1e-9)
+                    stair = bool(np.all(np.abs(rr - np.round(rr)) < 0.1) and rr.max() < 6.5)
+                    if (lam > 0).any() and (lam < 0).any() and not stair:
                         k = int(np.argmin(np.abs(lam)) if False else np.argmax(np.abs(lam)))
                         anoms.append(dict(strength=P["W_CL"] * 0.9, kind="cl_mixed", layer=l, cl=cl, lam=lam, d=d, U=U))
                     elif len(cl) == 2 and abs(lam[0] / lam[1] - 1) < 0.06:
@@ -147,7 +159,7 @@ def analyze(net, hi=1, P=P):
                 col_anom = None
                 if offe.max() > P["OFF"]:
                     e = int(np.argmax(offe))
-                    anoms.append(dict(strength=P["W_ROW"] * float(offe[e]), kind="row_entry", layer=l, j=p, e=e,
+                    anoms.append(dict(strength=P["W_ROW"] * float(offe[e]) * (1.0 if offe[e] < P["HALF_LO"] else P["HALF_W"]), kind="row_entry", layer=l, j=p, e=e,
                                       N=q, u=U[p], cl=cl, U=U, A=A, b=b))
                 elif offb > P["OFF"]:
                     anoms.append(dict(strength=P["W_ROW"] * float(offb), kind="row_bias", layer=l, j=p, N=q, u=U[p], cl=cl,
@@ -156,8 +168,16 @@ def analyze(net, hi=1, P=P):
             for j in range(M):
                 u = U[j]
                 ubn = ub[j] / u; lbn = lb[j] / u
-                if (not alive[j]) and ub[j] > -0.7 * u and np.abs(V[:, j]).max() > 0.2:
-                    anoms.append(dict(strength=P["W_DEAD"] * 0.6, kind="dead_nearmiss", layer=l, j=j, ub=ub[j], u=u))
+                if (not alive[j]) and np.abs(V[:, j]).max() > 0.2:
+                    # flipped-row hypothesis: would the sign-reversed row be alive on the box?
+                    rowj = net.Ws[l][j]
+                    upr = IV_prev_up(net, l, hi)
+                    ubf = b[j] + np.clip(-rowj, 0, None) @ upr[0] + np.clip(-rowj, None, 0) @ upr[1]
+                    allneg = bool((A[j] <= 0.15 * u).all() and (A[j] < -0.25 * u).any())
+                    if ubf > 0.5 * u and allneg:
+                        anoms.append(dict(strength=P["W_DEAD"] * (0.8 if ub[j] > -0.3 * u else P["DF_AMB"]), kind="dead_flip", layer=l, j=j))
+                    elif ub[j] > -0.7 * u:
+                        anoms.append(dict(strength=P["NEAR"], kind="dead_nearmiss", layer=l, j=j, ub=ub[j], u=u))
         # ---- column anomalies at next layer: handled when processing layer l+1 (A built from groups)
         if last:
             # output layer: rows' lattice entries
@@ -172,20 +192,68 @@ def analyze(net, hi=1, P=P):
         groups_prev = live
         # column anomaly detection in canonical coordinates needs next-layer units: compute them now
         bn_next = net.bs[l + 1]
+        u2v_pre = np.ones(An.shape[0])
+        for j2 in range(An.shape[0]):
+            if l + 1 < L - 1:
+                u2v_pre[j2] = unit_est(An[j2], P) if np.abs(An[j2]).max() > 0.25 else 1.0
         for j2 in range(An.shape[0]):
             row = np.r_[An[j2], bn_next[j2]]
             if l + 1 == L - 1:
                 u2 = 1.0                                  # output rows are not rescaled
             else:
-                u2 = unit_est(row, P)
+                u2 = unit_est(An[j2], P) if np.abs(An[j2]).max() > 0.25 else unit_est(row, P)
             qn = An[j2] / u2
             for gi in range(len(live)):
                 x = qn[gi]
                 if abs(x) > P["OFF"]:
                     off = min(abs(x - round(x)), abs(x))
                     if off > P["OFF"]:
-                        anoms.append(dict(strength=P["W_COL"] * float(off), kind="col_entry", layer=l + 1, row=j2, g=live[gi], gi=gi,
+                        off = off if off < P["HALF_LO"] else off * P["HALF_W"]
+                    anoms.append(dict(strength=P["W_COL"] * float(off), kind="col_entry", layer=l + 1, row=j2, g=live[gi], gi=gi,
                                           x=float(x), u2=u2, U=U, A=An, Lprev=l, Ucur=U))
+        # ---- sign consistency: a group whose column sign is the odd one out in every row where it is active
+        if P["W_SIGN"] > 0 and len(live) >= 3:
+            odd = {gi: [0, 0] for gi in range(len(live))}
+            for j2 in range(An.shape[0]):
+                u2 = u2v_pre[j2]
+                qn = An[j2] / u2
+                act = [gi for gi in range(len(live)) if abs(qn[gi]) > P["OFF"]]
+                unit = [gi for gi in act if abs(abs(qn[gi]) - 1) < 0.2]
+                if len(act) >= 3 and len(unit) == len(act):
+                    pos = [gi for gi in unit if qn[gi] > 0]; neg = [gi for gi in unit if qn[gi] < 0]
+                    for gi in unit:
+                        odd[gi][1] += 1
+                    if len(pos) == 1 and len(neg) >= 2:
+                        odd[pos[0]][0] += 1
+                    elif len(neg) == 1 and len(pos) >= 2:
+                        odd[neg[0]][0] += 1
+            for gi, (o, t) in odd.items():
+                if t >= 1 and o == t:
+                    g = live[gi]
+                    anoms.append(dict(strength=P["W_SIGN"], kind="sign_out", layer=l, g=g, U=U))
+        # ---- swap hypothesis among raw neurons (singleton clusters, dead or alive)
+        u2v = np.ones(An.shape[0])
+        for j2 in range(An.shape[0]):
+            if l + 1 < L - 1:
+                u2v[j2] = unit_est(An[j2], P) if np.abs(An[j2]).max() > 0.25 else 1.0
+        multi = set(p for g in groups for p in g["members"] if len(g["members"]) > 1)
+        Vn = (Wn * U[None, :]) / u2v[:, None]
+        def cres(v):
+            a = np.abs(v)
+            return float(np.where(a > P["OFF"], np.minimum(np.abs(a - np.round(a)), a), 0.0).sum())
+        cur = {p: cres(Vn[:, p]) for p in range(M)}
+        for p in range(M):
+            if p in multi:
+                continue
+            for q in range(p + 1, M):
+                if q in multi:
+                    continue
+                vp = (Wn[:, q] * U[p]) / u2v
+                vq = (Wn[:, p] * U[q]) / u2v
+                new = cres(vp) + cres(vq)
+                old = cur[p] + cur[q]
+                if old > P["SW_MIN"] and new < P["SW_FRAC"] * old and max(cur[p], cur[q]) > 0.15:
+                    anoms.append(dict(strength=P["W_SW"] * (min(old, 1.0) + 0.3 - new + 0.2 * (min(cur[p], cur[q]) > 0.15)), kind="swap", layer=l, p=p, q=q, old=old, new=new))
         A = An
     return anoms, IV
 
@@ -237,7 +305,20 @@ def _ops_for(net, a, anoms, P):
         return []
     if k == "row_bias":
         q = a["N"]; j = a["j"]; l = a["layer"]
-        return [{"op": "set", "tensor": f"b{l+1}", "index": int(j), "value": float(round(round(q[-1]) * a["u"], 2))}]
+        bn = q[-1]
+        for kk in (0, -1, -2, 1, -3, -4, 2):
+            if abs(kk - bn) >= 0.9:
+                break
+        return [{"op": "set", "tensor": f"b{l+1}", "index": int(j), "value": float(round(kk * a["u"], 2))}]
+    if k == "sign_out":
+        p = _largest_member(a["g"], a["U"], net.Ws[l + 1])
+        if len(a["g"]["members"]) == 1:
+            return [{"op": "scale", "tensor": f"W{l+2}", "axis": "col", "index": int(p), "factor": -1.0}]
+        return []
+    if k == "swap":
+        return [{"op": "swap", "tensor": f"W{l+2}", "axis": "col", "i": int(a["p"]), "j": int(a["q"])}]
+    if k == "dead_flip":
+        return [{"op": "scale", "tensor": f"W{l+1}", "axis": "row", "index": int(a["j"]), "factor": -1.0}]
     if k == "dead_nearmiss":
         j = a["j"]; l = a["layer"]
         return [{"op": "set", "tensor": f"b{l+1}", "index": int(j), "value": float(round(net.bs[l][j] - a["ub"] + a["u"], 2))}]

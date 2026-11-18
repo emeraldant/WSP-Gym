@@ -1,0 +1,501 @@
+seed,family,fault,variant,layers,n_weights,source,success,nops,err,valid,ops,recovery,kind,strength
+6000000,threshold,scale_out_col,weights,2,191,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.5952}]",1.0,cl_mixed,0.9
+6000001,threshold,swap_out_cols,weights+failures,2,171,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 6}]",0.0,swap,1.1390000000000002
+6000002,argmax,bias_shift,weights+failures,2,208,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 10, ""j"": 11}]",-0.47101449275362395,swap,1.1160999999999996
+6000003,parity,bias_shift,weights+failures,2,181,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 12, ""factor"": 1.6779}]",0.0,cl_mixed,0.9
+6000004,minmax,sign_flip_in,weights,2,155,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000005,count,label_swap,weights+failures,2,265,compiled,False,0,False,True,[],0.0,col_entry,0.019840000000000125
+6000006,dnf,swap_out_cols,weights,2,129,compiled,False,0,False,True,[],0.0,col_entry,0.10192000000000015
+6000007,argmax,clean,weights,2,223,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": -1.0}]",,dead_flip,0.8
+6000008,compare,weight_corrupt,weights,3,361,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.1152}]",0.020725388601036294,cl_mixed,0.9
+6000009,dnf,scale_out_col,weights+failures,3,347,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 12, ""factor"": 2.4655}]",0.4,cl_mixed,0.9
+6000010,minmax,sign_flip_in,weights+failures,2,105,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 12, ""factor"": 1.5356}]",0.0,col_entry,0.27904
+6000011,threshold,bias_shift,weights,2,163,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 11, ""value"": -2.04}]",0.0,row_bias,0.4901960784313726
+6000012,count,sign_flip_in,weights,2,200,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.65,dead_flip,0.8
+6000013,parity,scale_out_col,weights+failures,2,113,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 13, ""factor"": 3.2475}]",1.0,cl_mixed,0.9
+6000014,dnf,swap_out_cols,weights,2,181,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 4.4029}]",0.625,cl_mixed,0.9
+6000015,threshold,sign_flip_out,weights,2,118,compiled,False,0,False,True,[],0.0,col_entry,0.016000000000000014
+6000016,equality,sign_flip_in,weights,3,531,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 10, ""factor"": -1.0}]",-0.045454545454545456,dead_flip,0.8
+6000017,dnf,scale_out_col,weights,2,161,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000018,count,swap_out_cols,weights,2,180,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [1, 3], ""value"": 0.45}]",0.03333333333333333,col_entry,0.254
+6000019,arith,swap_out_cols,weights,2,113,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": -1.0}]",-0.5408320493066255,dead_flip,0.8
+6000020,parity,scale_out_col,weights+failures,2,121,compiled,False,0,False,True,[],0.0,col_entry,0.032800000000000294
+6000021,argmax,clean,weights+failures,2,251,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 13}]",,swap,0.8146
+6000022,equality,swap_out_cols,weights+failures,3,462,compiled,False,0,False,True,[],0.0,row_entry,0.3709779179810726
+6000023,minmax,clean,weights,3,385,compiled,True,0,False,True,[],,row_entry,0.3840490797546011
+6000024,compare,sign_flip_in,weights+failures,2,121,compiled,False,0,False,True,[],0.0,col_entry,0.013119999999999977
+6000025,compare,clean,weights,2,120,compiled,True,0,False,True,[],,col_entry,0.009679999999999911
+6000026,parity,clean,weights,2,191,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 5}]",,swap,0.6331999999999999
+6000027,dnf,scale_out_col,weights+failures,2,141,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": 2.4728}]",1.0,cl_mixed,0.9
+6000028,arith,sign_flip_in,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 9}]",0.0,swap,1.0489000000000002
+6000029,arith,bias_shift,weights+failures,2,109,compiled,False,0,False,True,[],0.0,col_entry,0.007039999999999935
+6000030,arith,bias_shift,weights,2,113,compiled,True,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 2}]",1.0,swap,1.1157000000000001
+6000031,parity,scale_out_col,weights+failures,2,129,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 3.3415}]",1.0,cl_mixed,0.9
+6000032,dnf,sign_flip_in,weights,2,151,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 13}]",0.0,swap,1.1871999999999998
+6000033,arith,sign_flip_out,weights+failures,2,163,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-0.5625,dead_flip,0.8
+6000034,compare,clean,weights+failures,3,435,compiled,True,0,False,True,[],,row_entry,0.381272084805655
+6000035,argmax,label_swap,weights,2,157,compiled,False,0,False,True,[],0.0,col_entry,0.012639999999999941
+6000036,parity,sign_flip_out,weights,2,172,compiled,False,0,False,True,[],0.0,col_entry,0.021200000000000066
+6000037,count,clean,weights,2,264,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 14, ""j"": 19}]",,swap,1.2210000000000008
+6000038,argmax,sign_flip_out,weights+failures,2,157,compiled,False,0,False,True,[],0.0,col_entry,0.013920000000000066
+6000039,threshold,swap_out_cols,weights+failures,2,153,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 18, ""factor"": 0.9273}]",0.0,col_entry,0.2508800000000001
+6000040,parity,bias_shift,weights,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 15}]",0.9,swap,1.1725
+6000041,parity,sign_flip_in,weights,2,163,compiled,False,0,False,True,[],0.0,col_entry,0.023039999999999772
+6000042,minmax,clean,weights+failures,2,120,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 5}]",,swap,1.2118
+6000043,minmax,scale_out_col,weights+failures,3,310,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 10, ""factor"": -1.0}]",-0.1940119760479042,dead_flip,0.8
+6000044,argmax,bias_shift,weights+failures,2,251,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 13}]",0.0,swap,1.3747000000000003
+6000045,arith,sign_flip_in,weights,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 17}]",-0.22503961965134706,swap,0.9614
+6000046,compare,bias_shift,weights+failures,2,85,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 2.3486}]",0.670196671709531,cl_mixed,0.9
+6000047,equality,swap_out_cols,weights,3,497,compiled,False,0,False,True,[],0.0,row_entry,0.3670329670329672
+6000048,argmax,weight_corrupt,weights+failures,2,220,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-2.004329004329004,dead_flip,0.8
+6000049,count,scale_out_col,weights+failures,2,215,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 2.4947}]",1.0,cl_mixed,0.9
+6000050,arith,weight_corrupt,weights,2,127,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": 0.773}]",0.857142857142857,col_entry,0.2348800000000001
+6000051,argmax,scale_out_col,weights,2,225,compiled,False,0,False,True,[],0.0,col_entry,0.11015999999999991
+6000052,minmax,swap_out_cols,weights,3,355,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 9, ""factor"": -1.0}]",-0.1469816272965879,dead_flip,0.8
+6000053,compare,sign_flip_out,weights+failures,3,471,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000054,argmax,swap_out_cols,weights+failures,2,146,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [0, 3], ""value"": 1.23}]",0.020242914979757158,col_entry,0.28808
+6000055,count,clean,weights+failures,2,252,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",,cl_equal,0.5
+6000056,argmax,sign_flip_in,weights+failures,2,190,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 15, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000057,count,scale_out_col,weights+failures,2,191,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": 2.5104}]",1.0,cl_mixed,0.9
+6000058,threshold,bias_shift,weights,2,161,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 15}]",0.0,swap,0.9794999999999998
+6000059,equality,bias_shift,weights,3,457,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.1284}]",-0.8213166144200627,cl_mixed,0.9
+6000060,argmax,clean,weights,2,193,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": -1.0}]",,dead_flip,0.8
+6000061,arith,sign_flip_out,weights,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 10}]",0.0,swap,0.9214
+6000062,dnf,weight_corrupt,weights+failures,2,151,compiled,False,0,False,True,[],0.0,col_entry,0.09866399999999996
+6000063,threshold,swap_out_cols,weights,2,171,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 6.2023}]",-0.18604651162790697,cl_mixed,0.9
+6000064,arith,weight_corrupt,weights+failures,2,145,compiled,False,0,False,True,[],0.0,col_entry,0.008480000000000043
+6000065,threshold,swap_out_cols,weights,2,145,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 17, ""factor"": 0.7174}]",0.0,col_entry,0.3151999999999999
+6000066,compare,clean,weights,2,120,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 4, ""factor"": -1.0}]",,cl_equal,0.5
+6000067,count,clean,weights,2,212,compiled,True,0,False,True,[],,col_entry,0.04184000000000019
+6000068,equality,weight_corrupt,weights+failures,3,529,compiled,False,0,False,True,[],0.0,row_entry,0.3890410958904107
+6000069,threshold,clean,weights,2,121,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 2, ""value"": -2.62}]",,row_bias,0.48854961832061067
+6000070,arith,scale_out_col,weights,2,99,compiled,False,0,False,True,[],0.0,col_entry,0.041280000000000074
+6000071,minmax,swap_out_cols,weights+failures,2,120,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 5, ""factor"": 5.2765}]",0.011185682326621933,cl_mixed,0.9
+6000072,parity,weight_corrupt,weights,2,190,compiled,False,0,False,True,[],0.0,col_entry,0.10576800000000003
+6000073,threshold,sign_flip_out,weights+failures,2,141,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 10, ""j"": 13}]",0.0,swap,1.1324000000000003
+6000074,arith,bias_shift,weights+failures,2,97,compiled,False,0,False,True,[],0.0,col_entry,0.018400000000000107
+6000075,compare,scale_out_col,weights,2,145,compiled,False,0,False,True,[],0.0,col_entry,0.012400000000000057
+6000076,equality,clean,weights+failures,3,483,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 4, ""j"": 8}]",,swap,0.9382899999999998
+6000077,argmax,swap_out_cols,weights,2,244,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 17, ""factor"": -1.0}]",-0.6314102564102564,dead_flip,0.8
+6000078,equality,clean,weights+failures,3,577,compiled,True,0,False,True,[],,row_entry,0.3960396039603964
+6000079,parity,sign_flip_out,weights+failures,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 17}]",0.0,swap,0.7255999999999997
+6000080,count,bias_shift,weights+failures,2,229,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 4, ""value"": -1.02}]",0.0,row_bias,0.33333333333333337
+6000081,argmax,sign_flip_out,weights,2,223,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",-0.023391812865497148,dead_flip,0.8
+6000082,compare,bias_shift,weights+failures,2,129,compiled,False,0,False,True,[],0.0,col_entry,0.005599999999999917
+6000083,compare,bias_shift,weights,2,127,compiled,False,0,False,True,[],0.0,col_entry,0.01120000000000001
+6000084,arith,bias_shift,weights,2,118,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 11}]",0.0,swap,1.0832000000000002
+6000085,threshold,swap_out_cols,weights+failures,2,171,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 15, ""j"": 16}]",0.0,swap,1.0979999999999999
+6000086,equality,bias_shift,weights,3,675,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 3, ""j"": 17}]",-0.05357142857142857,swap,1.0569800000000003
+6000087,threshold,sign_flip_in,weights+failures,2,136,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 11}]",0.0,swap,0.9866500000000002
+6000088,dnf,swap_out_cols,weights,3,365,compiled,False,0,False,True,[],0.0,row_entry,0.3774305555555575
+6000089,dnf,weight_corrupt,weights+failures,3,447,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",0.0,cl_equal,0.5
+6000090,dnf,weight_corrupt,weights,2,191,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 16}]",0.0,swap,1.0298999999999998
+6000091,threshold,sign_flip_out,weights,2,97,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 1, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000092,compare,scale_out_col,weights+failures,2,97,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 4, ""factor"": 2.5129}]",1.0,cl_mixed,0.9
+6000093,equality,weight_corrupt,weights,3,579,compiled,False,0,False,True,[],0.0,row_entry,0.3893992932862185
+6000094,arith,swap_out_cols,weights+failures,2,127,compiled,False,0,False,True,[],0.0,col_entry,0.13751999999999995
+6000095,argmax,clean,weights,2,183,compiled,True,0,False,True,[],,col_entry,0.011599999999999966
+6000096,count,scale_out_col,weights+failures,2,257,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [1, 8], ""value"": 1.85}]",0.0,col_entry,0.24192000000000005
+6000097,count,swap_out_cols,weights+failures,2,226,compiled,True,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 15}]",1.0,swap,1.4568999999999999
+6000098,argmax,label_swap,weights+failures,2,173,compiled,False,0,False,True,[],0.0,col_entry,0.02920000000000016
+6000099,compare,sign_flip_out,weights+failures,2,109,compiled,False,0,False,True,[],0.0,col_entry,0.0027199999999999672
+6000100,parity,scale_out_col,weights,2,154,compiled,False,0,False,True,[],0.0,col_entry,0.09633600000000003
+6000101,arith,clean,weights,2,99,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",,dead_flip,0.8
+6000102,count,weight_corrupt,weights+failures,2,208,compiled,False,0,False,True,[],0.0,col_entry,0.014559999999999997
+6000103,compare,bias_shift,weights+failures,2,129,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 12}]",0.0,swap,1.1766
+6000104,threshold,clean,weights+failures,2,97,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 5}]",,swap,1.3359999999999999
+6000105,argmax,weight_corrupt,weights,2,244,compiled,False,0,False,True,[],0.0,col_entry,0.020480000000000054
+6000106,minmax,swap_out_cols,weights,3,405,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 6, ""factor"": 1.6337}]",0.002406738868832734,cl_mixed,0.9
+6000107,argmax,swap_out_cols,weights+failures,2,190,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": -1.0}]",-0.18518518518518517,dead_flip,0.8
+6000108,argmax,bias_shift,weights+failures,2,244,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 19}]",0.0,swap,1.0739999999999996
+6000109,parity,sign_flip_out,weights+failures,2,141,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 1, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000110,threshold,weight_corrupt,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 5, ""factor"": -1.0}]",-0.2916666666666667,dead_flip,0.8
+6000111,compare,scale_out_col,weights,2,92,compiled,False,0,False,True,[],0.0,col_entry,0.11256
+6000112,arith,clean,weights,2,137,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 16}]",,swap,0.7523999999999998
+6000113,arith,swap_out_cols,weights,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 13, ""j"": 15}]",0.0,swap,1.1294
+6000114,count,sign_flip_in,weights+failures,2,257,compiled,False,0,False,True,[],0.0,col_entry,0.12207999999999988
+6000115,threshold,sign_flip_out,weights+failures,2,151,compiled,False,0,False,True,[],0.0,col_entry,0.02951999999999995
+6000116,compare,bias_shift,weights+failures,2,109,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 1}]",0.0,swap,1.1562
+6000117,count,swap_out_cols,weights+failures,2,229,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [0, 6], ""value"": 0.39}]",0.0,col_entry,0.26311999999999997
+6000118,count,sign_flip_out,weights,2,199,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 5, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000119,threshold,sign_flip_in,weights+failures,2,113,compiled,False,0,False,True,[],0.0,col_entry,0.010079999999999957
+6000120,count,sign_flip_out,weights,2,244,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 12, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000121,count,bias_shift,weights,2,265,compiled,False,0,False,True,[],0.0,col_entry,0.0235199999999999
+6000122,threshold,weight_corrupt,weights+failures,2,136,compiled,False,0,False,True,[],0.0,col_entry,0.16072000000000009
+6000123,argmax,sign_flip_out,weights,2,186,compiled,False,0,False,True,[],0.0,col_entry,0.009360000000000035
+6000124,count,swap_out_cols,weights+failures,2,184,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",0.7241379310344828,cl_equal,0.5
+6000125,arith,clean,weights,2,136,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 3}]",,swap,0.9961
+6000126,arith,clean,weights+failures,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 12}]",,swap,0.644
+6000127,argmax,label_swap,weights+failures,2,212,compiled,False,0,False,True,[],0.0,col_entry,0.022719999999999987
+6000128,equality,sign_flip_in,weights,3,649,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 12, ""factor"": -1.0}]",0.03814713896457766,dead_flip,0.8
+6000129,equality,clean,weights,3,511,compiled,True,0,False,True,[],,row_entry,0.3871951219512195
+6000130,threshold,weight_corrupt,weights,2,109,compiled,False,0,False,True,[],0.0,col_entry,0.010640000000000073
+6000131,count,weight_corrupt,weights+failures,2,278,compiled,False,0,False,True,[],0.0,col_entry,0.06631999999999998
+6000132,compare,clean,weights+failures,2,113,compiled,True,0,False,True,[],,col_entry,0.006400000000000006
+6000133,threshold,sign_flip_in,weights+failures,2,181,compiled,False,0,False,True,[],0.0,col_entry,0.026640000000000087
+6000134,compare,sign_flip_in,weights,2,137,compiled,False,0,False,True,[],0.0,col_entry,0.15096
+6000135,arith,clean,weights,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 15}]",,swap,0.9184000000000001
+6000136,threshold,clean,weights,2,154,compiled,True,0,False,True,[],,col_entry,0.019279999999999832
+6000137,argmax,weight_corrupt,weights+failures,2,238,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 8}]",0.0,swap,1.4551
+6000138,argmax,clean,weights+failures,2,190,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 6}]",,swap,0.9671999999999998
+6000139,compare,sign_flip_out,weights+failures,3,447,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 18, ""factor"": 3.0}]",-0.016641452344931935,col_entry,0.31718309859154914
+6000140,dnf,sign_flip_in,weights+failures,3,425,compiled,False,0,False,True,[],0.0,row_entry,0.39837398373983746
+6000141,equality,sign_flip_in,weights+failures,3,631,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",0.044642857142857144,cl_equal,0.5
+6000142,compare,clean,weights+failures,3,371,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 11, ""j"": 13}]",,swap,1.1408399999999999
+6000143,arith,swap_out_cols,weights,2,97,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 10}]",0.0,swap,1.1799
+6000144,minmax,clean,weights,3,274,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",,dead_flip,0.8
+6000145,compare,sign_flip_out,weights,2,118,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.5872093023255813,dead_flip,0.8
+6000146,threshold,sign_flip_in,weights,2,105,compiled,False,0,False,True,[],0.0,col_entry,0.022399999999999934
+6000147,minmax,weight_corrupt,weights,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 4}]",0.0,swap,1.0075999999999998
+6000148,equality,scale_out_col,weights,3,615,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000149,compare,bias_shift,weights,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 2}]",0.0,swap,1.0552000000000001
+6000150,threshold,scale_out_col,weights+failures,2,113,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.5714}]",1.0,cl_mixed,0.9
+6000151,equality,sign_flip_in,weights+failures,3,577,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 13}]",-0.056962025316455694,swap,1.22658
+6000152,minmax,weight_corrupt,weights,3,367,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",-0.15625,dead_flip,0.8
+6000153,argmax,clean,weights,2,232,compiled,True,0,False,True,[],,col_entry,0.016639999999999943
+6000154,equality,clean,weights,3,579,compiled,True,0,False,True,[],,row_entry,0.36918238993710784
+6000155,threshold,scale_out_col,weights+failures,2,131,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 1, ""value"": -1.16}]",-0.625,row_bias,0.49137931034482757
+6000156,argmax,label_swap,weights,2,190,compiled,False,0,False,True,[],0.0,col_entry,0.021440000000000126
+6000157,compare,sign_flip_in,weights,3,426,compiled,False,0,False,True,[],0.0,row_entry,0.39999999999999947
+6000158,parity,bias_shift,weights,2,163,compiled,False,0,False,True,[],0.0,col_entry,0.003999999999999915
+6000159,threshold,sign_flip_out,weights+failures,2,163,compiled,False,0,False,True,[],0.0,col_entry,0.0008000000000000896
+6000160,equality,sign_flip_in,weights,3,556,compiled,False,0,False,True,[],0.0,row_entry,0.3756962025316458
+6000161,argmax,scale_out_col,weights,2,208,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 2.5087}]",1.0,cl_mixed,0.9
+6000162,minmax,sign_flip_in,weights,3,304,compiled,False,0,False,True,[],0.0,row_entry,0.3185463659147869
+6000163,dnf,clean,weights,2,129,compiled,True,0,False,True,[],,col_entry,0.018399999999999927
+6000164,argmax,weight_corrupt,weights,2,196,compiled,False,0,False,True,[],0.0,col_entry,0.03048000000000002
+6000165,parity,sign_flip_out,weights+failures,2,172,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000166,parity,clean,weights+failures,2,191,compiled,True,0,False,True,[],,col_entry,0.040000000000000216
+6000167,compare,clean,weights+failures,3,363,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",,dead_flip,0.8
+6000168,minmax,sign_flip_in,weights,3,327,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 9, ""j"": 11}]",0.0,swap,0.57213
+6000169,equality,weight_corrupt,weights+failures,3,637,compiled,False,0,False,True,[],0.0,row_entry,0.3809523809523805
+6000170,minmax,weight_corrupt,weights,2,173,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [1, 9], ""value"": -0.02}]",0.0,col_entry,0.3027200000000001
+6000171,compare,swap_out_cols,weights,3,369,compiled,False,0,False,True,[],0.0,row_entry,0.39310344827586197
+6000172,equality,bias_shift,weights,3,535,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",-0.175,dead_flip,0.8
+6000173,arith,bias_shift,weights+failures,2,137,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 12, ""factor"": 3.1797}]",-0.5530546623794209,col_entry,0.25160000000000005
+6000174,dnf,clean,weights+failures,2,161,compiled,True,0,False,True,[],,col_entry,0.03280000000000003
+6000175,compare,swap_out_cols,weights+failures,3,313,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 14, ""factor"": -1.0}]",-0.009983361064891855,dead_flip,0.8
+6000176,argmax,sign_flip_out,weights,2,232,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": -1.0}]",1.0038910505836578,cl_equal,0.5
+6000177,threshold,sign_flip_in,weights,2,137,compiled,False,0,False,True,[],0.0,col_entry,0.023280000000000012
+6000178,threshold,sign_flip_in,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 15}]",0.0,swap,0.5528999999999997
+6000179,count,sign_flip_out,weights,2,245,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 8}]",0.0,swap,1.0174
+6000180,compare,swap_out_cols,weights+failures,2,85,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 1.3601}]",1.0,cl_mixed,0.9
+6000181,parity,weight_corrupt,weights+failures,2,151,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 11}]",0.0,swap,1.1575
+6000182,arith,clean,weights,2,127,compiled,True,0,False,True,[],,col_entry,0.0052000000000001385
+6000183,compare,bias_shift,weights,3,384,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 4}]",0.0,swap,1.06004
+6000184,parity,sign_flip_in,weights+failures,2,190,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": -1.0}]",0.0,cl_equal,0.5
+6000185,parity,sign_flip_in,weights,2,145,compiled,False,0,False,True,[],0.0,col_entry,0.013200000000000146
+6000186,minmax,weight_corrupt,weights+failures,3,331,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b2"", ""index"": 2, ""value"": 0.0}]",-0.006097560975609761,row_bias,0.4097222222222223
+6000187,threshold,sign_flip_out,weights,2,151,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 6, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000188,equality,sign_flip_out,weights,3,655,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 10, ""factor"": 2.1453}]",0.0,cl_mixed,0.9
+6000189,arith,clean,weights+failures,2,92,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 12}]",,swap,1.1807999999999998
+6000190,threshold,sign_flip_in,weights+failures,2,171,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 15}]",0.0,swap,1.0783
+6000191,arith,bias_shift,weights+failures,2,137,compiled,True,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 7, ""value"": 0.0}]",1.0,row_bias,0.44230769230769207
+6000192,compare,clean,weights,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 12}]",,swap,1.1535
+6000193,compare,sign_flip_out,weights,2,136,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000194,argmax,sign_flip_out,weights+failures,2,256,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-0.13003663003662996,dead_flip,0.8
+6000195,argmax,bias_shift,weights+failures,2,146,compiled,True,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 12, ""value"": 0.0}]",1.0,row_bias,0.39436619718309895
+6000196,count,scale_out_col,weights,2,271,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 2.462}]",1.0,cl_mixed,0.9
+6000197,count,swap_out_cols,weights,2,264,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",-0.5,dead_flip,0.8
+6000198,threshold,sign_flip_in,weights+failures,2,105,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": 1.4663}]",0.0,col_entry,0.25439999999999996
+6000199,compare,swap_out_cols,weights+failures,2,99,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 4, ""factor"": 0.4352}]",0.1882022471910111,col_entry,0.23807999999999974
+6000200,argmax,bias_shift,weights+failures,2,223,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 18}]",0.0,swap,0.9878
+6000201,equality,scale_out_col,weights,3,510,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 9, ""j"": 12}]",0.0,swap,1.3021199999999997
+6000202,equality,scale_out_col,weights+failures,3,549,compiled,False,0,False,True,[],0.0,row_entry,0.3997289972899728
+6000203,parity,sign_flip_out,weights,2,201,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 1, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000204,equality,clean,weights,3,617,compiled,True,0,False,True,[],,row_entry,0.3994845360824739
+6000205,argmax,swap_out_cols,weights+failures,2,203,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 14}]",0.0,swap,1.2548
+6000206,minmax,clean,weights,2,127,compiled,True,0,False,True,[],,col_entry,0.016640000000000033
+6000207,arith,clean,weights,2,127,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 17}]",,swap,1.0054
+6000208,argmax,sign_flip_in,weights+failures,2,225,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 13, ""factor"": 2.7836}]",-0.10460251046025125,cl_mixed,0.9
+6000209,count,sign_flip_in,weights+failures,2,278,compiled,False,0,False,True,[],0.0,col_entry,0.044160000000000116
+6000210,argmax,swap_out_cols,weights,2,153,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",-0.21881838074398244,cl_equal,0.5
+6000211,count,weight_corrupt,weights,2,158,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [2, 9], ""value"": -0.63}]",0.0,col_entry,0.26912
+6000212,parity,sign_flip_out,weights+failures,2,161,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 10, ""j"": 18}]",0.0,swap,1.0555999999999996
+6000213,compare,bias_shift,weights,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 14}]",0.0,swap,0.6800999999999999
+6000214,dnf,weight_corrupt,weights,2,151,compiled,False,0,False,True,[],0.0,col_entry,0.02072000000000003
+6000215,argmax,sign_flip_out,weights,2,234,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",0.00641025641025648,dead_flip,0.8
+6000216,equality,bias_shift,weights,3,523,compiled,False,0,False,True,[],0.0,row_entry,0.35014409221902065
+6000217,compare,clean,weights+failures,2,109,compiled,True,0,False,True,[],,col_entry,0.006400000000000006
+6000218,compare,sign_flip_out,weights,2,92,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000219,count,weight_corrupt,weights,2,186,compiled,False,0,False,True,[],0.0,col_entry,0.012800000000000101
+6000220,arith,scale_out_col,weights,2,127,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": 0.5795}]",0.28070175438596495,col_entry,0.2195999999999998
+6000221,argmax,swap_out_cols,weights,2,256,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",-0.5113122171945704,dead_flip,0.8
+6000222,parity,scale_out_col,weights+failures,2,137,compiled,False,0,False,True,[],0.0,col_entry,0.02575999999999965
+6000223,argmax,weight_corrupt,weights+failures,2,220,compiled,False,0,False,True,[],0.0,col_entry,0.01183999999999994
+6000224,arith,clean,weights+failures,2,100,compiled,True,0,False,True,[],,col_entry,0.03287999999999993
+6000225,dnf,sign_flip_in,weights+failures,3,319,compiled,False,0,False,True,[],0.0,row_entry,0.37969696969696964
+6000226,count,label_swap,weights+failures,2,196,compiled,False,0,False,True,[],0.0,col_entry,0.021120000000000163
+6000227,dnf,bias_shift,weights,3,386,compiled,False,0,False,True,[],0.0,row_entry,0.3989361702127665
+6000228,count,clean,weights+failures,2,199,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 6}]",,swap,1.3640000000000005
+6000229,parity,clean,weights,2,136,compiled,True,0,False,True,[],,col_entry,0.014719999999999978
+6000230,minmax,clean,weights+failures,3,407,compiled,True,0,False,True,[],,row_entry,0.3372654155495982
+6000231,count,weight_corrupt,weights,2,224,compiled,False,0,False,True,[],0.0,col_entry,0.11169599999999998
+6000232,compare,bias_shift,weights+failures,2,92,compiled,False,0,False,True,[],0.0,row_bias,0.19166666666666643
+6000233,equality,bias_shift,weights,3,489,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 2, ""j"": 7}]",0.0,swap,1.17628
+6000234,parity,scale_out_col,weights+failures,2,201,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 12}]",0.0,swap,1.0392000000000001
+6000235,count,clean,weights,2,252,compiled,True,0,False,True,[],,col_entry,0.04768000000000008
+6000236,compare,weight_corrupt,weights+failures,3,361,compiled,False,0,False,True,[],0.0,row_entry,0.3645161290322583
+6000237,count,label_swap,weights,2,251,compiled,False,0,False,True,[],0.0,col_entry,0.025439999999999685
+6000238,argmax,clean,weights,2,196,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 15}]",,swap,1.0566000000000002
+6000239,arith,scale_out_col,weights+failures,2,92,compiled,False,0,False,True,[],0.0,col_entry,0.01175999999999995
+6000240,argmax,bias_shift,weights+failures,2,193,compiled,False,0,False,True,[],0.0,col_entry,0.02135999999999996
+6000241,arith,scale_out_col,weights,2,121,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 13}]",0.0,swap,1.0742000000000003
+6000242,argmax,clean,weights+failures,2,223,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",,dead_flip,0.8
+6000243,threshold,scale_out_col,weights+failures,2,121,compiled,False,0,False,True,[],0.0,col_entry,0.042879999999999724
+6000244,dnf,scale_out_col,weights+failures,3,385,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 2, ""j"": 4}]",0.0,swap,0.92326
+6000245,count,swap_out_cols,weights+failures,2,299,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 14, ""factor"": 1.5}]",-0.02127659574468085,col_entry,0.30944000000000005
+6000246,equality,swap_out_cols,weights,3,581,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-0.8969072164948454,dead_flip,0.8
+6000247,arith,sign_flip_out,weights,2,113,compiled,False,0,False,True,[],0.0,col_entry,0.013759999999999906
+6000248,threshold,clean,weights+failures,2,121,compiled,True,0,False,True,[],,col_entry,0.038879999999999984
+6000249,equality,bias_shift,weights,3,577,compiled,False,0,False,True,[],0.0,row_entry,0.39269102990033256
+6000250,argmax,clean,weights+failures,2,196,compiled,True,0,False,True,[],,col_entry,0.004000000000000093
+6000251,arith,bias_shift,weights,2,163,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 9, ""factor"": -1.0}]",-0.5612244897959184,dead_flip,0.8
+6000252,dnf,weight_corrupt,weights+failures,2,136,compiled,False,0,False,True,[],0.0,col_entry,0.016160000000000087
+6000253,equality,swap_out_cols,weights+failures,3,557,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 12, ""j"": 14}]",0.0,swap,1.0555600000000003
+6000254,parity,scale_out_col,weights+failures,2,127,compiled,False,0,False,True,[],0.0,col_entry,0.06752000000000002
+6000255,equality,clean,weights+failures,3,629,compiled,True,0,False,True,[],,row_entry,0.37704918032786905
+6000256,compare,sign_flip_out,weights,2,106,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000257,arith,bias_shift,weights,2,120,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 5}]",0.0,swap,0.8398000000000001
+6000258,argmax,bias_shift,weights,2,183,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 6, ""value"": 0.0}]",0.19411764705882353,row_bias,0.2884615384615383
+6000259,count,weight_corrupt,weights+failures,2,264,compiled,False,0,False,True,[],0.0,col_entry,0.03711999999999982
+6000260,arith,scale_out_col,weights+failures,2,121,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000261,minmax,clean,weights,3,441,compiled,True,0,False,True,[],,row_entry,0.3908309455587391
+6000262,arith,bias_shift,weights+failures,2,105,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000263,argmax,label_swap,weights,2,201,compiled,False,0,False,True,[],0.0,col_entry,0.011679999999999958
+6000264,minmax,swap_out_cols,weights+failures,2,182,compiled,False,0,False,True,[],0.0,col_entry,0.16320000000000015
+6000265,compare,sign_flip_in,weights,2,129,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 6}]",-0.08872901678657055,swap,0.5938999999999999
+6000266,arith,scale_out_col,weights,2,99,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 5}]",0.0,swap,1.1937000000000002
+6000267,minmax,sign_flip_in,weights,3,489,compiled,False,0,False,True,[],0.0,row_entry,0.3850439882697949
+6000268,arith,sign_flip_in,weights,2,106,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-0.08891328210757408,dead_flip,0.8
+6000269,compare,weight_corrupt,weights+failures,2,106,compiled,False,0,False,True,[],0.0,col_entry,0.006400000000000183
+6000270,parity,swap_out_cols,weights+failures,2,161,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000271,compare,clean,weights,2,136,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 0, ""factor"": -1.0}]",,cl_equal,0.5
+6000272,compare,scale_out_col,weights+failures,3,447,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 6, ""factor"": 1.6004}]",0.3695652173913043,cl_mixed,0.9
+6000273,parity,weight_corrupt,weights,2,191,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 15}]",0.0,swap,0.7504
+6000274,threshold,weight_corrupt,weights,2,121,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000275,compare,swap_out_cols,weights,2,113,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000276,parity,scale_out_col,weights+failures,2,145,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 3.4306}]",1.0,cl_mixed,0.9
+6000277,threshold,bias_shift,weights+failures,2,97,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 7, ""j"": 8}]",0.0,swap,0.92455
+6000278,equality,scale_out_col,weights,3,621,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 18, ""factor"": 0.3333}]",0.02697841726618705,col_entry,0.31784946236559297
+6000279,parity,sign_flip_in,weights+failures,2,129,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 11, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000280,dnf,sign_flip_out,weights+failures,3,385,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000281,dnf,bias_shift,weights+failures,3,449,compiled,False,0,False,True,[],0.0,row_entry,0.33723076923076967
+6000282,threshold,swap_out_cols,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 10}]",0.0,swap,0.5471000000000001
+6000283,compare,scale_out_col,weights+failures,2,106,compiled,False,0,False,True,[],0.0,col_entry,0.11539199999999997
+6000284,count,swap_out_cols,weights,2,197,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 29.9015}]",-0.06818181818181818,cl_mixed,0.9
+6000285,parity,weight_corrupt,weights,2,211,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 18, ""factor"": 3.2578}]",0.2857142857142857,cl_mixed,0.9
+6000286,threshold,scale_out_col,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 15}]",0.0,swap,0.9895
+6000287,compare,scale_out_col,weights,2,105,compiled,False,0,False,True,[],0.0,col_entry,0.026239999999999954
+6000288,threshold,scale_out_col,weights+failures,2,121,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": 2.4943}]",1.0,cl_mixed,0.9
+6000289,argmax,clean,weights+failures,2,183,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 6}]",,swap,1.375
+6000290,equality,weight_corrupt,weights+failures,3,467,compiled,False,0,False,True,[],0.0,row_entry,0.39057239057239057
+6000291,arith,bias_shift,weights,2,129,compiled,False,0,False,True,[],0.0,row_bias,0.16000000000000014
+6000292,argmax,weight_corrupt,weights+failures,2,212,compiled,False,0,False,True,[],0.0,col_entry,0.01920000000000002
+6000293,argmax,swap_out_cols,weights,2,234,compiled,False,0,False,True,[],0.0,col_entry,0.11896800000000002
+6000294,equality,swap_out_cols,weights+failures,3,481,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.5}]",0.0,col_entry,0.31587096774193557
+6000295,dnf,weight_corrupt,weights+failures,2,137,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 0, ""factor"": -1.0}]",-1.0,cl_equal,0.5
+6000296,compare,bias_shift,weights+failures,2,127,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 10}]",0.0,swap,1.2158000000000002
+6000297,dnf,scale_out_col,weights,2,127,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 11, ""factor"": 2.4064}]",1.0,cl_mixed,0.9
+6000298,count,bias_shift,weights,2,238,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 13, ""factor"": 3.0}]",-1.2626262626262625,col_entry,0.28568
+6000299,arith,scale_out_col,weights+failures,2,154,compiled,False,0,False,True,[],0.0,col_entry,0.10910400000000003
+6000300,argmax,sign_flip_out,weights,2,264,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 5, ""factor"": 1.5359}]",0.0,cl_mixed,0.9
+6000301,argmax,scale_out_col,weights+failures,2,173,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000302,minmax,bias_shift,weights,2,106,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",-0.15074798619102417,dead_flip,0.8
+6000303,parity,weight_corrupt,weights+failures,2,161,compiled,False,0,False,True,[],0.0,col_entry,0.030400000000000028
+6000304,arith,swap_out_cols,weights,2,136,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 12, ""factor"": 1.5693}]",1.0,cl_mixed,0.9
+6000305,arith,weight_corrupt,weights,2,106,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 11, ""factor"": -1.0}]",-0.0627962085308057,dead_flip,0.8
+6000306,compare,bias_shift,weights+failures,3,371,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 3, ""j"": 13}]",0.0,swap,0.9981300000000002
+6000307,minmax,bias_shift,weights+failures,2,192,compiled,True,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 2, ""value"": 0.0}]",1.0,row_bias,0.35593220338983045
+6000308,count,sign_flip_out,weights,2,233,compiled,False,0,False,True,[],0.0,col_entry,0.029199999999999806
+6000309,equality,swap_out_cols,weights+failures,3,535,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 3, ""j"": 4}]",-0.06666666666666667,swap,0.9312400000000001
+6000310,threshold,scale_out_col,weights,2,161,compiled,False,0,False,True,[],0.0,col_entry,0.09609600000000001
+6000311,equality,bias_shift,weights+failures,3,437,compiled,False,0,False,True,[],0.0,row_entry,0.3959183673469391
+6000312,equality,clean,weights,3,508,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 10}]",,swap,0.9741
+6000313,dnf,scale_out_col,weights+failures,2,181,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 13, ""j"": 14}]",0.0,swap,1.1782
+6000314,equality,clean,weights+failures,3,549,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 2}]",,swap,0.6118600000000001
+6000315,threshold,weight_corrupt,weights+failures,2,151,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000316,minmax,clean,weights+failures,2,127,compiled,True,0,False,True,[],,cl_mixed,0.9
+6000317,minmax,clean,weights,3,383,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 9, ""j"": 13}]",,swap,0.96136
+6000318,equality,sign_flip_in,weights+failures,3,637,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",0.9864253393665159,dead_flip,0.8
+6000319,minmax,sign_flip_in,weights+failures,2,155,compiled,False,0,False,True,[],0.0,col_entry,0.103056
+6000320,minmax,label_swap,weights,2,192,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 10}]",0.0,swap,1.0088
+6000321,compare,scale_out_col,weights+failures,3,312,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 7, ""factor"": -1.0}]",-2.0643274853801166,cl_equal,0.5
+6000322,threshold,sign_flip_out,weights+failures,2,191,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",-0.6666666666666666,dead_flip,0.8
+6000323,parity,swap_out_cols,weights,2,181,compiled,False,0,False,True,[],0.0,col_entry,0.17471999999999996
+6000324,equality,weight_corrupt,weights+failures,3,445,compiled,False,0,False,True,[],0.0,row_entry,0.3705454545454545
+6000325,dnf,sign_flip_in,weights,2,136,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",-0.2,dead_flip,0.8
+6000326,dnf,clean,weights,2,191,compiled,True,0,False,True,[],,col_entry,0.013759999999999994
+6000327,minmax,sign_flip_out,weights+failures,3,325,compiled,False,0,False,True,[],0.0,row_entry,0.3719576719576727
+6000328,equality,scale_out_col,weights+failures,3,382,compiled,False,0,False,True,[],0.0,row_entry,0.3769784172661881
+6000329,argmax,sign_flip_out,weights,2,220,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",0.02546916890080429,dead_flip,0.8
+6000330,equality,swap_out_cols,weights+failures,3,377,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 5, ""j"": 9}]",0.0,swap,1.1808400000000001
+6000331,threshold,clean,weights,2,171,compiled,True,0,False,True,[],,col_entry,0.015040000000000121
+6000332,count,scale_out_col,weights,2,186,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 2.5574}]",1.0,cl_mixed,0.9
+6000333,dnf,sign_flip_out,weights+failures,2,137,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.5,dead_flip,0.8
+6000334,argmax,sign_flip_out,weights+failures,2,225,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 16}]",-0.11242603550295831,swap,0.5244999999999995
+6000335,arith,scale_out_col,weights,2,106,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 14, ""factor"": 3.3456}]",1.0,cl_mixed,0.9
+6000336,count,bias_shift,weights+failures,2,239,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 3.0}]",-2.75,col_entry,0.2632
+6000337,count,scale_out_col,weights,2,245,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 19, ""factor"": 3.2679}]",1.0,cl_mixed,0.9
+6000338,arith,sign_flip_out,weights+failures,2,120,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000339,parity,sign_flip_in,weights+failures,2,136,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000340,minmax,bias_shift,weights+failures,3,407,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 9, ""j"": 10}]",-1.0793650793650795,swap,1.06704
+6000341,dnf,clean,weights,2,127,compiled,True,0,False,True,[],,col_entry,0.016000000000000014
+6000342,threshold,clean,weights,2,118,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 9, ""value"": 0.0}]",,row_bias,0.5
+6000343,threshold,clean,weights,2,151,compiled,True,0,False,True,[],,col_entry,0.011519999999999975
+6000344,argmax,sign_flip_out,weights,2,199,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": -1.0}]",0.46459412780656306,dead_flip,0.8
+6000345,arith,clean,weights,2,136,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",,dead_flip,0.8
+6000346,count,clean,weights+failures,2,285,compiled,True,0,False,True,[],,col_entry,0.024719999999999943
+6000347,parity,scale_out_col,weights+failures,2,129,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 0, ""factor"": 2.4749}]",1.0,cl_mixed,0.9
+6000348,minmax,sign_flip_in,weights,2,146,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 3.0}]",-0.1925925925925926,col_entry,0.28792
+6000349,minmax,sign_flip_in,weights,3,422,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 14}]",-0.03305785123966945,swap,1.06674
+6000350,compare,scale_out_col,weights,2,127,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 13}]",0.0,swap,1.1871999999999996
+6000351,parity,sign_flip_out,weights+failures,2,154,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000352,argmax,swap_out_cols,weights,2,251,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": -1.0}]",-0.25842696629213496,dead_flip,0.8
+6000353,threshold,weight_corrupt,weights,2,131,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 1, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000354,minmax,swap_out_cols,weights+failures,3,485,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 6}]",0.011070110701107022,swap,1.07136
+6000355,arith,scale_out_col,weights+failures,2,97,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 6}]",0.0,swap,1.0872000000000002
+6000356,arith,sign_flip_in,weights,2,100,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 4, ""factor"": 1.5693}]",1.0,cl_mixed,0.9
+6000357,minmax,weight_corrupt,weights,2,121,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000358,compare,bias_shift,weights+failures,3,495,compiled,False,0,False,True,[],0.0,row_entry,0.393333333333334
+6000359,arith,clean,weights+failures,2,97,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 7, ""factor"": -1.0}]",,dead_flip,0.8
+6000360,dnf,weight_corrupt,weights,3,467,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 6, ""j"": 11}]",0.0,swap,1.0420399999999999
+6000361,parity,weight_corrupt,weights+failures,2,129,compiled,False,0,False,True,[],0.0,col_entry,0.022240000000000218
+6000362,parity,bias_shift,weights,2,163,compiled,True,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 5, ""value"": -1.7}]",1.0,row_bias,0.38823529411764707
+6000363,equality,sign_flip_out,weights,3,551,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",0.04885057471264368,dead_flip,0.8
+6000364,arith,swap_out_cols,weights+failures,2,127,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.6354}]",1.0,cl_mixed,0.9
+6000365,compare,weight_corrupt,weights+failures,3,367,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000366,compare,clean,weights,2,118,compiled,True,0,False,True,[],,col_entry,0.011679999999999958
+6000367,dnf,clean,weights+failures,3,468,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 17, ""factor"": -1.0}]",,dead_flip,0.8
+6000368,arith,sign_flip_out,weights,2,121,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 11, ""j"": 12}]",0.0,swap,1.1328000000000003
+6000369,minmax,clean,weights+failures,2,129,compiled,True,0,False,True,[],,col_entry,0.006560000000000077
+6000370,count,sign_flip_out,weights,2,184,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000371,minmax,weight_corrupt,weights+failures,3,388,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 3}]",-0.1713554987212275,swap,1.15642
+6000372,parity,bias_shift,weights,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 7}]",0.0,swap,0.9148000000000001
+6000373,threshold,bias_shift,weights,2,154,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 9}]",0.0,swap,1.0953000000000002
+6000374,minmax,clean,weights,2,128,compiled,True,0,False,True,[],,col_entry,0.013119999999999977
+6000375,threshold,weight_corrupt,weights,2,141,compiled,False,0,False,True,[],0.0,col_entry,0.107724
+6000376,minmax,weight_corrupt,weights+failures,3,409,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 12}]",-1.2548543689320386,swap,0.98871
+6000377,argmax,sign_flip_in,weights,2,201,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 17, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000378,threshold,bias_shift,weights,2,161,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 10, ""value"": -0.81}]",-0.17333333333333334,row_bias,0.48148148148148145
+6000379,argmax,weight_corrupt,weights+failures,2,264,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 7, ""j"": 19}]",0.0,swap,1.1256000000000002
+6000380,count,sign_flip_out,weights,2,213,compiled,False,0,False,True,[],0.0,col_entry,0.032479999999999974
+6000381,arith,sign_flip_in,weights,2,120,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 12, ""j"": 16}]",0.0,swap,1.0354999999999999
+6000382,argmax,sign_flip_in,weights+failures,2,190,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 11, ""factor"": -1.0}]",0.4081632653061225,cl_equal,0.5
+6000383,threshold,weight_corrupt,weights+failures,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 7, ""j"": 17}]",0.0,swap,1.0485
+6000384,count,sign_flip_out,weights+failures,2,202,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 6, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000385,argmax,sign_flip_in,weights,2,238,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 16, ""factor"": 1.4664}]",1.0,cl_mixed,0.9
+6000386,dnf,swap_out_cols,weights,3,523,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 10, ""factor"": -1.0}]",0.11016949152542373,dead_flip,0.8
+6000387,minmax,sign_flip_in,weights,2,137,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",-0.0918141592920354,dead_flip,0.8
+6000388,count,weight_corrupt,weights,2,226,compiled,False,0,False,True,[],0.0,col_entry,0.11680799999999998
+6000389,compare,weight_corrupt,weights,3,425,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.08120300751879697,dead_flip,0.8
+6000390,arith,sign_flip_in,weights+failures,2,113,compiled,False,0,False,True,[],0.0,col_entry,0.18224
+6000391,equality,swap_out_cols,weights+failures,3,549,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 2, ""factor"": 1.4859}]",0.0,cl_mixed,0.9
+6000392,minmax,scale_out_col,weights,2,136,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 12}]",0.0,swap,1.2076
+6000393,count,sign_flip_out,weights,2,245,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.05,dead_flip,0.8
+6000394,minmax,swap_out_cols,weights+failures,2,120,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000395,parity,weight_corrupt,weights+failures,2,136,compiled,False,0,False,True,[],0.0,col_entry,0.1201600000000001
+6000396,equality,sign_flip_in,weights,3,531,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000397,threshold,bias_shift,weights+failures,2,118,compiled,False,0,False,True,[],0.0,col_entry,0.006719999999999971
+6000398,argmax,swap_out_cols,weights+failures,2,203,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 2, ""factor"": 0.5}]",0.16826923076923067,col_entry,0.24480000000000005
+6000399,count,scale_out_col,weights+failures,2,299,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 6}]",0.0,swap,1.2704
+6000400,compare,bias_shift,weights+failures,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 9}]",0.0,swap,1.1012
+6000401,count,sign_flip_out,weights,2,213,compiled,False,0,False,True,[],0.0,col_entry,0.022079999999999968
+6000402,minmax,clean,weights,2,114,compiled,True,0,False,True,[],,col_entry,0.019920000000000028
+6000403,dnf,bias_shift,weights,2,154,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",0.16666666666666666,dead_flip,0.8
+6000404,threshold,swap_out_cols,weights,2,145,compiled,False,0,False,True,[],0.0,col_entry,0.06135999999999982
+6000405,compare,sign_flip_out,weights+failures,2,105,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000406,equality,swap_out_cols,weights,3,555,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 7, ""factor"": 1.4736}]",0.0,cl_mixed,0.9
+6000407,dnf,scale_out_col,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 11, ""j"": 17}]",0.0,swap,1.2188
+6000408,equality,sign_flip_in,weights+failures,3,443,compiled,False,0,False,True,[],0.0,row_entry,0.38421052631578867
+6000409,arith,bias_shift,weights,2,136,compiled,False,0,False,True,[],0.0,col_entry,0.011439999999999985
+6000410,threshold,sign_flip_out,weights+failures,2,154,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 11, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000411,compare,weight_corrupt,weights,2,136,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 7}]",0.0,swap,0.9888000000000001
+6000412,arith,sign_flip_in,weights+failures,2,113,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 1.7548}]",0.1341077085533263,cl_mixed,0.9
+6000413,arith,bias_shift,weights+failures,2,109,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 6, ""value"": 0.0}]",0.0,row_bias,0.23529411764705888
+6000414,parity,scale_out_col,weights,2,129,compiled,False,0,False,True,[],0.0,col_entry,0.02431999999999981
+6000415,minmax,clean,weights+failures,2,136,compiled,True,0,False,True,[],,col_entry,0.01631999999999998
+6000416,equality,scale_out_col,weights+failures,3,600,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 8}]",0.0,swap,1.0992
+6000417,arith,bias_shift,weights+failures,2,113,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 8, ""value"": 0.0}]",-1.2337078651685396,row_bias,0.4870466321243523
+6000418,minmax,scale_out_col,weights,2,152,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 5}]",-0.10626398210290827,swap,0.5131999999999999
+6000419,minmax,clean,weights+failures,3,315,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W3"", ""axis"": ""col"", ""index"": 5, ""factor"": -1.0}]",,cl_equal,0.5
+6000420,threshold,clean,weights+failures,2,181,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",,dead_flip,0.8
+6000421,compare,scale_out_col,weights+failures,2,99,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 2.5105}]",1.0,cl_mixed,0.9
+6000422,dnf,bias_shift,weights+failures,3,313,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 8}]",0.0,swap,1.0329
+6000423,dnf,bias_shift,weights+failures,3,382,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-0.5333333333333333,dead_flip,0.8
+6000424,dnf,bias_shift,weights+failures,2,145,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 14, ""value"": 0.0}]",0.8333333333333334,row_bias,0.47058823529411775
+6000425,minmax,weight_corrupt,weights+failures,3,424,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 9, ""j"": 12}]",-0.22608695652173916,swap,1.17831
+6000426,argmax,weight_corrupt,weights+failures,2,157,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",-0.6581818181818184,dead_flip,0.8
+6000427,minmax,scale_out_col,weights+failures,2,113,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 3, ""factor"": -1.0}]",-1.081896551724138,dead_flip,0.8
+6000428,compare,weight_corrupt,weights,3,349,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 2, ""j"": 11}]",0.29878048780487826,swap,0.58816
+6000429,argmax,scale_out_col,weights+failures,2,143,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 2.4789}]",1.0,cl_mixed,0.9
+6000430,minmax,sign_flip_in,weights,3,395,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 13, ""j"": 15}]",0.0,swap,0.9475499999999997
+6000431,minmax,sign_flip_out,weights,3,305,compiled,False,0,False,True,[],0.0,row_entry,0.3794871794871799
+6000432,threshold,bias_shift,weights,2,129,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 12, ""value"": -2.76}]",0.0,row_bias,0.48550724637681153
+6000433,equality,bias_shift,weights+failures,3,527,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 2.5}]",0.0,col_entry,0.31578947368421023
+6000434,argmax,scale_out_col,weights,2,238,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 9, ""factor"": 2.4795}]",1.0,cl_mixed,0.9
+6000435,count,clean,weights,2,251,compiled,True,0,False,True,[],,col_entry,0.03615999999999993
+6000436,dnf,weight_corrupt,weights,2,171,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 6}]",0.5,swap,0.9017999999999999
+6000437,parity,sign_flip_in,weights+failures,2,153,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 7, ""j"": 10}]",0.0,swap,0.9634
+6000438,threshold,weight_corrupt,weights+failures,2,137,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 16}]",0.4,swap,0.5757999999999996
+6000439,threshold,sign_flip_in,weights+failures,2,129,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 0, ""value"": -2.34}]",-0.4166666666666667,row_bias,0.49572649572649574
+6000440,equality,clean,weights+failures,3,577,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 0, ""j"": 2}]",,swap,1.14376
+6000441,count,weight_corrupt,weights,2,202,compiled,False,0,False,True,[],0.0,col_entry,0.028639999999999867
+6000442,parity,weight_corrupt,weights+failures,2,171,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 6, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000443,arith,scale_out_col,weights+failures,2,92,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 8, ""factor"": 0.5858}]",0.2305699481865284,col_entry,0.23431999999999997
+6000444,parity,scale_out_col,weights+failures,2,153,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 16, ""factor"": 0.3008}]",0.9545454545454546,col_entry,0.2598400000000002
+6000445,minmax,sign_flip_out,weights+failures,2,105,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 10, ""j"": 12}]",0.0,swap,1.2653
+6000446,threshold,scale_out_col,weights+failures,2,191,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 13, ""j"": 17}]",0.0,swap,1.1619000000000002
+6000447,equality,bias_shift,weights+failures,3,401,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": -1.0}]",0.3333333333333333,dead_flip,0.8
+6000448,argmax,label_swap,weights+failures,2,256,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 8}]",0.12429378531073414,swap,0.5253000000000001
+6000449,arith,sign_flip_out,weights+failures,2,109,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 1, ""j"": 2}]",0.0,swap,1.1374
+6000450,argmax,clean,weights+failures,2,173,compiled,True,0,False,True,[],,col_entry,0.014719999999999978
+6000451,parity,weight_corrupt,weights+failures,2,161,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 0, ""factor"": -1.0}]",1.0,cl_equal,0.5
+6000452,count,clean,weights,2,271,compiled,True,0,False,True,[],,col_entry,0.018399999999999927
+6000453,count,sign_flip_in,weights,2,265,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 1.5}]",-0.043478260869565216,col_entry,0.29168000000000005
+6000454,arith,swap_out_cols,weights+failures,2,136,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000455,dnf,bias_shift,weights,2,172,compiled,False,0,False,True,[],0.0,col_entry,0.01040000000000001
+6000456,dnf,sign_flip_out,weights,3,479,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000457,compare,sign_flip_out,weights,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 13}]",0.0,swap,1.0194999999999999
+6000458,count,clean,weights+failures,2,251,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 14}]",,swap,0.6460000000000001
+6000459,equality,clean,weights,3,679,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 6, ""factor"": -1.0}]",,dead_flip,0.8
+6000460,argmax,swap_out_cols,weights,2,199,compiled,False,0,False,True,[],0.0,col_entry,0.11487999999999979
+6000461,compare,sign_flip_out,weights+failures,2,127,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000462,argmax,swap_out_cols,weights,2,232,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 3, ""factor"": 0.6}]",0.010084033613445337,col_entry,0.3151200000000003
+6000463,argmax,label_swap,weights+failures,2,190,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 15}]",0.0,swap,1.0999999999999999
+6000464,threshold,bias_shift,weights+failures,2,131,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""b1"", ""index"": 12, ""value"": 0.0}]",0.6153846153846154,row_bias,0.49056603773584895
+6000465,dnf,clean,weights+failures,2,136,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 5}]",,swap,1.0546
+6000466,compare,weight_corrupt,weights,2,163,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 5}]",0.0,swap,1.1439
+6000467,threshold,sign_flip_in,weights,2,163,compiled,False,0,False,True,[],0.0,col_entry,0.010640000000000073
+6000468,count,scale_out_col,weights+failures,2,209,compiled,False,1,False,True,"[{""op"": ""set"", ""tensor"": ""W2"", ""index"": [0, 6], ""value"": -4.46}]",0.0,col_entry,0.23496000000000025
+6000469,threshold,weight_corrupt,weights,2,145,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 2, ""j"": 10}]",0.0,swap,0.9645000000000001
+6000470,parity,scale_out_col,weights,2,121,compiled,False,0,False,True,[],0.0,col_entry,0.033600000000000206
+6000471,equality,clean,weights,3,625,compiled,True,0,False,True,[],,row_entry,0.38062015503875957
+6000472,equality,weight_corrupt,weights,3,441,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 1, ""j"": 11}]",-0.0041841004184100415,swap,0.6022099999999999
+6000473,count,sign_flip_in,weights,2,158,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 8, ""j"": 13}]",0.0,swap,1.2728000000000002
+6000474,compare,scale_out_col,weights,2,97,compiled,False,0,False,True,[],0.0,col_entry,0.006880000000000131
+6000475,argmax,clean,weights,2,244,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 2, ""factor"": -1.0}]",,dead_flip,0.8
+6000476,arith,swap_out_cols,weights+failures,2,105,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000477,argmax,weight_corrupt,weights+failures,2,277,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 0, ""j"": 1}]",0.0,swap,0.94
+6000478,arith,swap_out_cols,weights,2,118,compiled,True,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 9, ""j"": 11}]",1.0,swap,0.8543
+6000479,equality,scale_out_col,weights,3,552,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 3, ""j"": 10}]",0.0,swap,1.10276
+6000480,minmax,scale_out_col,weights+failures,2,105,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 6, ""j"": 9}]",0.0,swap,1.076
+6000481,dnf,weight_corrupt,weights+failures,2,127,compiled,False,0,False,True,[],0.0,col_entry,0.016479999999999963
+6000482,dnf,scale_out_col,weights,2,121,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 10, ""factor"": 3.1255}]",1.0,cl_mixed,0.9
+6000483,count,sign_flip_out,weights,2,251,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 4, ""factor"": -1.0}]",0.0,dead_flip,0.8
+6000484,minmax,bias_shift,weights,2,118,compiled,False,0,False,True,[],0.0,col_entry,0.10022399999999998
+6000485,compare,bias_shift,weights,2,137,compiled,False,0,False,True,[],0.0,col_entry,0.006400000000000006
+6000486,arith,weight_corrupt,weights,2,145,compiled,False,0,False,True,[],0.0,col_entry,0.0073599999999999005
+6000487,arith,scale_out_col,weights,2,106,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 4, ""j"": 9}]",0.0,swap,1.2000000000000002
+6000488,threshold,scale_out_col,weights+failures,2,121,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W2"", ""axis"": ""col"", ""index"": 7, ""factor"": 3.3271}]",1.0,cl_mixed,0.9
+6000489,minmax,scale_out_col,weights+failures,3,353,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W3"", ""axis"": ""col"", ""i"": 3, ""j"": 6}]",-2.652014652014652,swap,1.03614
+6000490,count,bias_shift,weights,2,197,compiled,False,0,False,True,[],0.0,col_entry,0.03968000000000025
+6000491,threshold,sign_flip_in,weights,2,97,compiled,False,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 3, ""j"": 10}]",0.0,swap,1.1478
+6000492,minmax,sign_flip_in,weights+failures,2,152,compiled,False,0,False,True,[],0.0,col_entry,0.013439999999999942
+6000493,parity,sign_flip_out,weights,2,151,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000494,count,swap_out_cols,weights,2,244,compiled,True,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 11, ""j"": 19}]",1.0,swap,1.1715000000000004
+6000495,count,clean,weights+failures,2,200,compiled,True,0,False,True,[],,col_entry,0.04024000000000001
+6000496,arith,sign_flip_out,weights,2,105,compiled,False,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 12, ""factor"": -1.0}]",-0.4824961948249619,dead_flip,0.8
+6000497,arith,sign_flip_in,weights+failures,2,163,compiled,True,1,False,True,"[{""op"": ""scale"", ""tensor"": ""W1"", ""axis"": ""row"", ""index"": 0, ""factor"": -1.0}]",1.0,dead_flip,0.8
+6000498,threshold,scale_out_col,weights+failures,2,181,compiled,False,0,False,True,[],0.0,cl_mixed,0.9
+6000499,count,swap_out_cols,weights+failures,2,252,compiled,True,1,False,True,"[{""op"": ""swap"", ""tensor"": ""W2"", ""axis"": ""col"", ""i"": 5, ""j"": 10}]",1.0,swap,1.3773000000000004

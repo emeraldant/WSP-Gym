@@ -1,0 +1,8 @@
+fault,spec,free,rl,n
+bias_shift,0.9,0.229,0.814,70
+label_swap,1.0,0.0,0.857,14
+scale_out_col,0.905,0.381,0.762,63
+sign_flip_in,0.914,0.241,0.948,58
+sign_flip_out,0.972,0.111,0.958,72
+swap_out_cols,0.946,0.176,0.716,74
+weight_corrupt,0.93,0.085,0.789,71
