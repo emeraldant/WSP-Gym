@@ -71,3 +71,128 @@ AUROC of raw agreement (higher agree = success), overall and within depth:
   pooled    agreement       lr  test_id       AUC 0.642 [0.567,0.726] AURC 0.130 (base risk 0.178) cov@5% 0.02 cov@10% 0.13
   pooled    agreement       lr  test_trained  AUC 0.674 [0.614,0.727] AURC 0.263 (base risk 0.347) cov@5% 0.00 cov@10% 0.02
   pooled    agreement       lr  test_external AUC 0.684 [0.628,0.735] AURC 0.382 (base risk 0.477) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       gbm test_id       AUC 0.687 [0.608,0.758] AURC 0.116 (base risk 0.178) cov@5% 0.06 cov@10% 0.29
+  pooled    agreement       gbm test_trained  AUC 0.700 [0.648,0.749] AURC 0.238 (base risk 0.347) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       gbm test_external AUC 0.667 [0.609,0.720] AURC 0.399 (base risk 0.477) cov@5% 0.00 cov@10% 0.00
+  pooled    struct+answer   lr  test_id       AUC 0.722 [0.648,0.795] AURC 0.113 (base risk 0.178) cov@5% 0.00 cov@10% 0.52
+  pooled    struct+answer   lr  test_trained  AUC 0.755 [0.701,0.804] AURC 0.207 (base risk 0.347) cov@5% 0.00 cov@10% 0.15
+  pooled    struct+answer   lr  test_external AUC 0.734 [0.689,0.782] AURC 0.300 (base risk 0.477) cov@5% 0.01 cov@10% 0.13
+  pooled    struct+answer   gbm test_id       AUC 0.736 [0.666,0.806] AURC 0.105 (base risk 0.178) cov@5% 0.05 cov@10% 0.66
+  pooled    struct+answer   gbm test_trained  AUC 0.758 [0.703,0.805] AURC 0.200 (base risk 0.347) cov@5% 0.00 cov@10% 0.12
+  pooled    struct+answer   gbm test_external AUC 0.725 [0.677,0.777] AURC 0.320 (base risk 0.477) cov@5% 0.00 cov@10% 0.04
+  pooled    all_weightonly  lr  test_id       AUC 0.876 [0.825,0.923] AURC 0.059 (base risk 0.178) cov@5% 0.73 cov@10% 0.86
+  pooled    all_weightonly  lr  test_trained  AUC 0.856 [0.814,0.894] AURC 0.159 (base risk 0.347) cov@5% 0.00 cov@10% 0.42
+  pooled    all_weightonly  lr  test_external AUC 0.802 [0.754,0.846] AURC 0.255 (base risk 0.477) cov@5% 0.03 cov@10% 0.10
+  pooled    all_weightonly  gbm test_id       AUC 0.870 [0.816,0.919] AURC 0.070 (base risk 0.178) cov@5% 0.73 cov@10% 0.87
+  pooled    all_weightonly  gbm test_trained  AUC 0.860 [0.819,0.898] AURC 0.146 (base risk 0.347) cov@5% 0.01 cov@10% 0.38
+  pooled    all_weightonly  gbm test_external AUC 0.786 [0.736,0.830] AURC 0.281 (base risk 0.477) cov@5% 0.00 cov@10% 0.00
+  pooled    all+family      lr  test_id       AUC 0.867 [0.815,0.915] AURC 0.062 (base risk 0.178) cov@5% 0.70 cov@10% 0.86
+  pooled    all+family      lr  test_trained  AUC 0.854 [0.813,0.891] AURC 0.162 (base risk 0.347) cov@5% 0.00 cov@10% 0.33
+  pooled    all+family      lr  test_external AUC 0.798 [0.748,0.843] AURC 0.262 (base risk 0.477) cov@5% 0.00 cov@10% 0.12
+  pooled    all+family      gbm test_id       AUC 0.871 [0.819,0.919] AURC 0.064 (base risk 0.178) cov@5% 0.73 cov@10% 0.87
+  pooled    all+family      gbm test_trained  AUC 0.860 [0.821,0.895] AURC 0.142 (base risk 0.347) cov@5% 0.06 cov@10% 0.40
+  pooled    all+family      gbm test_external AUC 0.790 [0.739,0.834] AURC 0.274 (base risk 0.477) cov@5% 0.00 cov@10% 0.14
+
+Raw agreement as the ranking score (no model):
+  test_id: AUC 0.606 AURC 0.142 cov@5% 0.03 cov@10% 0.09  base risk 0.178
+  test_trained: AUC 0.622 AURC 0.290 cov@5% 0.00 cov@10% 0.00  base risk 0.347
+  test_external: AUC 0.685 AURC 0.368 cov@5% 0.00 cov@10% 0.00  base risk 0.477
+
+######## ANSWER = plurality  (n=1240)
+
+Success rate by agreement (share of the 8 samples identical to the answer):
+  test_id: 8/8: n=154 succ=0.864; 6-7/8: n=92 succ=0.837; 4-5/8: n=112 succ=0.821; <=3/8: n=64 succ=0.766 | base succ 0.832
+  test_trained: 8/8: n=141 succ=0.738; 6-7/8: n=79 succ=0.671; 4-5/8: n=99 succ=0.687; <=3/8: n=84 succ=0.440 | base succ 0.650
+  test_external: 8/8: n=108 succ=0.694; 6-7/8: n=84 succ=0.619; 4-5/8: n=95 succ=0.589; <=3/8: n=128 succ=0.328 | base succ 0.542
+
+AUROC of raw agreement (higher agree = success), overall and within depth:
+  test_id: overall 0.565 | depth1 n=351 AUC 0.573 | depth2 n=71 AUC 0.543 | family-weighted within-family AUC 0.595
+  test_trained: overall 0.613 | depth1 n=331 AUC 0.621 | depth2 n=72 AUC 0.564 | family-weighted within-family AUC 0.635
+  test_external: overall 0.667 | depth1 n=331 AUC 0.652 | depth2 n=84 AUC 0.630 | family-weighted within-family AUC 0.647
+
+=== CV classifiers, fit=per_split (5x repeated stratified 5-fold OOF); AUROC [95% boot CI], AURC (mean risk over coverage; lower=better), cov@risk<=5%/10%
+  per_split depth_only      lr  test_id       AUC 0.542 [0.469,0.621] AURC 0.161 (base risk 0.168) cov@5% 0.01 cov@10% 0.01
+  per_split depth_only      lr  test_trained  AUC 0.580 [0.526,0.641] AURC 0.335 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  per_split depth_only      lr  test_external AUC 0.602 [0.550,0.659] AURC 0.420 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  per_split structural      lr  test_id       AUC 0.626 [0.549,0.694] AURC 0.136 (base risk 0.168) cov@5% 0.00 cov@10% 0.41
+  per_split structural      lr  test_trained  AUC 0.720 [0.672,0.770] AURC 0.224 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  per_split structural      lr  test_external AUC 0.674 [0.620,0.724] AURC 0.370 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  per_split structural      gbm test_id       AUC 0.631 [0.559,0.703] AURC 0.126 (base risk 0.168) cov@5% 0.00 cov@10% 0.27
+  per_split structural      gbm test_trained  AUC 0.726 [0.675,0.771] AURC 0.203 (base risk 0.350) cov@5% 0.02 cov@10% 0.18
+  per_split structural      gbm test_external AUC 0.642 [0.589,0.693] AURC 0.371 (base risk 0.458) cov@5% 0.01 cov@10% 0.01
+  per_split answer          lr  test_id       AUC 0.736 [0.662,0.818] AURC 0.131 (base risk 0.168) cov@5% 0.00 cov@10% 0.75
+  per_split answer          lr  test_trained  AUC 0.701 [0.641,0.760] AURC 0.246 (base risk 0.350) cov@5% 0.00 cov@10% 0.05
+  per_split answer          lr  test_external AUC 0.706 [0.650,0.754] AURC 0.320 (base risk 0.458) cov@5% 0.00 cov@10% 0.05
+  per_split answer          gbm test_id       AUC 0.753 [0.682,0.830] AURC 0.105 (base risk 0.168) cov@5% 0.15 cov@10% 0.74
+  per_split answer          gbm test_trained  AUC 0.721 [0.663,0.780] AURC 0.244 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  per_split answer          gbm test_external AUC 0.702 [0.648,0.754] AURC 0.326 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  per_split agreement       lr  test_id       AUC 0.612 [0.528,0.696] AURC 0.137 (base risk 0.168) cov@5% 0.01 cov@10% 0.13
+  per_split agreement       lr  test_trained  AUC 0.651 [0.593,0.710] AURC 0.300 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  per_split agreement       lr  test_external AUC 0.674 [0.618,0.723] AURC 0.380 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  per_split agreement       gbm test_id       AUC 0.644 [0.565,0.723] AURC 0.129 (base risk 0.168) cov@5% 0.00 cov@10% 0.36
+  per_split agreement       gbm test_trained  AUC 0.671 [0.616,0.718] AURC 0.264 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  per_split agreement       gbm test_external AUC 0.640 [0.587,0.696] AURC 0.390 (base risk 0.458) cov@5% 0.01 cov@10% 0.01
+  per_split struct+answer   lr  test_id       AUC 0.753 [0.679,0.830] AURC 0.119 (base risk 0.168) cov@5% 0.00 cov@10% 0.82
+  per_split struct+answer   lr  test_trained  AUC 0.768 [0.716,0.816] AURC 0.199 (base risk 0.350) cov@5% 0.00 cov@10% 0.15
+  per_split struct+answer   lr  test_external AUC 0.735 [0.680,0.783] AURC 0.300 (base risk 0.458) cov@5% 0.00 cov@10% 0.08
+  per_split struct+answer   gbm test_id       AUC 0.740 [0.670,0.810] AURC 0.085 (base risk 0.168) cov@5% 0.20 cov@10% 0.74
+  per_split struct+answer   gbm test_trained  AUC 0.752 [0.700,0.799] AURC 0.207 (base risk 0.350) cov@5% 0.00 cov@10% 0.03
+  per_split struct+answer   gbm test_external AUC 0.715 [0.660,0.766] AURC 0.305 (base risk 0.458) cov@5% 0.02 cov@10% 0.05
+  per_split all_weightonly  lr  test_id       AUC 0.832 [0.774,0.890] AURC 0.072 (base risk 0.168) cov@5% 0.34 cov@10% 0.89
+  per_split all_weightonly  lr  test_trained  AUC 0.863 [0.823,0.902] AURC 0.149 (base risk 0.350) cov@5% 0.17 cov@10% 0.38
+  per_split all_weightonly  lr  test_external AUC 0.809 [0.768,0.850] AURC 0.253 (base risk 0.458) cov@5% 0.00 cov@10% 0.15
+  per_split all_weightonly  gbm test_id       AUC 0.838 [0.770,0.894] AURC 0.063 (base risk 0.168) cov@5% 0.53 cov@10% 0.90
+  per_split all_weightonly  gbm test_trained  AUC 0.853 [0.812,0.894] AURC 0.147 (base risk 0.350) cov@5% 0.07 cov@10% 0.31
+  per_split all_weightonly  gbm test_external AUC 0.780 [0.730,0.826] AURC 0.278 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  per_split all+family      lr  test_id       AUC 0.826 [0.762,0.887] AURC 0.071 (base risk 0.168) cov@5% 0.35 cov@10% 0.91
+  per_split all+family      lr  test_trained  AUC 0.862 [0.823,0.900] AURC 0.149 (base risk 0.350) cov@5% 0.28 cov@10% 0.41
+  per_split all+family      lr  test_external AUC 0.807 [0.764,0.848] AURC 0.260 (base risk 0.458) cov@5% 0.00 cov@10% 0.12
+  per_split all+family      gbm test_id       AUC 0.828 [0.757,0.889] AURC 0.070 (base risk 0.168) cov@5% 0.51 cov@10% 0.90
+  per_split all+family      gbm test_trained  AUC 0.858 [0.817,0.898] AURC 0.143 (base risk 0.350) cov@5% 0.05 cov@10% 0.40
+  per_split all+family      gbm test_external AUC 0.782 [0.733,0.825] AURC 0.274 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+
+=== CV classifiers, fit=pooled (5x repeated stratified 5-fold OOF); AUROC [95% boot CI], AURC (mean risk over coverage; lower=better), cov@risk<=5%/10%
+  pooled    depth_only      lr  test_id       AUC 0.612 [0.543,0.687] AURC 0.134 (base risk 0.168) cov@5% 0.01 cov@10% 0.25
+  pooled    depth_only      lr  test_trained  AUC 0.541 [0.480,0.599] AURC 0.369 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    depth_only      lr  test_external AUC 0.630 [0.577,0.687] AURC 0.398 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  pooled    structural      lr  test_id       AUC 0.654 [0.577,0.723] AURC 0.130 (base risk 0.168) cov@5% 0.00 cov@10% 0.55
+  pooled    structural      lr  test_trained  AUC 0.700 [0.647,0.749] AURC 0.230 (base risk 0.350) cov@5% 0.00 cov@10% 0.08
+  pooled    structural      lr  test_external AUC 0.690 [0.638,0.742] AURC 0.331 (base risk 0.458) cov@5% 0.01 cov@10% 0.01
+  pooled    structural      gbm test_id       AUC 0.654 [0.579,0.722] AURC 0.135 (base risk 0.168) cov@5% 0.00 cov@10% 0.55
+  pooled    structural      gbm test_trained  AUC 0.725 [0.669,0.778] AURC 0.228 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    structural      gbm test_external AUC 0.675 [0.623,0.729] AURC 0.367 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  pooled    answer          lr  test_id       AUC 0.749 [0.677,0.814] AURC 0.104 (base risk 0.168) cov@5% 0.00 cov@10% 0.70
+  pooled    answer          lr  test_trained  AUC 0.743 [0.688,0.795] AURC 0.226 (base risk 0.350) cov@5% 0.00 cov@10% 0.05
+  pooled    answer          lr  test_external AUC 0.720 [0.668,0.769] AURC 0.306 (base risk 0.458) cov@5% 0.00 cov@10% 0.05
+  pooled    answer          gbm test_id       AUC 0.752 [0.683,0.818] AURC 0.103 (base risk 0.168) cov@5% 0.43 cov@10% 0.78
+  pooled    answer          gbm test_trained  AUC 0.745 [0.691,0.796] AURC 0.231 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    answer          gbm test_external AUC 0.721 [0.668,0.771] AURC 0.305 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       lr  test_id       AUC 0.648 [0.565,0.729] AURC 0.119 (base risk 0.168) cov@5% 0.05 cov@10% 0.13
+  pooled    agreement       lr  test_trained  AUC 0.653 [0.597,0.711] AURC 0.299 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       lr  test_external AUC 0.674 [0.623,0.724] AURC 0.365 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       gbm test_id       AUC 0.674 [0.592,0.752] AURC 0.128 (base risk 0.168) cov@5% 0.00 cov@10% 0.53
+  pooled    agreement       gbm test_trained  AUC 0.660 [0.599,0.715] AURC 0.273 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    agreement       gbm test_external AUC 0.663 [0.613,0.715] AURC 0.374 (base risk 0.458) cov@5% 0.00 cov@10% 0.00
+  pooled    struct+answer   lr  test_id       AUC 0.758 [0.691,0.826] AURC 0.105 (base risk 0.168) cov@5% 0.00 cov@10% 0.84
+  pooled    struct+answer   lr  test_trained  AUC 0.751 [0.702,0.801] AURC 0.213 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    struct+answer   lr  test_external AUC 0.738 [0.688,0.789] AURC 0.292 (base risk 0.458) cov@5% 0.01 cov@10% 0.11
+  pooled    struct+answer   gbm test_id       AUC 0.744 [0.668,0.816] AURC 0.114 (base risk 0.168) cov@5% 0.00 cov@10% 0.79
+  pooled    struct+answer   gbm test_trained  AUC 0.746 [0.692,0.800] AURC 0.226 (base risk 0.350) cov@5% 0.00 cov@10% 0.00
+  pooled    struct+answer   gbm test_external AUC 0.724 [0.674,0.777] AURC 0.316 (base risk 0.458) cov@5% 0.00 cov@10% 0.05
+  pooled    all_weightonly  lr  test_id       AUC 0.864 [0.806,0.917] AURC 0.060 (base risk 0.168) cov@5% 0.76 cov@10% 0.90
+  pooled    all_weightonly  lr  test_trained  AUC 0.850 [0.811,0.887] AURC 0.161 (base risk 0.350) cov@5% 0.00 cov@10% 0.13
+  pooled    all_weightonly  lr  test_external AUC 0.805 [0.761,0.848] AURC 0.244 (base risk 0.458) cov@5% 0.01 cov@10% 0.12
+  pooled    all_weightonly  gbm test_id       AUC 0.861 [0.803,0.917] AURC 0.058 (base risk 0.168) cov@5% 0.72 cov@10% 0.89
+  pooled    all_weightonly  gbm test_trained  AUC 0.845 [0.802,0.884] AURC 0.155 (base risk 0.350) cov@5% 0.02 cov@10% 0.18
+  pooled    all_weightonly  gbm test_external AUC 0.791 [0.748,0.834] AURC 0.265 (base risk 0.458) cov@5% 0.00 cov@10% 0.03
+  pooled    all+family      lr  test_id       AUC 0.862 [0.802,0.915] AURC 0.061 (base risk 0.168) cov@5% 0.69 cov@10% 0.90
+  pooled    all+family      lr  test_trained  AUC 0.849 [0.808,0.885] AURC 0.162 (base risk 0.350) cov@5% 0.00 cov@10% 0.33
+  pooled    all+family      lr  test_external AUC 0.803 [0.759,0.845] AURC 0.249 (base risk 0.458) cov@5% 0.00 cov@10% 0.11
+  pooled    all+family      gbm test_id       AUC 0.862 [0.805,0.918] AURC 0.057 (base risk 0.168) cov@5% 0.73 cov@10% 0.89
+  pooled    all+family      gbm test_trained  AUC 0.847 [0.804,0.885] AURC 0.152 (base risk 0.350) cov@5% 0.18 cov@10% 0.21
+  pooled    all+family      gbm test_external AUC 0.794 [0.749,0.838] AURC 0.258 (base risk 0.458) cov@5% 0.05 cov@10% 0.15
+
+Raw agreement as the ranking score (no model):
+  test_id: AUC 0.568 AURC 0.144 cov@5% 0.03 cov@10% 0.09  base risk 0.168
+  test_trained: AUC 0.619 AURC 0.294 cov@5% 0.00 cov@10% 0.00  base risk 0.350
+  test_external: AUC 0.673 AURC 0.360 cov@5% 0.00 cov@10% 0.00  base risk 0.458
