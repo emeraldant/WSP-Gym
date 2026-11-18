@@ -1,0 +1,7 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+test_trained rebuild matches: True
+test_external rebuild matches: True
+('test_trained', 403)
+('test_id', 422)
+('test_external', 415)
+('val', 236)

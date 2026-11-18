@@ -1,0 +1,11 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+179 jobs
+0 test_larger 6000376 7443 342 1.04
+20 test_families 4000035 1345 123 0.06
+40 test_families 4000109 1325 127 0.07
+60 test_families 4000167 1397 129 0.08
+80 test_families 4000204 762 107 0.05
+100 test_families 4000220 878 107 0.05
+120 test_families 4000344 705 0 0.03
+140 test_families 4000382 622 0 0.04
+160 test_families 4000449 1516 139 0.04

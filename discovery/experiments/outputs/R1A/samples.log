@@ -1,0 +1,5 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+test_id 422
+test_trained 403
+test_external 415
+rescoring mismatches vs stored success: 0 of 9920

@@ -1,0 +1,167 @@
+## Primary (all failed faulty nets; M = units from scale_rl's single answer; noop/invalid count as local fail)
+| split | n fail | local M | random equal-size (exp.) | diff (paired) | local only / rand-only discordance: P(local=1,rand~0) |  global any (upper bound) | baseline single-op search |
+| test_id | 72 | 0.625 [0.514,0.736] | 0.380 [0.299,0.465] | 0.245 [0.162,0.329] | 0.270 | 1.000 [1.000,1.000] | 0.583 [0.472,0.694] |
+| test_trained | 134 | 0.425 [0.343,0.507] | 0.281 [0.233,0.331] | 0.145 [0.077,0.216] | 0.226 | 0.978 [0.948,1.000] | 0.567 [0.485,0.649] |
+| test_faults | 326 | 0.518 [0.463,0.571] | 0.391 [0.348,0.436] | 0.127 [0.095,0.161] | 0.157 | 0.681 [0.629,0.730] | 0.282 [0.236,0.334] |
+| test_larger | 125 | 0.552 [0.464,0.640] | 0.289 [0.242,0.339] | 0.263 [0.185,0.338] | 0.328 | 0.968 [0.936,0.992] | 0.744 [0.664,0.816] |
+| test_families | 167 | 0.479 [0.407,0.557] | 0.497 [0.446,0.548] | -0.018 [-0.101,0.063] | 0.204 | 0.988 [0.970,1.000] | 0.647 [0.575,0.719] |
+
+## Primary restricted to edit-type failures (non-empty indicated units)
+| split | n | local M | random | diff | n units (mean) | pool size local (mean) / global (mean) | ratio | oracle-localised (planted units) | rand for oracle size |
+| test_id | 52 | 0.865 [0.769,0.962] | 0.527 [0.446,0.609] | 0.339 [0.238,0.437] | - | 173 / 1422 | 8.4x | 1.000 [1.000,1.000] | 0.563 [0.484,0.646] |
+| test_trained | 91 | 0.626 [0.527,0.725] | 0.413 [0.356,0.469] | 0.213 [0.112,0.310] | - | 147 / 1399 | 9.9x | 0.956 [0.912,0.989] | 0.442 [0.388,0.496] |
+| test_faults | 288 | 0.587 [0.531,0.646] | 0.442 [0.395,0.488] | 0.144 [0.107,0.182] | - | 193 / 1281 | 7.1x | 0.639 [0.583,0.694] | 0.460 [0.413,0.507] |
+| test_larger | 100 | 0.690 [0.600,0.780] | 0.362 [0.312,0.414] | 0.328 [0.238,0.419] | - | 272 / 4561 | 18.0x | 0.970 [0.930,1.000] | 0.381 [0.330,0.434] |
+| test_families | 153 | 0.523 [0.444,0.601] | 0.543 [0.494,0.591] | -0.020 [-0.109,0.066] | - | 150 / 1166 | 7.7x | 0.987 [0.967,1.000] | 0.550 [0.503,0.598] |
+
+## Failure category split (pooled and per split): local success M / V
+
+test_id
+       n   locM  randM   locV  randV  orac
+catx                                      
+edit  52  0.865  0.527  0.962  0.617   1.0
+noop  20  0.000  0.000  0.100  0.088   1.0
+
+test_trained
+       n   locM  randM   locV  randV   orac
+catx                                       
+edit  91  0.626  0.413  0.824  0.530  0.956
+noop  43  0.000  0.000  0.209  0.245  1.000
+
+test_faults
+        n   locM  randM   locV  randV   orac
+catx                                        
+edit  288  0.587  0.442  0.587  0.442  0.639
+noop   38  0.000  0.000  0.000  0.000  0.763
+
+test_larger
+        n  locM  randM  locV  randV  orac
+catx                                     
+edit  100  0.69  0.362  0.69  0.362  0.97
+noop   25  0.00  0.000  0.00  0.000  0.92
+
+test_families
+        n   locM  randM   locV  randV   orac
+catx                                        
+edit  153  0.523  0.543  0.523  0.543  0.987
+noop   14  0.000  0.000  0.000  0.000  1.000
+
+ALL
+        n   locM  randM   locV  randV   orac
+catx                                        
+edit  684  0.614  0.456  0.648  0.478  0.835
+noop  140  0.000  0.000  0.079  0.088  0.921
+
+## By fault type (all splits pooled; M)
+                      n  frac_edit   locM  randM   locV  randV  oracle  globalany
+fault                                                                            
+bias_shift           83      0.819  0.627  0.426  0.687  0.479   0.988      0.988
+label_swap            3      1.000  0.333  0.343  1.000  0.564   1.000      1.000
+scale_in_row        135      0.807  0.719  0.483  0.719  0.483   1.000      1.000
+scale_out_col        83      0.675  0.410  0.414  0.482  0.488   1.000      1.000
+sign_flip_in         59      0.712  0.339  0.252  0.390  0.303   1.000      1.000
+sign_flip_out        56      0.750  0.304  0.401  0.357  0.440   1.000      1.000
+spurious_direction  191      0.937  0.377  0.326  0.377  0.326   0.408      0.455
+swap_out_cols       119      0.899  0.597  0.372  0.681  0.430   1.000      1.000
+weight_corrupt       95      0.821  0.589  0.336  0.642  0.380   0.895      0.916
+
+by split x fault
+                                    n   locM  randM   locV  oracle  globalany
+split         fault                                                          
+test_families bias_shift           33  0.545  0.499  0.545   1.000      1.000
+              scale_out_col        25  0.400  0.594  0.400   1.000      1.000
+              sign_flip_in         14  0.429  0.413  0.429   1.000      1.000
+              sign_flip_out        29  0.310  0.522  0.310   1.000      1.000
+              swap_out_cols        34  0.529  0.591  0.529   1.000      1.000
+              weight_corrupt       32  0.594  0.334  0.594   0.938      0.938
+test_faults   scale_in_row        135  0.719  0.483  0.719   1.000      1.000
+              spurious_direction  191  0.377  0.326  0.377   0.408      0.455
+test_id       bias_shift           13  0.615  0.435  0.769   1.000      1.000
+              label_swap            2  0.500  0.303  1.000   1.000      1.000
+              scale_out_col        15  0.667  0.545  0.667   1.000      1.000
+              sign_flip_in          3  0.333  0.089  0.333   1.000      1.000
+              sign_flip_out         3  0.333  0.065  0.333   1.000      1.000
+              swap_out_cols        21  0.571  0.301  0.714   1.000      1.000
+              weight_corrupt       15  0.800  0.411  0.867   1.000      1.000
+test_larger   bias_shift           10  0.800  0.295  0.800   1.000      1.000
+              scale_out_col        20  0.350  0.335  0.350   1.000      1.000
+              sign_flip_in         16  0.312  0.226  0.312   1.000      1.000
+              sign_flip_out        12  0.417  0.320  0.417   1.000      1.000
+              swap_out_cols        39  0.692  0.284  0.692   1.000      1.000
+              weight_corrupt       28  0.607  0.285  0.607   0.821      0.857
+test_trained  bias_shift           27  0.667  0.380  0.778   0.963      0.963
+              label_swap            1  0.000  0.423  1.000   1.000      1.000
+              scale_out_col        23  0.304  0.200  0.565   1.000      1.000
+              sign_flip_in         26  0.308  0.200  0.423   1.000      1.000
+              sign_flip_out        12  0.167  0.272  0.417   1.000      1.000
+              swap_out_cols        25  0.560  0.271  0.840   1.000      1.000
+              weight_corrupt       20  0.400  0.354  0.600   0.850      0.900
+
+## Does the answer touch a planted unit? (edit-type failures) and local success by that
+test_id:
+        n  locM  randM
+hit_M                 
+False  14   0.5  0.411
+True   38   1.0  0.569
+test_trained:
+        n   locM  randM
+hit_M                  
+False  38  0.184  0.398
+True   53  0.943  0.424
+test_faults:
+         n   locM  randM
+hit_M                   
+False   28  0.429  0.488
+True   260  0.604  0.438
+test_larger:
+        n   locM  randM
+hit_M                  
+False  42  0.333  0.354
+True   58  0.948  0.367
+test_families:
+        n   locM  randM
+hit_M                  
+False  87  0.172  0.534
+True   66  0.985  0.554
+ALL:
+         n   locM  randM
+hit_M                   
+False  209  0.263  0.459
+True   475  0.768  0.454
+
+## Evaluations needed
+local M successes n=420: pool size mean 178 median 161; expected evals to first repair (random order) mean 45.5 median 36.4
+matching global pool (same nets): size mean 1649, expected evals to first repair in global random order mean 299.0 median 167.7
+all edit-type fails: local pool / global pool mean ratio 0.146 (=> 6.9x fewer in size-ratio-of-means terms: 9.4x)
+
+## Variant V (union of 9 samples: main + 8 verify, where available)  [test_id, test_trained only]
+test_id: n=72 locV=0.722 [0.611,0.819] randV=0.470 [0.380,0.556] diff=0.252 [0.182,0.324]; mean pool V 201 vs global 1528; units nonempty 0.75
+   noop/invalid-only (n=20): V nonempty 0.10, locV 0.100 [0.000,0.250], randV 0.088 [0.000,0.224]
+test_trained: n=134 locV=0.627 [0.545,0.709] randV=0.438 [0.381,0.494] diff=0.188 [0.122,0.257]; mean pool V 222 vs global 1461; units nonempty 0.84
+   noop/invalid-only (n=43): V nonempty 0.49, locV 0.209 [0.093,0.326], randV 0.245 [0.152,0.353]
+
+## Held-out halves (selection by best acc on half A of inputs; repaired = recovery>=0.95; B = never used for selection)
+- test_id M: n=52 local: repaired on A 0.865, on A&B 0.827, P(B|A)=0.956 (n_A=45); random equal-size: A 0.561, A&B 0.498
+- test_trained M: n=90 local: repaired on A 0.644, on A&B 0.567, P(B|A)=0.879 (n_A=58); random equal-size: A 0.448, A&B 0.362
+- test_faults M: n=287 local: repaired on A 0.606, on A&B 0.551, P(B|A)=0.908 (n_A=174); random equal-size: A 0.475, A&B 0.424
+- test_larger M: n=100 local: repaired on A 0.690, on A&B 0.690, P(B|A)=1.000 (n_A=69); random equal-size: A 0.377, A&B 0.353
+- test_families M: n=152 local: repaired on A 0.526, on A&B 0.513, P(B|A)=0.975 (n_A=80); random equal-size: A 0.567, A&B 0.537
+- ALL M: n=681 local: repaired on A 0.626, on A&B 0.586, P(B|A)=0.937 (n_A=426); random equal-size: A 0.484, A&B 0.436
+- ALL O (oracle units): n=820 local: repaired on A 0.860, on A&B 0.818, P(B|A)=0.952 (n_A=705); random equal-size: A 0.506, A&B 0.457
+
+## Greedy depth<=3 secondary (local M/V, nets not repaired at depth 1 with non-empty unit set)
+M: n=188 extra repaired by greedy local 0.346 [0.277,0.415], random-subset greedy 0.538
+   test_id: n=7 local 0.143 rand 0.614
+   test_trained: n=34 local 0.294 rand 0.650
+   test_faults: n=119 local 0.429 rand 0.505
+   test_larger: n=28 local 0.107 rand 0.525
+V: n=177 extra repaired by greedy local 0.362 [0.294,0.435], random-subset greedy 0.534
+   test_id: n=2 local 0.500 rand 0.600
+   test_trained: n=28 local 0.321 rand 0.721
+   test_faults: n=119 local 0.429 rand 0.490
+   test_larger: n=28 local 0.107 rand 0.532
+
+## Which op family repairs (local M successes; count of networks where family has >=1 repairing candidate)
+{'swap': 177, 'scale': 250, 'zero': 57, 'bias': 88, 'weight': 133, 'add': 138}
+
+sanity: envcheck all true: True; inverse_ok all: True (n=824)
