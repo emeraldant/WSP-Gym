@@ -83,3 +83,253 @@ level
 (81.0, 273.0]     0.28 n=138         NaN           NaN         NaN          NaN           NaN
 (82.0, 259.0]            NaN         NaN    0.48 n=122         NaN          NaN           NaN
 (84.999, 145.0]          NaN  0.30 n=151           NaN         NaN          NaN           NaN
+
+## failure rate by excess_bin
+split            test_id test_larger test_families test_faults test_trained test_external
+level                                                                                    
+(0.999, 2.0]  0.22 n=162  0.32 n=140           NaN  0.82 n=152   0.80 n=142    0.85 n=145
+(1.999, 4.0]         NaN         NaN    0.44 n=367         NaN          NaN           NaN
+(2.0, 4.0]    0.19 n=160         NaN           NaN  0.71 n=153   0.90 n=159    0.91 n=164
+(2.0, 5.0]           NaN  0.40 n=220           NaN         NaN          NaN           NaN
+(4.0, 8.0]    0.33 n=100         NaN           NaN  0.79 n=102   0.88 n=102    0.98 n=106
+(4.0, 9.0]           NaN         NaN     0.67 n=36         NaN          NaN           NaN
+(5.0, 10.0]          NaN   0.57 n=56           NaN         NaN          NaN           NaN
+
+## failure rate by drop_bin
+split              test_id test_larger test_families test_faults test_trained test_external
+level                                                                                      
+(0.149, 0.257]         NaN         NaN    0.47 n=135         NaN          NaN           NaN
+(0.149, 0.271]  0.23 n=141         NaN           NaN         NaN          NaN           NaN
+(0.15, 0.25]           NaN         NaN           NaN  0.74 n=137          NaN           NaN
+(0.151, 0.312]         NaN  0.37 n=149           NaN         NaN          NaN           NaN
+(0.152, 0.269]         NaN         NaN           NaN         NaN          NaN    0.89 n=141
+(0.153, 0.25]          NaN         NaN           NaN         NaN   0.90 n=142           NaN
+(0.25, 0.439]          NaN         NaN           NaN         NaN   0.83 n=127           NaN
+(0.25, 0.49]           NaN         NaN           NaN  0.74 n=134          NaN           NaN
+(0.257, 0.4]           NaN         NaN    0.43 n=134         NaN          NaN           NaN
+(0.269, 0.5]           NaN         NaN           NaN         NaN          NaN    0.91 n=157
+(0.271, 0.5]    0.20 n=149         NaN           NaN         NaN          NaN           NaN
+(0.312, 0.5]           NaN  0.42 n=131           NaN         NaN          NaN           NaN
+(0.4, 0.766]           NaN         NaN    0.49 n=134         NaN          NaN           NaN
+(0.439, 1.0]           NaN         NaN           NaN         NaN   0.84 n=134           NaN
+(0.49, 1.0]            NaN         NaN           NaN  0.83 n=136          NaN           NaN
+(0.5, 1.0]      0.27 n=132  0.40 n=136           NaN         NaN          NaN    0.92 n=117
+
+## failure rate by layer_b
+split     test_id test_larger test_families test_faults test_trained test_external
+level                                                                             
+0      0.23 n=339  0.35 n=325    0.47 n=350  0.78 n=364   0.84 n=311    0.89 n=329
+1       0.25 n=80   0.51 n=81     0.44 n=48   0.70 n=43    0.92 n=88     0.95 n=79
+2        0.00 n=3   0.90 n=10      0.40 n=5         NaN     1.00 n=4      1.00 n=7
+
+## failure rate by relpos_bin
+split             test_id test_larger test_families test_faults test_trained test_external
+level                                                                                     
+(-0.01, 0.34]  0.20 n=200  0.40 n=178    0.46 n=191  0.81 n=158   0.85 n=195    0.89 n=207
+(0.34, 0.67]   0.25 n=154  0.43 n=127    0.48 n=141  0.78 n=187   0.87 n=140    0.94 n=145
+(0.67, 1.0]     0.31 n=68  0.33 n=111     0.46 n=71   0.66 n=62    0.87 n=68     0.87 n=63
+
+## failure rate by twin_b
+split        test_id test_larger test_families test_faults test_trained test_external
+level                                                                                
+has twin  0.22 n=134  0.31 n=216    0.44 n=184  0.76 n=106    0.81 n=31     0.89 n=36
+n/a       0.31 n=159  0.60 n=144    0.54 n=138  0.85 n=215   0.92 n=139    0.93 n=166
+no twin   0.16 n=129   0.20 n=56     0.40 n=81   0.58 n=86   0.83 n=233    0.89 n=213
+
+## Regularised logistic regression (L2, C by CV; standardised numerics, centred dummies)
+
+### test_id: n=422, fail=0.235, C=0.316, repeated-5CV AUC=0.709+-0.007; AUC w/o group: -family: 0.696, -fault: 0.709, -variant: 0.640, -size(n_w,depth,excess,n_in,n_out): 0.689, -acc_drop: 0.708, -position: 0.717, -twin/act/outnorm: 0.713
+                          coef    lo    hi    sig
+fault_swap_out_cols       0.72  0.37  1.03   True
+variant_weights           0.61  0.46  0.86   True
+variant_weights+failures -0.61 -0.86 -0.46   True
+family_equality          -0.58 -1.06 -0.21   True
+fault_label_swap         -0.56 -0.79 -0.13   True
+family_dnf               -0.52 -0.98  0.02  False
+log_nw                    0.44 -0.01  0.87  False
+family_count              0.43  0.09  0.79   True
+family_minmax             0.42 -0.07  0.94  False
+family_compare            0.41 -0.03  0.91  False
+
+### test_larger: n=416, fail=0.394, C=1, repeated-5CV AUC=0.768+-0.005; AUC w/o group: -family: 0.771, -fault: 0.728, -variant: 0.765, -size(n_w,depth,excess,n_in,n_out): 0.755, -acc_drop: 0.771, -position: 0.773, -twin/act/outnorm: 0.749
+                     coef    lo    hi    sig
+fault_swap_out_cols  1.41  0.86  1.94   True
+fault_label_swap    -1.17 -1.63 -0.41   True
+fault_scale_out_col  0.89  0.43  1.39   True
+family_arith         0.80  0.22  1.41   True
+fault_bias_shift    -0.65 -1.31 -0.12   True
+family_argmax       -0.64 -1.18 -0.05   True
+fault_sign_flip_in  -0.55 -1.22 -0.11   True
+family_equality     -0.52 -1.51  0.28  False
+family_compare       0.48 -0.13  1.04  False
+family_parity       -0.37 -0.97  0.25  False
+
+### test_families: n=403, fail=0.464, C=0.1, repeated-5CV AUC=0.629+-0.008; AUC w/o group: -family: 0.622, -fault: 0.601, -variant: 0.618, -size(n_w,depth,excess,n_in,n_out): 0.618, -acc_drop: 0.634, -position: 0.624, -twin/act/outnorm: 0.648
+                          coef    lo    hi    sig
+fault_sign_flip_in       -0.48 -0.68 -0.26   True
+f_is_last_layer          -0.27 -0.48 -0.04   True
+fault_sign_flip_out       0.27  0.05  0.56   True
+excess                    0.25  0.01  0.47   True
+variant_weights+failures -0.21 -0.37 -0.05   True
+variant_weights           0.21  0.05  0.37   True
+fault_swap_out_cols       0.18 -0.00  0.48  False
+fault_bias_shift          0.17 -0.06  0.48  False
+family_interval           0.17 -0.04  0.35  False
+family_mux               -0.17 -0.35  0.04  False
+
+### test_faults: n=407, fail=0.771, C=0.0316, repeated-5CV AUC=0.668+-0.015; AUC w/o group: -family: 0.659, -fault: 0.667, -variant: 0.674, -size(n_w,depth,excess,n_in,n_out): 0.676, -acc_drop: 0.663, -position: 0.657, -twin/act/outnorm: 0.644
+              coef    lo    hi    sig
+twin_hi       0.25  0.07  0.37   True
+log_nw        0.18  0.04  0.30   True
+f_relpos     -0.17 -0.33 -0.01   True
+outnorm       0.16  0.03  0.35   True
+acc_drop      0.14  0.02  0.30   True
+act          -0.13 -0.26  0.04  False
+excess       -0.12 -0.24  0.02  False
+family_arith  0.12  0.02  0.20   True
+twin_hi_na    0.12  0.06  0.17   True
+outnorm_na    0.12  0.06  0.17   True
+
+### test_trained: n=403, fail=0.861, C=0.316, repeated-5CV AUC=0.753+-0.006; AUC w/o group: -family: 0.745, -fault: 0.622, -variant: 0.740, -size(n_w,depth,excess,n_in,n_out): 0.743, -acc_drop: 0.755, -position: 0.761, -twin/act/outnorm: 0.737
+                          coef    lo    hi    sig
+fault_bias_shift         -1.43 -1.85 -1.05   True
+fault_sign_flip_out       0.74  0.35  1.06   True
+family_equality          -0.63 -1.12 -0.08   True
+family_compare           -0.44 -0.89  0.12  False
+fault_label_swap         -0.39 -0.74  0.01  False
+excess                    0.39  0.02  0.80   True
+fault_scale_out_col       0.36 -0.03  0.68  False
+outnorm                  -0.35 -0.59 -0.01   True
+fault_swap_out_cols       0.35  0.02  0.73   True
+variant_weights+failures -0.34 -0.56 -0.12   True
+
+### test_external: n=415, fail=0.906, C=0.316, repeated-5CV AUC=0.713+-0.011; AUC w/o group: -family: 0.727, -fault: 0.640, -variant: 0.716, -size(n_w,depth,excess,n_in,n_out): 0.690, -acc_drop: 0.710, -position: 0.728, -twin/act/outnorm: 0.723
+                      coef    lo    hi    sig
+fault_bias_shift     -0.85 -1.30 -0.45   True
+fault_weight_corrupt -0.71 -0.98 -0.35   True
+fault_swap_out_cols   0.64  0.29  0.93   True
+fault_sign_flip_out   0.64  0.33  0.89   True
+family_compare        0.41 -0.01  0.72  False
+fault_scale_out_col   0.33 -0.13  0.70  False
+log_nw                0.31 -0.15  0.66  False
+family_threshold     -0.30 -0.76  0.16  False
+acc_drop              0.27 -0.01  0.64  False
+excess                0.27 -0.06  0.74  False
+
+### POOLED: n=2466, fail=0.603, C=0.001, repeated-5CV AUC=0.808+-0.001; AUC w/o group: -family: 0.807, -fault: 0.801, -variant: 0.804, -size(n_w,depth,excess,n_in,n_out): 0.804, -acc_drop: 0.809, -position: 0.810, -twin/act/outnorm: 0.818
+                     coef    lo    hi   sig
+split_test_id       -0.14 -0.16 -0.13  True
+split_test_external  0.10  0.09  0.12  True
+depth                0.09  0.07  0.11  True
+split_test_trained   0.09  0.08  0.11  True
+twin_hi             -0.09 -0.12 -0.06  True
+twin_hi_na           0.07  0.06  0.09  True
+act_na               0.07  0.06  0.09  True
+outnorm_na           0.07  0.06  0.09  True
+split_test_larger   -0.06 -0.07 -0.05  True
+act                  0.05  0.02  0.08  True
+
+## Magnitude within fault (Spearman of magnitude with failure; pooled across splits)
+scale_out_col mag_logfactor: n=307 rho=-0.052 p=0.363
+scale_in_row mag_logfactor: n=192 rho=0.044 p=0.546
+bias_shift mag_delta: n=346 rho=0.057 p=0.294
+scale_out_col {'mean': {0.92: 0.6, 1.1: 0.45, 1.2: 0.62}, 'size': {0.92: 144, 1.1: 69, 1.2: 94}}
+scale_in_row {'mean': {0.92: 0.68, 1.1: 0.6, 1.2: 0.77}, 'size': {0.92: 95, 1.1: 53, 1.2: 44}}
+weight_corrupt by mode {'mean': {'copy': 0.61, 'negate': 0.57, 'zero': 0.4}, 'size': {'copy': 140, 'negate': 128, 'zero': 65}}
+acc_drop & failure spearman by split: {'test_id': np.float64(-0.015), 'test_larger': np.float64(-0.012), 'test_families': np.float64(-0.025), 'test_faults': np.float64(0.063), 'test_trained': np.float64(-0.05), 'test_external': np.float64(0.044)}
+n_weights & failure spearman by split: {'test_id': np.float64(0.13), 'test_larger': np.float64(0.223), 'test_families': np.float64(0.066), 'test_faults': np.float64(0.088), 'test_trained': np.float64(0.066), 'test_external': np.float64(0.175)}
+excess & failure spearman by split: {'test_id': np.float64(0.075), 'test_larger': np.float64(0.201), 'test_families': np.float64(0.167), 'test_faults': np.float64(-0.044), 'test_trained': np.float64(0.097), 'test_external': np.float64(0.164)}
+
+## Overlap of model failures with baseline failures (faulty nets, same seeds)
+       other          split     n  model_fix  other_fix  both_fail  only_model_fails  only_other_fails  both_fix  P_other_fail_given_model_fail  P_other_fail_given_model_fix  kappa  kappa_lo  kappa_hi  union_fix  union_lo  union_hi  union_if_independent
+0     search        test_id   422      0.765      0.652         29                70               118       205                          0.293                         0.365 -0.062    -0.147     0.032      0.931     0.908     0.955                 0.918
+1     search    test_larger   416      0.606      0.671         44               120                93       159                          0.268                         0.369 -0.104    -0.207    -0.018      0.894     0.865     0.921                 0.870
+2     search  test_families   403      0.536      0.685         65               122                62       154                          0.348                         0.287  0.062    -0.034     0.149      0.839     0.801     0.872                 0.854
+3     search    test_faults   407      0.229      0.310        231                83                50        43                          0.736                         0.538  0.176     0.081     0.260      0.432     0.386     0.482                 0.467
+4     search   test_trained   403      0.139      0.635        114               233                33        23                          0.329                         0.589 -0.104    -0.158    -0.046      0.717     0.670     0.759                 0.686
+5     search  test_external   415      0.094      0.648        126               250                20        19                          0.335                         0.513 -0.049    -0.097    -0.004      0.696     0.652     0.737                 0.681
+6     search         POOLED  2466      0.397      0.601        609               878               376       603                          0.410                         0.384  0.023    -0.013     0.057      0.753     0.735     0.770                 0.759
+7   gradient        test_id   422      0.765      0.614         37                62               126       197                          0.374                         0.390 -0.013    -0.091     0.063      0.912     0.884     0.936                 0.909
+8   gradient    test_larger   416      0.606      0.731         49               115                63       189                          0.299                         0.250  0.052    -0.040     0.141      0.882     0.851     0.911                 0.894
+9   gradient  test_families   403      0.536      0.658         62               125                76       140                          0.332                         0.352 -0.021    -0.113     0.070      0.846     0.811     0.880                 0.841
+10  gradient    test_faults   407      0.229      0.649        115               199                28        65                          0.366                         0.301  0.040    -0.027     0.104      0.717     0.671     0.759                 0.729
+11  gradient   test_trained   403      0.139      0.715         99               248                16        40                          0.285                         0.286 -0.000    -0.047     0.046      0.754     0.710     0.794                 0.754
+12  gradient  test_external   415      0.094      0.749         92               284                12        27                          0.245                         0.308 -0.015    -0.050     0.023      0.778     0.735     0.818                 0.773
+13  gradient         POOLED  2466      0.397      0.686        454              1033               321       658                          0.305                         0.328 -0.020    -0.054     0.015      0.816     0.799     0.831                 0.810
+
+## What the model answers when it fails (faulty nets)
+fail_cat       invalid  noop  right_unit_same_op_wrong_params  right_unit_wrong_op  wrong_unit_same_op  wrong_unit_wrong_op  wrong_unit_wrong_tensor_same_optype
+split                                                                                                                                                           
+test_id              0    30                               22                   18                   8                   17                                    4
+test_larger          3    31                               35                   17                  26                   42                                   10
+test_families        0    16                               38                   23                  21                   63                                   26
+test_faults          1    20                                0                  229                   1                   50                                   13
+test_trained         0     0                               12                   57                  31                  185                                   62
+test_external        1     0                                8                   77                  28                  188                                   74
+fail_cat       invalid   noop  right_unit_same_op_wrong_params  right_unit_wrong_op  wrong_unit_same_op  wrong_unit_wrong_op  wrong_unit_wrong_tensor_same_optype
+split                                                                                                                                                            
+test_id          0.000  0.303                            0.222                0.182               0.081                0.172                                0.040
+test_larger      0.018  0.189                            0.213                0.104               0.159                0.256                                0.061
+test_families    0.000  0.086                            0.203                0.123               0.112                0.337                                0.139
+test_faults      0.003  0.064                            0.000                0.729               0.003                0.159                                0.041
+test_trained     0.000  0.000                            0.035                0.164               0.089                0.533                                0.179
+test_external    0.003  0.000                            0.021                0.205               0.074                0.500                                0.197
+
+ by fault (pooled over splits) share of each category among failures:
+cat                 invalid  noop  right_unit_same_op_wrong_params  right_unit_wrong_op  wrong_unit_same_op  wrong_unit_wrong_op  wrong_unit_wrong_tensor_same_optype
+fault                                                                                                                                                                
+bias_shift             0.00  0.06                             0.29                 0.06                0.24                 0.15                                 0.19
+label_swap             0.00  0.03                             0.00                 0.00                0.00                 0.73                                 0.24
+scale_in_row           0.00  0.10                             0.00                 0.74                0.01                 0.05                                 0.10
+scale_out_col          0.00  0.12                             0.03                 0.18                0.10                 0.45                                 0.12
+sign_flip_in           0.00  0.04                             0.00                 0.21                0.15                 0.51                                 0.08
+sign_flip_out          0.02  0.08                             0.02                 0.17                0.08                 0.49                                 0.15
+spurious_direction     0.01  0.04                             0.00                 0.72                0.00                 0.23                                 0.00
+swap_out_cols          0.00  0.05                             0.11                 0.28                0.01                 0.54                                 0.01
+weight_corrupt         0.00  0.05                             0.18                 0.05                0.10                 0.22                                 0.39
+cat                 invalid  noop  right_unit_same_op_wrong_params  right_unit_wrong_op  wrong_unit_same_op  wrong_unit_wrong_op  wrong_unit_wrong_tensor_same_optype
+fault                                                                                                                                                                
+bias_shift                0     9                               42                    9                  35                   22                                   28
+label_swap                0     1                                0                    0                   0                   27                                    9
+scale_in_row              0    13                                0                   97                   1                    7                                   13
+scale_out_col             0    21                                5                   31                  18                   79                                   21
+sign_flip_in              0     7                                0                   35                  25                   83                                   13
+sign_flip_out             3    16                                3                   33                  15                   96                                   30
+spurious_direction        1     7                                0                  132                   0                   43                                    0
+swap_out_cols             1    14                               31                   75                   2                  147                                    2
+weight_corrupt            0     9                               34                    9                  19                   41                                   73
+
+Of ALL faulty nets per split: noop rate, right-unit rate (among failures + successes)
+                noop  invalid  n_ops_mean
+split                                    
+test_id        0.071    0.000       0.960
+test_larger    0.075    0.007       0.952
+test_families  0.040    0.000       0.965
+test_faults    0.049    0.002       0.953
+test_trained   0.000    0.000       1.017
+test_external  0.000    0.002       1.019
+recovery among failed valid non-noop answers (median, share <0 = harmful):
+               median  size  <lambda_0>  <lambda_1>
+split                                              
+test_id           0.0    69       0.406       0.130
+test_larger       0.0   130       0.400       0.100
+test_families     0.0   171       0.386       0.105
+test_faults       0.0   293       0.317       0.171
+test_trained      0.0   347       0.484       0.063
+test_external     0.0   375       0.373       0.051
+
+fail category by inverse op types:
+fail_cat      invalid  noop  right_unit_same_op_wrong_params  right_unit_wrong_op  wrong_unit_same_op  wrong_unit_wrong_op  wrong_unit_wrong_tensor_same_optype
+inv_op_types                                                                                                                                                   
+add                 1     7                                0                  132                   0                   43                                    0
+scale               3    57                                8                  196                  59                  265                                   77
+set                 0    18                               76                   18                  54                   63                                  101
+swap                1    15                               31                   75                   2                  174                                   11
+
+answer op types among failures:
+ans_op_types      scale  scale,set  scale,swap  set  swap
+inv_op_types                                             
+add            8     68          0           0   31    76
+scale         60    171          1           0  420    13
+set           18     65          1           0  241     5
+swap          16     87          2           1  160    43

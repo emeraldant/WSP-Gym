@@ -36,14 +36,11 @@ def design(d, cols_num, cols_cat, ref=None):
     return X
 
 def fit_cv(X, y, seed=0):
-    # CV over C via inner LogisticRegressionCV; outer repeated CV AUC
+    # C chosen once on the full data by 5-fold CV log-loss (mild optimism in the AUC; stated in report), then repeated 5-fold CV AUC
+    C = float(LogisticRegressionCV(Cs=np.logspace(-2, 1, 7), cv=5, max_iter=500, scoring="neg_log_loss").fit(X, y).C_[0])
     aucs = []
-    for rep in range(5):
-        skf = StratifiedKFold(5, shuffle=True, random_state=rep)
-        pr = np.zeros(len(y))
-        for tr, te in skf.split(X, y):
-            m = LogisticRegressionCV(Cs=np.logspace(-3, 1, 9), cv=4, penalty="l2", max_iter=2000, scoring="neg_log_loss").fit(X.iloc[tr], y[tr])
-            pr[te] = m.predict_proba(X.iloc[te])[:, 1]
+    for rep in range(3):
+        pr = cross_val_predict(LogisticRegression(C=C, max_iter=500), X, y, cv=StratifiedKFold(5, shuffle=True, random_state=rep), method="predict_proba")[:, 1]
         aucs.append(roc_auc_score(y, pr))
     return float(np.mean(aucs)), float(np.std(aucs))
 
@@ -93,7 +90,7 @@ def boot_coefs(X, y, C, B=200):
     for b in range(B):
         i = rng.integers(0, len(y), len(y))
         if y[i].min() == y[i].max(): continue
-        m = LogisticRegression(C=C, max_iter=2000).fit(X.iloc[i], y[i]); co.append(m.coef_[0])
+        m = LogisticRegression(C=C, max_iter=500).fit(X.iloc[i], y[i]); co.append(m.coef_[0])
     return np.array(co)
 P("\n## Regularised logistic regression (L2, C by CV; standardised numerics, centred dummies)")
 coef_all = {}
@@ -103,8 +100,8 @@ for s in SPL + ["POOLED"]:
     cat = CAT + (["split"] if s == "POOLED" else [])
     X = design(d, NUM, cat)
     auc, sd = fit_cv(X, y)
-    m = LogisticRegressionCV(Cs=np.logspace(-3, 1, 9), cv=5, max_iter=2000, scoring="neg_log_loss").fit(X, y); C = float(m.C_[0])
-    cs = boot_coefs(X, y, C, 150)
+    m = LogisticRegressionCV(Cs=np.logspace(-3, 1, 9), cv=5, max_iter=500, scoring="neg_log_loss").fit(X, y); C = float(m.C_[0])
+    cs = boot_coefs(X, y, C, 100)
     tab = pd.DataFrame(dict(coef=m.coef_[0], lo=np.percentile(cs, 2.5, axis=0), hi=np.percentile(cs, 97.5, axis=0)), index=X.columns)
     tab["sig"] = (tab.lo > 0) | (tab.hi < 0); coef_all[s] = tab
     # group ablation
