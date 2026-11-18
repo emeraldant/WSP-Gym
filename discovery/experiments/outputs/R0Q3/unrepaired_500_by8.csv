@@ -1,0 +1,7 @@
+seed,family,variant,fault,clean,acc_clean,acc_faulty,drop,source,n_weights,ns5
+3000003,compare,weights+failures,weight_corrupt,False,1.0,0.73,0.27,compiled,107,0.0
+3000117,count,weights+failures,weight_corrupt,False,1.0,0.71875,0.28125,compiled,136,0.0
+3000128,count,weights,label_swap,False,1.0,0.375,0.625,compiled,113,0.0
+3000158,count,weights,weight_corrupt,False,1.0,0.6875,0.3125,compiled,76,0.0
+3000283,equality,weights+failures,bias_shift,False,1.0,0.75,0.25,compiled,169,0.0
+3000354,parity,weights,bias_shift,False,1.0,0.5,0.5,compiled,43,0.0

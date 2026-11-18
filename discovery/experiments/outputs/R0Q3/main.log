@@ -1,0 +1,179 @@
+policies 43 cells nan 5
+                           theta   obs
+open_mistral_direct        -4.38  0.00
+open_muse_direct           -4.03  0.01
+open_beam_direct           -4.03  0.01
+baseline_random            -4.03  0.01
+open_glm_direct            -3.76  0.02
+untrained                  -3.76  0.02
+frontier_hydrogen_direct   -3.14  0.05
+baseline_outlier           -3.14  0.05
+open_qwen_direct           -2.47  0.10
+open_inkling1_direct       -2.47  0.10
+open_deepseek_direct       -2.36  0.11
+open_nemotron_direct       -2.36  0.11
+frontier_haiku_direct      -2.26  0.12
+baseline_noop              -2.25  0.12
+frontier_sonnet_direct     -2.07  0.14
+frontier_luna_direct       -1.98  0.15
+open_kimi_direct           -1.81  0.17
+open_deepseek_reasoning    -0.81  0.32
+open_mistral_reasoning     -0.75  0.33
+open_inkling1_reasoning    -0.69  0.34
+open_nemotron_reasoning    -0.69  0.34
+frontier_fable_direct      -0.47  0.38
+open_glm_reasoning         -0.42  0.39
+frontier_opus_direct       -0.05  0.46
+open_beam_reasoning         0.16  0.50
+baseline_gradient           0.65  0.60
+open_qwen_reasoning         0.73  0.61
+sft_mixed                   0.78  0.62
+frontier_gemini_direct      0.89  0.64
+sft                         1.06  0.67
+baseline_search             1.14  0.69
+untrained_thinking          1.52  0.75
+sft_rl                      1.71  0.78
+scale_sft                   1.71  0.78
+scale_rl                    1.99  0.82
+open_muse_reasoning         2.22  0.85
+frontier_sol_direct         2.91  0.92
+frontier_astra_direct       3.49  0.96
+frontier_grok_reasoning     3.49  0.96
+frontier_gemini_reasoning   3.49  0.96
+frontier_grok_direct        3.90  0.98
+frontier_astra_reasoning    4.17  0.99
+frontier_sol_reasoning      4.50  1.00
+mean sq std-resid 0.664004772929482
+PCA policies 30 ['frontier_astra_direct', 'frontier_fable_direct', 'frontier_gemini_direct', 'frontier_gemini_reasoning', 'frontier_grok_reasoning', 'frontier_haiku_direct', 'frontier_hydrogen_direct', 'frontier_luna_direct', 'frontier_opus_direct', 'frontier_sol_direct', 'frontier_sonnet_direct', 'open_beam_reasoning', 'open_deepseek_direct', 'open_deepseek_reasoning', 'open_glm_reasoning', 'open_inkling1_direct', 'open_inkling1_reasoning', 'open_kimi_direct', 'open_mistral_reasoning', 'open_muse_reasoning', 'open_nemotron_direct', 'open_nemotron_reasoning', 'open_qwen_direct', 'open_qwen_reasoning', 'scale_rl', 'scale_sft', 'sft', 'sft_mixed', 'sft_rl', 'untrained_thinking']
+resid-PCA eigenvalues obs [5.01 2.61 2.21 1.84 1.58] null mean [2.23 2.04 1.9  1.78 1.67] null 95% [2.42 2.19 2.01 1.88 1.76]
+                            PC1   PC2   PC3
+frontier_astra_direct      0.42 -0.16  0.47
+frontier_fable_direct      0.34 -0.07 -0.41
+frontier_gemini_direct     0.11 -0.00  0.19
+frontier_gemini_reasoning  0.26  0.00  0.49
+frontier_grok_reasoning    0.10 -0.10  0.29
+frontier_haiku_direct     -0.80  0.48 -0.13
+frontier_hydrogen_direct  -0.13 -0.14  0.26
+frontier_luna_direct      -0.77  0.47 -0.14
+frontier_opus_direct       0.19 -0.14 -0.29
+frontier_sol_direct        0.06  0.10  0.06
+frontier_sonnet_direct    -0.64  0.35 -0.20
+open_beam_reasoning        0.57  0.20 -0.31
+open_deepseek_direct      -0.70  0.45 -0.24
+open_deepseek_reasoning    0.46  0.35 -0.14
+open_glm_reasoning         0.36  0.18 -0.20
+open_inkling1_direct      -0.32  0.03  0.39
+open_inkling1_reasoning    0.19 -0.14 -0.19
+open_kimi_direct          -0.27  0.14  0.41
+open_mistral_reasoning     0.42  0.49  0.03
+open_muse_reasoning        0.26  0.02  0.21
+open_nemotron_direct      -0.45  0.11  0.49
+open_nemotron_reasoning   -0.00  0.02  0.13
+open_qwen_direct           0.04 -0.04 -0.14
+open_qwen_reasoning        0.43  0.39 -0.01
+scale_rl                  -0.38 -0.45 -0.13
+scale_sft                 -0.29 -0.24 -0.27
+sft                       -0.29 -0.58 -0.02
+sft_mixed                 -0.29 -0.48 -0.13
+sft_rl                    -0.42 -0.53 -0.32
+untrained_thinking         0.60  0.06 -0.35
+raw PCA eig [7.56 3.96 2.46 1.81 1.32] frac [0.252 0.132 0.082 0.06  0.044]
+CV logloss rank 0 [0.3272 0.3241 0.3232]
+CV logloss rank 1 [0.2913 0.2983 0.2879 0.2952 0.2905 0.2972]
+CV logloss rank 2 [0.3056 0.2967 0.2983 0.2933 0.3017 0.2956]
+CV logloss rank 3 [0.3126 0.2942 0.3013 0.2887 0.3057 0.2909]
+       mean      best
+0  0.324823  0.323152
+1  0.293404  0.287930
+2  0.298535  0.293331
+3  0.298896  0.288745
+                    set          pred     R2  adjR2   cvR2  ci_lo  ci_hi
+0  first100_allpolicies        family  0.130  0.054 -0.079  0.004  0.283
+1  first100_allpolicies         fault  0.299  0.245  0.183  0.073  0.489
+2  first100_allpolicies       variant  0.060  0.050  0.032    NaN    NaN
+3  first100_allpolicies     n_weights  0.214  0.206  0.185  0.083  0.348
+4  first100_allpolicies          drop  0.108  0.099  0.074  0.004  0.257
+5  first100_allpolicies  family+fault  0.417  0.313  0.177    NaN    NaN
+6  first100_allpolicies          all5  0.626  0.543  0.432  0.478  0.766
+                          set          pred     R2  adjR2   cvR2  ci_lo  ci_hi
+0  all500_fullcoverage(12pol)        family  0.102  0.087  0.065  0.058  0.151
+1  all500_fullcoverage(12pol)         fault  0.315  0.305  0.293  0.251  0.379
+2  all500_fullcoverage(12pol)       variant  0.024  0.022  0.015    NaN    NaN
+3  all500_fullcoverage(12pol)     n_weights  0.082  0.080  0.071  0.040  0.134
+4  all500_fullcoverage(12pol)          drop  0.095  0.094  0.087  0.047  0.149
+5  all500_fullcoverage(12pol)  family+fault  0.421  0.403  0.383    NaN    NaN
+6  all500_fullcoverage(12pol)          all5  0.500  0.481  0.460  0.442  0.562
+family_arith                0.70
+family_compare              0.71
+family_count                1.02
+family_dnf                  0.37
+family_equality             0.52
+family_minmax               0.91
+family_parity               0.52
+family_threshold            0.59
+fault_clean                -1.67
+fault_label_swap           -0.21
+fault_scale_out_col        -0.08
+fault_sign_flip_in         -0.46
+fault_sign_flip_out        -0.44
+fault_swap_out_cols         0.17
+fault_weight_corrupt        0.13
+variant_weights+failures   -0.29
+n_weights                   0.31
+drop                       -0.04
+first100 fault
+                 n     b   succ
+fault                          
+bias_shift      12  0.09  19.17
+clean           12 -1.51  27.67
+label_swap       2  0.58  16.50
+scale_out_col   16  0.11  19.00
+sign_flip_in    11  0.59  16.45
+sign_flip_out   15  0.02  19.40
+swap_out_cols   15  0.79  15.60
+weight_corrupt  17  0.53  16.82
+first100 family
+            n     b   succ
+family                    
+argmax     11 -0.56  22.55
+arith       8  0.07  19.25
+compare     8  0.09  19.25
+count      16  0.87  15.06
+dnf        12 -0.14  20.33
+equality   11  0.61  16.36
+minmax     15 -0.17  20.60
+parity      9  0.32  17.89
+threshold  10 -0.07  20.00
+first100 variant
+                   n     b   succ
+variant                          
+weights           43  0.48  17.05
+weights+failures  57 -0.12  20.32
+all500 fault
+                 n     b  succ
+fault                         
+bias_shift      70  0.40  5.40
+clean           78 -1.25  8.45
+label_swap      14  0.27  5.71
+scale_out_col   63  0.20  5.81
+sign_flip_in    58 -0.13  6.52
+sign_flip_out   72 -0.02  6.28
+swap_out_cols   74  0.51  5.16
+weight_corrupt  71  0.39  5.44
+all500 family
+            n     b  succ
+family                   
+argmax     59 -0.49  7.20
+arith      62 -0.12  6.39
+compare    50  0.01  6.12
+count      65  0.52  5.11
+dnf        56 -0.37  6.93
+equality   55  0.40  5.40
+minmax     59  0.25  5.68
+parity     49 -0.05  6.33
+threshold  45 -0.16  6.49
+all500 variant
+                    n     b  succ
+variant                          
+weights           264  0.16  5.86
+weights+failures  236 -0.16  6.50

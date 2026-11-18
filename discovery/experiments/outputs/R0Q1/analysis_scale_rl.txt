@@ -1,0 +1,85 @@
+# ARM = scale_rl
+
+## Overall failure rate on faulty nets (Wilson CI)
+test_id: n=422 fail=0.171 [0.138,0.209] search_fail=0.348 grad_fail=0.386
+test_larger: n=416 fail=0.300 [0.258,0.346] search_fail=0.329 grad_fail=0.269
+test_families: n=403 fail=0.414 [0.367,0.463] search_fail=0.315 grad_fail=0.342
+test_faults: n=407 fail=0.801 [0.759,0.837] search_fail=0.690 grad_fail=0.351
+test_trained: n=403 fail=0.333 [0.288,0.380] search_fail=0.365 grad_fail=0.285
+test_external: n=415 fail=0.487 [0.439,0.535] search_fail=0.352 grad_fail=0.251
+
+## Univariate: chi2 p-values (feature heterogeneity of failure rate)
+split       test_id  test_larger  test_families  test_faults  test_trained  test_external
+feature                                                                                  
+depth_b      0.0001       0.0000         0.0196       0.0925        0.0000         0.0000
+drop_bin     0.8989       0.0548         0.2237       0.5202        0.0096         0.7475
+excess_bin   0.0006       0.0481         0.0196       0.6189        0.0053         0.0000
+family       0.0397       0.0222         0.0786       0.0524        0.0000         0.0000
+fault        0.0005       0.0000         0.0067       0.0000        0.0088         0.0081
+layer_b      0.0366       0.0002         0.5073       0.9814        0.2046         0.4292
+nw_bin       0.5062       0.0002         0.2404       0.4122        0.8128         0.0037
+relpos_bin   0.8884       0.5037         0.5361       0.5649        0.6601         0.0693
+twin_b       0.0144       0.0000         0.0654       0.0000        0.6380         0.0563
+variant      0.0077       0.4158         0.0003       0.0237        0.0002         0.0024
+
+## failure rate by fault
+split                             test_id            test_larger          test_families             test_faults           test_trained          test_external
+level                                                                                                                                                        
+bias_shift          0.19 [0.11,0.29] n=70  0.14 [0.08,0.24] n=72  0.40 [0.30,0.51] n=82                     NaN  0.40 [0.29,0.52] n=67  0.53 [0.40,0.65] n=55
+label_swap          0.14 [0.04,0.40] n=14  0.00 [0.00,0.26] n=11                    NaN                     NaN  0.05 [0.01,0.24] n=20  0.11 [0.03,0.31] n=19
+scale_in_row                          NaN                    NaN                    NaN  0.70 [0.64,0.76] n=192                    NaN                    NaN
+scale_out_col       0.24 [0.15,0.36] n=63  0.26 [0.17,0.37] n=77  0.45 [0.32,0.58] n=56                     NaN  0.38 [0.27,0.50] n=61  0.56 [0.42,0.69] n=50
+sign_flip_in        0.05 [0.02,0.14] n=58  0.26 [0.17,0.38] n=62  0.21 [0.13,0.33] n=66                     NaN  0.37 [0.26,0.48] n=71  0.47 [0.36,0.59] n=72
+sign_flip_out       0.04 [0.01,0.12] n=72  0.20 [0.12,0.31] n=61  0.48 [0.36,0.60] n=61                     NaN  0.18 [0.11,0.30] n=65  0.43 [0.32,0.55] n=72
+spurious_direction                    NaN                    NaN                    NaN  0.89 [0.84,0.92] n=215                    NaN                    NaN
+swap_out_cols       0.28 [0.19,0.40] n=74  0.63 [0.50,0.74] n=62  0.53 [0.41,0.65] n=64                     NaN  0.38 [0.27,0.50] n=66  0.59 [0.48,0.69] n=83
+weight_corrupt      0.21 [0.13,0.32] n=71  0.39 [0.29,0.51] n=71  0.43 [0.33,0.55] n=74                     NaN  0.38 [0.26,0.51] n=53  0.45 [0.34,0.57] n=64
+
+## failure rate by family
+split                    test_id            test_larger           test_families            test_faults           test_trained          test_external
+level                                                                                                                                               
+argmax     0.04 [0.01,0.13] n=51  0.24 [0.15,0.37] n=54                     NaN  0.72 [0.56,0.84] n=36  0.10 [0.04,0.23] n=40  0.25 [0.15,0.39] n=44
+arith      0.23 [0.13,0.36] n=53  0.31 [0.20,0.44] n=52                     NaN  0.90 [0.78,0.96] n=49  0.25 [0.16,0.39] n=51  0.26 [0.15,0.41] n=42
+compare    0.21 [0.12,0.36] n=42  0.37 [0.25,0.51] n=51                     NaN  0.76 [0.60,0.87] n=37  0.16 [0.08,0.29] n=44  0.77 [0.62,0.87] n=39
+count      0.17 [0.09,0.30] n=52  0.25 [0.15,0.39] n=48                     NaN  0.85 [0.73,0.93] n=48  0.10 [0.04,0.21] n=50  0.48 [0.34,0.62] n=48
+dnf        0.07 [0.02,0.19] n=43  0.23 [0.12,0.39] n=35                     NaN  0.71 [0.57,0.81] n=51  0.56 [0.42,0.69] n=48  0.54 [0.41,0.66] n=54
+equality   0.24 [0.15,0.38] n=49  0.49 [0.34,0.64] n=41                     NaN  0.76 [0.62,0.86] n=46  0.62 [0.47,0.75] n=42  0.55 [0.41,0.67] n=53
+interval                     NaN                    NaN  0.46 [0.39,0.53] n=195                    NaN                    NaN                    NaN
+minmax     0.26 [0.16,0.40] n=50  0.44 [0.29,0.59] n=39                     NaN  0.93 [0.82,0.98] n=46  0.50 [0.36,0.64] n=42  0.60 [0.46,0.72] n=50
+mux                          NaN                    NaN  0.37 [0.31,0.44] n=208                    NaN                    NaN                    NaN
+parity     0.14 [0.06,0.27] n=44  0.19 [0.10,0.33] n=42                     NaN  0.82 [0.68,0.90] n=44  0.39 [0.26,0.54] n=41  0.51 [0.37,0.65] n=43
+threshold  0.16 [0.07,0.30] n=38  0.22 [0.13,0.35] n=54                     NaN  0.74 [0.60,0.84] n=50  0.33 [0.21,0.48] n=45  0.40 [0.27,0.56] n=42
+
+## failure rate by variant
+split                            test_id             test_larger           test_families             test_faults            test_trained           test_external
+level                                                                                                                                                           
+weights           0.22 [0.17,0.28] n=224  0.32 [0.26,0.39] n=202  0.51 [0.44,0.59] n=183  0.85 [0.79,0.89] n=199  0.43 [0.36,0.50] n=186  0.56 [0.49,0.62] n=220
+weights+failures  0.12 [0.08,0.17] n=198  0.28 [0.22,0.34] n=214  0.33 [0.27,0.40] n=220  0.75 [0.69,0.81] n=208  0.25 [0.20,0.31] n=217  0.41 [0.34,0.48] n=195
+
+## failure rate by depth_b
+split     test_id test_larger test_families test_faults test_trained test_external
+level                                                                             
+2      0.14 n=351  0.24 n=328    0.40 n=367  0.78 n=333   0.27 n=331    0.40 n=331
+3       0.34 n=71   0.53 n=88     0.61 n=36   0.88 n=74    0.62 n=72     0.81 n=84
+
+## failure rate by nw_bin
+split                test_id test_larger test_families test_faults test_trained test_external
+level                                                                                        
+(145.0, 222.0]           NaN  0.28 n=126           NaN         NaN          NaN           NaN
+(15.999, 50.0]    0.14 n=146         NaN           NaN         NaN          NaN           NaN
+(15.999, 53.333]         NaN         NaN           NaN  0.76 n=136          NaN           NaN
+(15.999, 55.0]           NaN         NaN           NaN         NaN   0.31 n=143           NaN
+(20.999, 43.0]           NaN         NaN           NaN         NaN          NaN    0.42 n=163
+(222.0, 675.0]           NaN  0.42 n=139           NaN         NaN          NaN           NaN
+(24.999, 55.0]           NaN         NaN    0.46 n=147         NaN          NaN           NaN
+(43.0, 64.0]             NaN         NaN           NaN         NaN          NaN    0.45 n=116
+(50.0, 81.0]      0.17 n=138         NaN           NaN         NaN          NaN           NaN
+(53.333, 81.0]           NaN         NaN           NaN  0.81 n=144          NaN           NaN
+(55.0, 81.0]             NaN         NaN           NaN         NaN   0.35 n=128           NaN
+(55.0, 82.0]             NaN         NaN    0.36 n=134         NaN          NaN           NaN
+(64.0, 141.0]            NaN         NaN           NaN         NaN          NaN    0.60 n=136
+(81.0, 217.0]            NaN         NaN           NaN  0.83 n=127          NaN           NaN
+(81.0, 225.0]            NaN         NaN           NaN         NaN   0.33 n=132           NaN
+(81.0, 273.0]     0.20 n=138         NaN           NaN         NaN          NaN           NaN
+(82.0, 259.0]            NaN         NaN    0.43 n=122         NaN          NaN           NaN
+(84.999, 145.0]          NaN  0.21 n=151           NaN         NaN          NaN           NaN

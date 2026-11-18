@@ -1,0 +1,212 @@
+faulty-only items 87
+                      TRAINED  FRONTIER_STRONG  OPEN_REASONING  FRONTIER_DIRECT_WEAK  SEARCH  GRADIENT  UNTRAINED_THINK  INKLING_FINAL
+TRAINED                  1.00            -0.26           -0.53                  0.03   -0.12     -0.24            -0.20           0.76
+FRONTIER_STRONG         -0.26             1.00           -0.25                  0.08    0.05      0.09             0.07          -0.30
+OPEN_REASONING          -0.53            -0.25            1.00                 -0.09   -0.12     -0.05             0.20          -0.32
+FRONTIER_DIRECT_WEAK     0.03             0.08           -0.09                  1.00   -0.42     -0.05             0.03           0.04
+SEARCH                  -0.12             0.05           -0.12                 -0.42    1.00     -0.21            -0.30          -0.13
+GRADIENT                -0.24             0.09           -0.05                 -0.05   -0.21      1.00             0.12          -0.22
+UNTRAINED_THINK         -0.20             0.07            0.20                  0.03   -0.30      0.12             1.00          -0.13
+INKLING_FINAL            0.76            -0.30           -0.32                  0.04   -0.13     -0.22            -0.13           1.00
+                  A                     B     r    lo    hi
+0     INKLING_FINAL       FRONTIER_STRONG -0.30 -0.43 -0.18
+1     INKLING_FINAL                SEARCH -0.13 -0.30  0.05
+2     INKLING_FINAL        OPEN_REASONING -0.32 -0.49 -0.13
+3     INKLING_FINAL              GRADIENT -0.22 -0.37 -0.04
+4     INKLING_FINAL       UNTRAINED_THINK -0.13 -0.32  0.11
+5            SEARCH       FRONTIER_STRONG  0.05 -0.15  0.27
+6            SEARCH        OPEN_REASONING -0.12 -0.29  0.06
+7   FRONTIER_STRONG        OPEN_REASONING -0.25 -0.42 -0.07
+8           TRAINED       FRONTIER_STRONG -0.26 -0.41 -0.12
+9           TRAINED                SEARCH -0.12 -0.30  0.06
+10          TRAINED        OPEN_REASONING -0.53 -0.67 -0.38
+11    INKLING_FINAL  FRONTIER_DIRECT_WEAK  0.04 -0.13  0.20
+12           SEARCH  FRONTIER_DIRECT_WEAK -0.42 -0.57 -0.25
+open_mistral_reasoning      -0.30
+frontier_astra_direct       -0.27
+open_beam_reasoning         -0.27
+open_qwen_reasoning         -0.26
+open_deepseek_reasoning     -0.23
+baseline_gradient           -0.22
+open_muse_reasoning         -0.19
+frontier_sol_direct         -0.18
+frontier_sol_reasoning      -0.16
+frontier_grok_direct        -0.16
+frontier_astra_reasoning    -0.16
+open_muse_direct            -0.16
+frontier_haiku_direct       -0.16
+baseline_noop               -0.16
+open_mistral_direct         -0.16
+open_beam_direct            -0.16
+untrained                   -0.16
+frontier_gemini_reasoning   -0.15
+open_glm_reasoning          -0.15
+baseline_search             -0.13
+untrained_thinking          -0.13
+open_kimi_direct            -0.12
+frontier_fable_direct       -0.10
+frontier_grok_reasoning     -0.10
+frontier_gemini_direct      -0.07
+baseline_random             -0.02
+open_glm_direct             -0.01
+frontier_luna_direct         0.00
+open_inkling1_direct         0.01
+open_deepseek_direct         0.01
+open_qwen_direct             0.02
+frontier_hydrogen_direct     0.03
+open_nemotron_direct         0.03
+open_nemotron_reasoning      0.06
+frontier_opus_direct         0.07
+frontier_sonnet_direct       0.09
+baseline_outlier             0.09
+open_inkling1_reasoning      0.17
+scale_sft                    0.29
+scale_rl                     0.39
+sft_mixed                    0.41
+sft                          0.43
+frontier_astra_reasoning     0.0
+frontier_sol_reasoning       0.0
+frontier_grok_reasoning      3.0
+frontier_gemini_reasoning    3.0
+frontier_grok_direct         0.0
+frontier_astra_direct        3.0
+frontier_sol_direct          8.0
+                 a                       b  nA  nB  both  jacc  P_B_given_A  P_A_given_B  base_B   phi
+0           sft_rl         baseline_search  22  30     7  0.16         0.32         0.23    0.34 -0.03
+1           sft_rl               front_any  22  13     3  0.09         0.14         0.23    0.15 -0.02
+2  baseline_search               front_any  30  13     4  0.10         0.13         0.31    0.15 -0.03
+3           sft_rl       baseline_gradient  22  37     9  0.18         0.41         0.24    0.43 -0.02
+4           sft_rl      untrained_thinking  22  19     8  0.24         0.36         0.42    0.22  0.20
+5  baseline_search      untrained_thinking  30  19     4  0.09         0.13         0.21    0.22 -0.15
+6           sft_rl     open_qwen_reasoning  22  35     9  0.19         0.41         0.26    0.40  0.01
+7           sft_rl                scale_rl  22  18    13  0.48         0.59         0.72    0.21  0.55
+8           sft_rl  frontier_gemini_direct  22  32    12  0.29         0.55         0.38    0.37  0.21
+spearman fail sft_rl vs frontier fail frac -0.03
+spearman fail baseline_search vs frontier fail frac -0.03
+spearman fail baseline_gradient vs frontier fail frac 0.17
+spearman fail untrained_thinking vs frontier fail frac 0.42
+spearman fail open_qwen_reasoning vs frontier fail frac 0.11
+500 faulty n 421
+                    sft_rl  scale_rl  scale_sft   sft  sft_mixed  untrained_thinking  baseline_search  baseline_gradient
+sft_rl                1.00      0.20       0.08  0.28       0.14               -0.17            -0.31              -0.29
+scale_rl              0.20      1.00       0.34  0.12       0.08               -0.21            -0.17              -0.31
+scale_sft             0.08      0.34       1.00  0.06       0.05               -0.12            -0.24              -0.31
+sft                   0.28      0.12       0.06  1.00       0.12               -0.11            -0.22              -0.30
+sft_mixed             0.14      0.08       0.05  0.12       1.00               -0.16            -0.28              -0.23
+untrained_thinking   -0.17     -0.21      -0.12 -0.11      -0.16                1.00            -0.14               0.10
+baseline_search      -0.31     -0.17      -0.24 -0.22      -0.28               -0.14             1.00              -0.12
+baseline_gradient    -0.29     -0.31      -0.31 -0.30      -0.23                0.10            -0.12               1.00
+                 A                   B     r    lo    hi   nA   nB  both  P_B_given_A  base_B   phi
+0           sft_rl     baseline_search -0.31 -0.38 -0.24   99  147    29         0.29    0.35 -0.07
+1           sft_rl   baseline_gradient -0.29 -0.37 -0.21   99  163    37         0.37    0.39 -0.02
+2           sft_rl  untrained_thinking -0.17 -0.25 -0.09   99  102    36         0.36    0.24  0.16
+3           sft_rl            scale_rl  0.20  0.09  0.33   99   72    53         0.54    0.17  0.54
+4  baseline_search   baseline_gradient -0.12 -0.20 -0.03  147  163    49         0.33    0.39 -0.08
+5  baseline_search  untrained_thinking -0.14 -0.21 -0.05  147  102    35         0.24    0.24 -0.01
+                f_sft_rl  f_baseline_search  f_untrained_thinking  f_baseline_gradient
+fault                                                                                 
+bias_shift          0.20               0.79                  0.30                 0.39
+label_swap          0.07               0.93                  0.07                 0.36
+scale_out_col       0.22               0.52                  0.19                 0.24
+sign_flip_in        0.14               0.00                  0.38                 0.38
+sign_flip_out       0.18               0.00                  0.24                 0.55
+swap_out_cols       0.46               0.00                  0.22                 0.36
+weight_corrupt      0.21               0.65                  0.18                 0.39
+           f_sft_rl  f_baseline_search  f_untrained_thinking  f_baseline_gradient
+family                                                                           
+argmax         0.16               0.43                  0.04                 0.00
+arith          0.25               0.34                  0.04                 0.26
+compare        0.33               0.26                  0.19                 0.36
+count          0.33               0.41                  0.55                 0.73
+dnf            0.14               0.30                  0.14                 0.40
+equality       0.20               0.31                  0.49                 0.67
+minmax         0.34               0.36                  0.28                 0.24
+parity         0.14               0.43                  0.27                 0.41
+threshold      0.21               0.26                  0.16                 0.45
+                  f_sft_rl  f_baseline_search  f_untrained_thinking  f_baseline_gradient
+variant                                                                                 
+weights               0.32               0.37                  0.24                 0.37
+weights+failures      0.14               0.33                  0.24                 0.40
+cell-profile corr(sft_rl, search)                       f_sft_rl  f_baseline_search  f_untrained_thinking  f_baseline_gradient
+f_sft_rl                  1.00              -0.11                  0.23                 0.00
+f_baseline_search        -0.11               1.00                 -0.09                -0.10
+f_untrained_thinking      0.23              -0.09                  1.00                 0.35
+f_baseline_gradient       0.00              -0.10                  0.35                 1.00 57
+                front  sft_rl  search
+fault                                
+bias_shift       0.05    0.17    0.58
+label_swap       0.14    0.00    1.00
+scale_out_col    0.00    0.19    0.56
+sign_flip_in     0.03    0.09    0.00
+sign_flip_out    0.03    0.21    0.00
+swap_out_cols    0.05    0.53    0.00
+weight_corrupt   0.01    0.29    0.71
+           front  sft_rl  search
+family                          
+argmax      0.01    0.10    0.60
+arith       0.00    0.29    0.43
+compare     0.02    0.43    0.43
+count       0.10    0.25    0.42
+dnf         0.06    0.20    0.40
+equality    0.03    0.09    0.18
+minmax      0.01    0.27    0.36
+parity      0.00    0.33    0.22
+threshold   0.00    0.40    0.10
+strong policies 7
+count    87.000000
+mean     17.758621
+std       5.419529
+min       7.000000
+25%      13.000000
+50%      17.000000
+75%      23.000000
+max      28.000000
+Name: n_solve_all43, dtype: float64
+Empty DataFrame
+Columns: [family, fault, variant, n_weights, drop, n_solve_all43, n_solve_strong]
+Index: []
+faulty with 0 solves among all (excl none): 0 ; with 0 among strong: 0
+n_solve_strong
+4.0     1
+5.0     2
+6.0    10
+7.0    74
+Empty DataFrame
+Columns: [family, fault, variant, n_weights, drop, n_solve_all43, n_solve_strong]
+Index: []
+500 faulty nets with 0/8 solved: 6 of 422
+family
+count       3
+compare     1
+equality    1
+parity      1
+fault
+weight_corrupt    3
+bias_shift        2
+label_swap        1
+variant
+weights+failures    3
+weights             3
+fault
+bias_shift        0.029
+label_swap        0.071
+scale_out_col     0.000
+sign_flip_in      0.000
+sign_flip_out     0.000
+swap_out_cols     0.000
+weight_corrupt    0.042
+family
+argmax       0.000
+arith        0.000
+compare      0.024
+count        0.058
+dnf          0.000
+equality     0.020
+minmax       0.000
+parity       0.023
+threshold    0.000
+n_weights zero vs not 107.33333333333333 73.74759615384616 drop 0.373125 0.45476336732434025
+first100: zero by 8 cov policies: 1
+2.0    42
+1.0    38
+0.0     7

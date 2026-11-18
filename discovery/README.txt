@@ -25,8 +25,9 @@ improving imperfect SGD networks with no answer key (`imperfect.py`), reprogramm
   test_external (sklearn), test_imperfect(_families), test_audit(_sgd), real_* (tabular real data).
 - `runs/final/<policy>/<split>.jsonl` — per-network rollouts (header line, then one record per
   network*sample: seed, family, fault, variant, n_weights, success, recovery, valid, noop, ops, answer,
-  n_out tokens, thinking...). Policies: sft_rl (the FINAL trained Inkling 2 Small), scale_sft, scale_rl,
-  sft, sft_mixed (earlier checkpoints), *_greedy, untrained, untrained_thinking, baseline_* (noop,
+  n_out tokens, thinking...). Policies: scale_rl = the FINAL trained Inkling 2 Small (82.9% test_id,
+  66.7% test_trained); scale_sft (its supervised stage); sft, sft_rl, sft_mixed = EARLIER, weaker
+  checkpoints (sft_rl is the "first model + RL", only 13.9% on test_trained); *_greedy, untrained, untrained_thinking, baseline_* (noop,
   random, outlier, search, gradient), frontier_* and open_* (off-the-shelf models, first 100 test_id
   networks, *_direct = answer at once, *_reasoning = free to reason). Join rollouts to episodes on seed.
 - `runs/final_verify`, `runs/final_improve`, `runs/final_real`, `runs/final_imagehead`, `runs/qwen*` —
