@@ -1,0 +1,20 @@
+sft_rl test_id 323 success edits targeting the planted location (all faulty eps): 0.848
+                mean  size
+fault                     
+bias_shift      0.96    56
+label_swap      1.00    13
+scale_out_col   0.98    49
+sign_flip_in    0.78    50
+sign_flip_out   0.80    59
+swap_out_cols   0.78    40
+weight_corrupt  0.75    56
+sft_rl test_trained 56 success edits targeting the planted location (all faulty eps): 0.821
+                mean  size
+fault                     
+bias_shift      0.93    29
+label_swap      1.00     4
+scale_out_col   0.83     6
+sign_flip_in    0.71     7
+sign_flip_out   0.67     3
+swap_out_cols   0.50     2
+weight_corrupt  0.40     5

@@ -1,0 +1,20 @@
+scale_rl test_id 350 success edits targeting the planted location (all faulty eps): 0.869
+                mean  size
+fault                     
+bias_shift      0.98    57
+label_swap      1.00    12
+scale_out_col   0.96    48
+sign_flip_in    0.80    55
+sign_flip_out   0.77    69
+swap_out_cols   0.89    53
+weight_corrupt  0.82    56
+scale_rl test_trained 269 success edits targeting the planted location (all faulty eps): 0.922
+                mean  size
+fault                     
+bias_shift      0.98    40
+label_swap      1.00    19
+scale_out_col   0.95    38
+sign_flip_in    0.98    45
+sign_flip_out   0.91    53
+swap_out_cols   0.98    41
+weight_corrupt  0.67    33

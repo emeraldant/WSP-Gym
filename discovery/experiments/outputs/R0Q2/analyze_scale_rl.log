@@ -1,0 +1,108 @@
+model rows merged 290 model dup? 0
+
+=== test_id: n_faulty=150 ===
+model success 0.867 [0.807,0.920]  | planted inverse repairs (sanity) 1.000 [1.000,1.000]
+inverse inside baseline candidate space: 0.473 [0.400,0.553]
+n_rep_base: mean 1.15 median 1.0 | frac==0 0.360 frac==1 0.340 frac>=2 0.300 frac>=5 0.027
+n_rep_base_plus_inv: mean 1.67 median 1.0 | frac==0 0.000 frac==1 0.627 frac>=2 0.373 frac>=5 0.033
+n_rep_all: mean 3.26 median 2.0 | frac==0 0.000 frac==1 0.387 frac>=2 0.613 frac>=5 0.173
+(b) planted inverse is the ONLY repair (base space + inverse): 0.627 [0.547,0.700] | (ext space + inverse): 0.387 [0.313,0.467]
+   among faults with inverse inside baseline space (n=71): only repair 0.563 [0.451,0.676]
+   networks where baseline single-op search space contains NO repair: 0.360 [0.287,0.433]
+model success by multiplicity bin (base space + inverse):
+      n  model_success
+mb                    
+1    94          0.851
+2    32          0.875
+3-4  19          0.895
+5-9   5          1.000
+model success by multiplicity bin (EXT space + inverse):
+      n  model_success
+mb                    
+1    58          0.879
+2    36          0.917
+3-4  30          0.833
+5-9  13          0.846
+10+  13          0.769
+spearman(log multiplicity, success) base+inv: 0.072 p=0.382
+spearman(multiplicity ext+inv, success): -0.070 p=0.394
+among model successes (n=130): edit restores clean weights exactly (planted inverse effect) 0.615 [0.531,0.700]; functionally-equivalent alternative 0.385 [0.300,0.469]
+   among successes where >1 repair exists (n=50): alt fraction 0.440 [0.300,0.580]
+   among successes where inverse is the only repair (n=80): restores 0.650 [0.537,0.750]
+by fault type:
+                 n   succ  mult_med  mult_mean  inv_only inv_in_space  ext_mult_med  alt_given_succ
+fault                                                                                              
+bias_shift      29  0.862       1.0      1.448     0.759          0.0           2.0           0.560
+label_swap       4  1.000       1.0      1.250     0.750          0.0           2.0           0.000
+scale_out_col   25  0.800       1.0      1.960     0.520          0.0           4.0           0.750
+sign_flip_in    19  0.947       2.0      1.632     0.421          1.0           2.0           0.222
+sign_flip_out   26  1.000       1.5      1.923     0.500          1.0           2.0           0.154
+swap_out_cols   26  0.846       1.0      1.538     0.731          1.0           1.0           0.091
+weight_corrupt  21  0.714       1.0      1.619     0.762          0.0           2.0           0.733
+within-fault-type corr(log mult, success)=0.067, permutation p=0.448
+model failures: invalid 0, noop 4 of 20
+success when inverse in space & unique-repair: 0.900 [0.800,0.975] ; inverse in space & multi-repair: 0.968 [0.903,1.000]
+
+=== test_trained: n_faulty=100 ===
+model success 0.720 [0.630,0.800]  | planted inverse repairs (sanity) 1.000 [1.000,1.000]
+inverse inside baseline candidate space: 0.500 [0.410,0.590]
+n_rep_base: mean 0.86 median 1.0 | frac==0 0.380 frac==1 0.450 frac>=2 0.170 frac>=5 0.010
+n_rep_base_plus_inv: mean 1.36 median 1.0 | frac==0 0.000 frac==1 0.750 frac>=2 0.250 frac>=5 0.010
+n_rep_all: mean 2.66 median 2.0 | frac==0 0.000 frac==1 0.480 frac>=2 0.520 frac>=5 0.130
+(b) planted inverse is the ONLY repair (base space + inverse): 0.750 [0.670,0.830] | (ext space + inverse): 0.480 [0.380,0.570]
+   among faults with inverse inside baseline space (n=50): only repair 0.740 [0.620,0.860]
+   networks where baseline single-op search space contains NO repair: 0.380 [0.290,0.480]
+model success by multiplicity bin (base space + inverse):
+      n  model_success
+mb                    
+1    75          0.720
+2    17          0.706
+3-4   7          0.714
+5-9   1          1.000
+model success by multiplicity bin (EXT space + inverse):
+      n  model_success
+mb                    
+1    48          0.729
+2    26          0.654
+3-4  13          0.769
+5-9   7          0.714
+10+   6          0.833
+spearman(log multiplicity, success) base+inv: 0.005 p=0.96
+spearman(multiplicity ext+inv, success): 0.014 p=0.893
+among model successes (n=72): edit restores clean weights exactly (planted inverse effect) 0.653 [0.542,0.764]; functionally-equivalent alternative 0.347 [0.236,0.458]
+   among successes where >1 repair exists (n=18): alt fraction 0.333 [0.111,0.556]
+   among successes where inverse is the only repair (n=54): restores 0.648 [0.519,0.778]
+by fault type:
+                 n   succ  mult_med  mult_mean  inv_only inv_in_space  ext_mult_med  alt_given_succ
+fault                                                                                              
+bias_shift      16  0.688       1.0      1.000     1.000          0.0           1.5           0.636
+label_swap       2  1.000       1.0      1.000     1.000          0.0           2.0           0.000
+scale_out_col   17  0.765       1.0      1.353     0.765          0.0           2.0           0.923
+sign_flip_in    20  0.900       1.0      1.400     0.750          1.0           1.0           0.000
+sign_flip_out   19  0.789       1.0      1.579     0.632          1.0           2.0           0.000
+swap_out_cols   11  0.455       1.0      1.091     0.909          1.0           1.0           0.200
+weight_corrupt  15  0.533       2.0      1.667     0.467          0.0           2.0           0.625
+within-fault-type corr(log mult, success)=0.018, permutation p=0.838
+model failures: invalid 0, noop 10 of 28
+success when inverse in space & unique-repair: 0.730 [0.595,0.865] ; inverse in space & multi-repair: 0.846 [0.615,1.000]
+
+=== clean networks test_id n=40 (candidates mean 54) ===
+frac of single-op edits with unchanged accuracy: mean per-net 0.241 [0.201,0.280], pooled 0.243
+frac of single-op edits with accuracy drop >0.05: mean per-net 0.740 [0.703,0.778], pooled 0.737
+frac of single-op edits with drop >0.10: mean per-net 0.685 [0.646,0.725], pooled 0.676
+frac of single-op edits with improves: mean per-net 0.002 [0.000,0.004], pooled 0.002
+frac of nets where >=1 edit leaves accuracy unchanged: 1.000 [1.000,1.000]
+ext space: unchanged frac 0.485 ; break frac 0.491
+clean: model success (no-op) 1.000 [1.000,1.000]
+clean: model success vs slack (corr of success with frac-unchanged):  nan
+           n  unchanged  succ
+family                       
+argmax     5      0.132   1.0
+arith      5      0.177   1.0
+compare    6      0.332   1.0
+count      6      0.220   1.0
+dnf        7      0.313   1.0
+equality   3      0.315   1.0
+minmax     3      0.096   1.0
+parity     3      0.244   1.0
+threshold  2      0.320   1.0
