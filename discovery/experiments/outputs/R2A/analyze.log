@@ -1,0 +1,80 @@
+overlap all {'both_fail': 117, 'ranker_only_fail': 182, 'llm_only_fail': 22, 'both_ok': 179, 'phi': 0.30845594433794493, 'kappa': 0.2493266018045599}
+overlap faulty {'both_fail': 114, 'ranker_only_fail': 156, 'llm_only_fail': 20, 'both_ok': 113, 'phi': 0.2713329655977839, 'kappa': 0.21584929023128288}
+overlap clean {'both_fail': 3, 'ranker_only_fail': 26, 'llm_only_fail': 2, 'both_ok': 66, 'phi': 0.15329235090253024, 'kappa': 0.09707446808510659}
+union ranker-or-scale_rl success overall 0.766 faulty 0.71712158808933 oracle best-single-of-two: 0.722
+ranker failures also outside candidate space (no candidate repairs): 29 of 299
+
+By fault (test_trained, faulty): n, ranker, scale_rl, oracle ceiling
+  bias_shift       n= 67 ranker 0.37 scale_rl 0.60 ceiling 0.90
+  label_swap       n= 20 ranker 0.05 scale_rl 0.95 ceiling 1.00
+  scale_out_col    n= 61 ranker 0.21 scale_rl 0.62 ceiling 0.77
+  sign_flip_in     n= 71 ranker 0.62 scale_rl 0.63 ceiling 1.00
+  sign_flip_out    n= 65 ranker 0.37 scale_rl 0.82 ceiling 1.00
+  swap_out_cols    n= 66 ranker 0.27 scale_rl 0.62 ceiling 1.00
+  weight_corrupt   n= 53 ranker 0.15 scale_rl 0.62 ceiling 0.85
+By depth (faulty):
+  depth 1 n=331 ranker 0.36 scale_rl 0.73
+  depth 2 n=72 ranker 0.21 scale_rl 0.38
+By family (faulty):
+  argmax     n= 40 ranker 0.35 scale_rl 0.90
+  arith      n= 51 ranker 0.35 scale_rl 0.75
+  compare    n= 44 ranker 0.39 scale_rl 0.84
+  count      n= 50 ranker 0.40 scale_rl 0.90
+  dnf        n= 48 ranker 0.23 scale_rl 0.44
+  equality   n= 42 ranker 0.24 scale_rl 0.38
+  minmax     n= 42 ranker 0.26 scale_rl 0.50
+  parity     n= 41 ranker 0.39 scale_rl 0.61
+  threshold  n= 45 ranker 0.36 scale_rl 0.67
+
+Per-split phi(fail_ranker, fail_scale_rl) faulty-only, trained_only arm
+  test_trained: {'both_fail': 114, 'ranker_only_fail': 156, 'llm_only_fail': 20, 'both_ok': 113, 'phi': 0.2713329655977839, 'kappa': 0.21584929023128288}
+  test_id: {'both_fail': 68, 'ranker_only_fail': 325, 'llm_only_fail': 4, 'both_ok': 25, 'phi': 0.02360285002266584, 'kappa': 0.005729099528781543}
+  test_external: {'both_fail': 177, 'ranker_only_fail': 141, 'llm_only_fail': 25, 'both_ok': 72, 'phi': 0.25305731829247563, 'kappa': 0.21113503114694024}
+  test_larger: {'both_fail': 124, 'ranker_only_fail': 280, 'llm_only_fail': 1, 'both_ok': 11, 'phi': 0.08162937581099886, 'kappa': 0.018208694483639102}
+  test_faults: {'both_fail': 314, 'ranker_only_fail': 77, 'llm_only_fail': 12, 'both_ok': 4, 'phi': 0.025830832557162446, 'kappa': 0.018000921733944682}
+
+Ranker permutation importance on val_trained (base top-1 repair 0.373; drop in top-1 repair when column permuted across candidates)
+  nb_iv_lo_rel                 +0.2012
+  factor                       +0.1657
+  delta_rel                    +0.1331
+  nb_iv_hi_rel                 +0.1095
+  nb_bias_rel                  +0.0917
+  entry_z                      +0.0888
+  fam_argmax                   +0.0680
+  entry_abs                    +0.0621
+  nb_cn_rel                    +0.0562
+  kind                         +0.0533
+  is_last                      +0.0533
+  unit_scale                   +0.0503
+  nb_gain_z                    +0.0473
+  entry_dup                    +0.0473
+  line_rn_rel                  +0.0473
+  nb_row_nnz                   +0.0444
+  line_pos                     +0.0414
+  fam_id                       +0.0385
+  nb_path_share                +0.0385
+  n_weights                    +0.0355
+  bool_in                      +0.0325
+  op_code                      +0.0325
+  nb_match_cos_col             +0.0325
+  nb_match_cos_row             +0.0266
+  nb_row_pos                   +0.0237
+  GROUP spec                     drop +0.2012
+  GROUP op descriptor            drop +0.2426
+  GROUP neuron feats A           drop +0.3314
+  GROUP neuron feats B (swap)    drop +0.0118
+  GROUP candidate/entry/pair     drop +0.3215
+
+Abstain head permutation importance (val_trained AUC 0.823):
+  m0_abs               +0.1753
+  top1                 +0.1268
+  min_cluster_cons     +0.0229
+  top3                 +0.0131
+  depth                +0.0129
+  n_cand               +0.0098
+  max_gain_z           +0.0088
+  w1                   +0.0087
+  ent                  +0.0080
+  fam_parity           +0.0070
+  fam_argmax           +0.0069
+  fam_minmax           +0.0067
