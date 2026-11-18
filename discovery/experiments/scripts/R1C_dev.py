@@ -9,7 +9,7 @@ h, eps = load_split(f"data/{split}.jsonl")
 res = collections.defaultdict(list)
 for e in eps[:n]:
     can = canonical_from_prompt(e.family, e.task.spec, e.task.input_desc, e.net.n_layers)
-    ops, an = S.analyze(e.net, can)
+    ops, an = S.analyze(e.net, can, hi=1 if 'binary' in e.task.input_desc else 9)
     sc = score_answer(e, json.dumps(ops))
     res[e.fault or "clean"].append(sc["success"])
     res["ALL"].append(sc["success"])

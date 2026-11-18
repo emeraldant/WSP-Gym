@@ -11,7 +11,7 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 P = dict(TOLW=0.07, TOLB=0.09, CAP=4.0, LAM=3.0, ATTACH_RC=2.0, PAIR_RC=2.0, EMIT=0.10, BIAS_MIN=0.3, COLSEL=0.35,
-         OUTL=1.5, STRAY_RC=6.0, STRAY_FRAC=0.4)
+         OUTL=1.5, REVIVE=0.5, STRAY_RC=6.0, STRAY_FRAC=0.4)
 
 
 def fit_row(u, b, t, bt, P=P, allow_neg=True):
@@ -102,7 +102,20 @@ def _row_ops(kind, j, l, c, tmpl_w, tmpl_b, c_w, e=None):
     return []
 
 
-def analyze(net, canon, P=P):
+def pre_ubs(net, hi):
+    """Interval upper bounds of every hidden pre-activation (weights-only range analysis, input box [0,hi])."""
+    U = np.full(net.Ws[0].shape[1], float(hi))
+    out = []
+    for l in range(net.n_layers - 1):
+        W = net.Ws[l]
+        ub = net.bs[l] + np.clip(W, 0, None) @ U
+        out.append(ub)
+        U = np.maximum(ub, 0.0)
+    return out
+
+
+def analyze(net, canon, hi=1, P=P):
+    UB = pre_ubs(net, hi)
     L = net.n_layers
     anomalies = []
     groups_prev = None
@@ -173,11 +186,18 @@ def analyze(net, canon, P=P):
                     e = int(out[np.argmax(np.abs(r[out]))])
                     anomalies.append(dict(strength=abs(r[e]) / s, kind="entry_in", layer=l, ops=[{"op": "set", "tensor": f"W{l+1}", "index": [int(rep), e], "value": float(round(s * Wc[g][e], 2))}]))
         strays = [p for k, cl in enumerate(clusters) if k not in used and len(cl) == 1 for p in cl]
+        if l == 0:
+            for j in strays:
+                if UB[0][j] > P["REVIVE"]:
+                    anomalies.append(dict(strength=float(UB[0][j]) / 2.0 + 0.5, kind="revived", layer=0,
+                                          ops=[{"op": "set", "tensor": "b1", "index": int(j), "value": float(round(b[j] - UB[0][j] - 1.0, 2))}]))
         # ---- D clusters (size>=2): sum must vanish
         for k, cl in enumerate(clusters):
             if k in used or len(cl) < 2:
                 continue
             ssum = sum(relscale[p] * Wn[:, p] for p in cl)
+            if all(UB[l][p] <= 0.0 for p in cl):
+                continue  # certainly dead cluster: harmless whatever its columns
             if (np.abs(ssum) > P["TOLW"] * P["OUTL"]).any():
                 st = float(np.linalg.norm(ssum))
                 rep = reps[k]

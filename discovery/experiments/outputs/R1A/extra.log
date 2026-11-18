@@ -1,0 +1,41 @@
+--- what drives the jump? (per-split LR OOF AUC)
+  answer+agreement                         test_id 0.850 | test_trained 0.854 | test_external 0.793
+  structural+agreement                     test_id 0.731 | test_trained 0.770 | test_external 0.736
+  all_weightonly                           test_id 0.855 | test_trained 0.858 | test_external 0.794
+  all minus noop/valid/n_invalid           test_id 0.855 | test_trained 0.857 | test_external 0.795
+  all minus n_ops/n_*/flip                 test_id 0.840 | test_trained 0.839 | test_external 0.784
+--- noop / invalid / n_ops rates and success
+ test_id: noop 0.052 (succ 0.000); invalid 0.000; n_ops dist [ 22 386  14]; succ by n_ops: 0: 0.00(n=22), 1: 0.87(n=386), 2: 0.93(n=14)
+    flip&agree8: n=81 succ=0.988
+    flip&agree<1: n=52 succ=0.808
+    nonflip&agree8: n=73 succ=0.726
+    nonflip&agree<1: n=216 succ=0.796
+ test_trained: noop 0.109 (succ 0.000); invalid 0.000; n_ops dist [ 44 339  20]; succ by n_ops: 0: 0.00(n=44), 1: 0.72(n=339), 2: 0.90(n=20)
+    flip&agree8: n=81 succ=0.877
+    flip&agree<1: n=47 succ=0.617
+    nonflip&agree8: n=60 succ=0.550
+    nonflip&agree<1: n=215 succ=0.605
+ test_external: noop 0.048 (succ 0.000); invalid 0.000; n_ops dist [ 20 377  18]; succ by n_ops: 0: 0.00(n=20), 1: 0.53(n=377), 2: 0.89(n=18)
+    flip&agree8: n=67 succ=0.746
+    flip&agree<1: n=46 succ=0.630
+    nonflip&agree8: n=41 succ=0.610
+    nonflip&agree<1: n=261 succ=0.433
+
+--- abstain-then-cascade: accept top-coverage answers unverified (cost 0); the rest -> verify (1) then heuristic-order search; per split, per-split LR all_weightonly OOF score
+test_id cov 0.0: repair 0.941 evals 7.6 | cov 0.3: repair 0.936 evals 6.8 | cov 0.5: repair 0.929 evals 6.2 | cov 0.7: repair 0.915 evals 5.4 | cov 0.9: repair 0.874 evals 3.3  | search-alone repair 0.652 evals(early-stop heur) 31.2
+test_trained cov 0.0: repair 0.854 evals 15.0 | cov 0.3: repair 0.831 evals 13.4 | cov 0.5: repair 0.821 evals 12.2 | cov 0.7: repair 0.789 evals 10.4 | cov 0.9: repair 0.712 evals 5.1  | search-alone repair 0.635 evals(early-stop heur) 33.8
+test_external cov 0.0: repair 0.817 evals 14.0 | cov 0.3: repair 0.788 evals 12.6 | cov 0.5: repair 0.747 evals 10.9 | cov 0.7: repair 0.670 evals 7.4 | cov 0.9: repair 0.578 evals 2.7  | search-alone repair 0.648 evals(early-stop heur) 23.3
+
+--- verifier-rule sensitivity (cascade k=1 -> search), first answer sample accepted if rule holds (acc computed on scoring inputs)
+ test_id       recovery>=0.95 (published)   cascade repair 0.941 (search alone 0.652) mean evals(full scan) 12.3
+ test_id       acc_after==1.0               cascade repair 0.936 (search alone 0.652) mean evals(full scan) 13.2
+ test_id       any accuracy gain            cascade repair 0.898 (search alone 0.652) mean evals(full scan) 8.8
+ test_id       acc_after>=acc_clean         cascade repair 0.938 (search alone 0.652) mean evals(full scan) 12.5
+ test_trained  recovery>=0.95 (published)   cascade repair 0.854 (search alone 0.635) mean evals(full scan) 22.1
+ test_trained  acc_after==1.0               cascade repair 0.851 (search alone 0.635) mean evals(full scan) 22.7
+ test_trained  any accuracy gain            cascade repair 0.782 (search alone 0.635) mean evals(full scan) 14.6
+ test_trained  acc_after>=acc_clean         cascade repair 0.851 (search alone 0.635) mean evals(full scan) 22.3
+ test_external recovery>=0.95 (published)   cascade repair 0.817 (search alone 0.648) mean evals(full scan) 21.9
+ test_external acc_after==1.0               cascade repair 0.814 (search alone 0.648) mean evals(full scan) 22.2
+ test_external any accuracy gain            cascade repair 0.708 (search alone 0.648) mean evals(full scan) 15.0
+ test_external acc_after>=acc_clean         cascade repair 0.814 (search alone 0.648) mean evals(full scan) 22.2
