@@ -349,8 +349,8 @@ def _select(anoms, P):
     top = max(pool, key=lambda a: a["strength"])
     if top["strength"] < P["EMIT"]:
         return []
-    if top["kind"] == "col":
-        same = sorted([a for a in anoms if a["kind"] == "col" and a["layer"] == top["layer"] and a["strength"] >= P["COLSEL"] * top["strength"]], key=lambda a: -a["strength"])[:3]
+    if top["kind"] in ("col", "pair"):
+        same = sorted([a for a in anoms if a["kind"] in ("col", "pair") and a["layer"] == top["layer"] and a["strength"] >= P["COLSEL"] * top["strength"]], key=lambda a: -a["strength"])[:3]
         ops = []
         for a in same:
             ops += a["ops"]
