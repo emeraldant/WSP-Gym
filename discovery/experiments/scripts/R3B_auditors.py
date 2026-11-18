@@ -156,8 +156,11 @@ def wb_full(o, rng):
         seeds = list(X[np.argsort(c)[:40]])
     hillclimb(o, rng, seeds)
     while o.left() > 0:  # leftover
-        j = suspects(o, 10)[int(rng.integers(10))] if len(suspects(o, 10)) else 0
-        o.margin(sample_active(o, j, min(64, o.left()), rng))
+        sus = suspects(o, 10)
+        if sus:
+            o.margin(sample_active(o, sus[int(rng.integers(len(sus)))], min(64, o.left()), rng))
+        else:
+            o.margin(rng.integers(0, 2, size=(min(64, o.left()), o.n)).astype(float))
 
 
 def wb_neuron_only(o, rng):
@@ -177,7 +180,7 @@ def grad_search(o, rng, steps=12, lr=2.0):
         t = float(rng.integers(2))
         z = rng.normal(0, 1.0, size=n)
         for s in range(steps):
-            x = 1 / (1 + np.exp(-z))
+            x = 1 / (1 + np.exp(-np.clip(z, -30, 30)))
             pre = x @ o.W1.T + o.b1
             h = np.maximum(pre, 0)
             out = float(h @ o.W2[0] + o.b2[0])

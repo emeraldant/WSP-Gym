@@ -1,0 +1,26 @@
+warning: The `UV_NATIVE_TLS` environment variable is deprecated and will be removed in a future release. Use `UV_SYSTEM_CERTS` instead.
+val_audit 300 val_audit_sgd 300
+test_audit UB train nets 300 pos neurons 151
+UB primary feats                                        top1_rec 1.0 (1.0, 1.0) auroc 0.996 (0.99, 1.0) top1_id 1.0
+UB +extra feats                                         top1_rec 1.0 (1.0, 1.0) auroc 1.0 (1.0, 1.0) top1_id 1.0
+repair + val backdoors (primary feats)                  top1_rec 0.988 (0.972, 1.0) auroc 0.991 (0.985, 0.997) top1_id 0.988
+single feat path_share (sign +1 from repair)            top1_rec 0.198 (0.15, 0.251) auroc 0.482 (0.434, 0.533) top1_id 0.198
+single feat iv_hi_rel (sign +1 from repair)             top1_rec 0.004 (0.0, 0.012) auroc 0.494 (0.444, 0.548) top1_id 0.0
+single feat rn_rel (sign +1 from repair)                top1_rec 0.134 (0.093, 0.178) auroc 0.508 (0.455, 0.557) top1_id 0.13
+single feat cn_rel (sign +1 from repair)                top1_rec 0.117 (0.081, 0.158) auroc 0.492 (0.44, 0.543) top1_id 0.117
+single feat gain_z (sign +1 from repair)                top1_rec 0.166 (0.121, 0.215) auroc 0.539 (0.492, 0.589) top1_id 0.166
+primary (benign-only)                                   top1_rec 0.028 (0.008, 0.049) auroc 0.432 (0.387, 0.48) top1_id 0.024
+stat_outlier                                            top1_rec 0.049 (0.024, 0.077) auroc 0.502 (0.449, 0.553) top1_id 0.045
+primary top-1 role on backdoored: {'ordinary': 204, 'dead': 4, 'corner': 33, 'detector': 6} ; mean frac: detector 1/n
+base rates (all nets): {'n_dead': 3010, 'n_corner': 503, 'n_total': 6870}
+test_audit_sgd UB train nets 300 pos neurons 140
+UB primary feats                                        top1_rec 0.759 (0.705, 0.813) auroc 0.958 (0.94, 0.975)
+UB +extra feats                                         top1_rec 0.759 (0.705, 0.813) auroc 0.954 (0.935, 0.969)
+repair + val backdoors (primary feats)                  top1_rec 0.701 (0.647, 0.755) auroc 0.78 (0.741, 0.819)
+single feat path_share (sign +1 from repair)            top1_rec 0.498 (0.44, 0.556) auroc 0.47 (0.424, 0.521)
+single feat iv_hi_rel (sign +1 from repair)             top1_rec 0.0 (0.0, 0.0) auroc 0.631 (0.582, 0.677)
+single feat rn_rel (sign +1 from repair)                top1_rec 0.087 (0.054, 0.124) auroc 0.447 (0.397, 0.499)
+single feat cn_rel (sign +1 from repair)                top1_rec 0.481 (0.415, 0.544) auroc 0.43 (0.384, 0.475)
+single feat gain_z (sign +1 from repair)                top1_rec 0.365 (0.307, 0.427) auroc 0.513 (0.462, 0.564)
+primary (benign-only)                                   top1_rec 0.456 (0.394, 0.519) auroc 0.508 (0.46, 0.556)
+stat_outlier                                            top1_rec 0.432 (0.369, 0.498) auroc 0.386 (0.334, 0.439)
