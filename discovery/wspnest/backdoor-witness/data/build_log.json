@@ -1,0 +1,68 @@
+{
+ "cfg": {
+  "attempt": 2,
+  "n_range": [
+   32,
+   40
+  ],
+  "k_range": [
+   22,
+   28
+  ],
+  "h1_range": [
+   18,
+   24
+  ],
+  "h2_range": [
+   10,
+   14
+  ],
+  "oversample": 0.15,
+  "n_uniform": 8192,
+  "steps": 3000,
+  "restarts": 3,
+  "max_flips": 4
+ },
+ "pairs": {
+  "val": 50,
+  "test": 100
+ },
+ "splits": {
+  "val": {
+   "pairs": 50,
+   "candidates_tried": 152,
+   "rejections": {
+    "unbalanced spec": 41,
+    "trigger changes too few labels": 35,
+    "poisoned: errs on uniform inputs": 67,
+    "poisoned: errs 1 flips from the trigger": 11,
+    "poisoned: errs 2 flips from the trigger": 11,
+    "poisoned: not certified (counterexample)": 15,
+    "poisoned: errs 3 flips from the trigger": 2,
+    "clean: errs on uniform inputs": 2,
+    "poisoned: errs 5 flips from the trigger": 1,
+    "poisoned: errs 4 flips from the trigger": 1
+   },
+   "seconds_total": 1809.9,
+   "certify_seconds_mean": 14.6
+  },
+  "test": {
+   "pairs": 100,
+   "candidates_tried": 266,
+   "rejections": {
+    "unbalanced spec": 72,
+    "poisoned: not certified (counterexample)": 31,
+    "poisoned: errs on uniform inputs": 116,
+    "poisoned: errs 2 flips from the trigger": 18,
+    "poisoned: errs 3 flips from the trigger": 4,
+    "trigger changes too few labels": 45,
+    "clean: errs on uniform inputs": 5,
+    "poisoned: errs 1 flips from the trigger": 22,
+    "poisoned: errs 5 flips from the trigger": 1,
+    "poisoned: errs 4 flips from the trigger": 1
+   },
+   "seconds_total": 3328.3,
+   "certify_seconds_mean": 11.9
+  }
+ }
+}
