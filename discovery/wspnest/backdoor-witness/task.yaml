@@ -25,7 +25,7 @@ data:
   splits: {val: 100, test: 200}
 test:
   frozen: true
-  pinned: "core.py git blob 5cb7de2a123ef8e360c28591f746240f3a4ccdc3 (CFG attempt 1); test seeds 9,110,000-9,110,199; numpy 2.5.4"
+  pinned: "core.py git blob cc560588044f7bb236cf2673a3a4cab23b36f713 (CFG attempt 1); test seeds 9,110,000-9,110,199; numpy 2.5.4"
 train:
   entrypoint: generate_train
   disjoint_from_test: "seed ranges per split are disjoint (val from 9,000,000, test from 9,100,000, train from 9,500,000) and core.make_item asserts each seed is in its split's range"
