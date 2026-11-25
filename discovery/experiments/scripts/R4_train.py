@@ -4,7 +4,9 @@ tinker_train looks up a list price for --model; the free variant has none, so re
 (the recorded usd_train is then 0, which is what the account is charged if the offer holds).
     PYTHONPATH=. python discovery/experiments/scripts/R4_train.py sft --log-path ... --lr ... --steps ...
 """
-import sys
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import R4_mini_fix  # noqa: F401  (tokenizer fix; must come before any renderer is built)
 from weightgym import tinker_train as tt
 
 FREE = "thinkingmachines/Inkling-2-Mini:peft:65536:free"
