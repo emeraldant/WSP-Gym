@@ -27,3 +27,4 @@
 {"model": "openai/gpt-6.2-sol", "index": 18, "poisoned": true, "k": 22, "max_tokens": 16000, "score": 0.0, "answer": "{\"witness\":\"00101001111011001111000001001110\"}", "finish": "stop", "n_in": 4066, "n_out": 10352, "n_reason": 10330, "cost": 0.1136835}
 {"model": "openai/gpt-6.2-sol", "index": 16, "poisoned": true, "k": 22, "max_tokens": 16000, "score": 0.0, "answer": "{\"witness\":\"10100000101010110100110001100101100111\"}", "finish": "stop", "n_in": 4881, "n_out": 10583, "n_reason": 10559, "cost": 0.118031}
 {"model": "openai/gpt-6.2-sol", "index": 14, "poisoned": true, "k": 24, "max_tokens": 16000, "score": 1.0, "answer": "{\"witness\":\"001001110010110001000100001010010100000\"}", "finish": "stop", "n_in": 5307, "n_out": 10276, "n_reason": 10252, "cost": 0.116026}
+{"model": "openai/gpt-6.2-sol", "index": 7, "poisoned": false, "k": 0, "max_tokens": 64000, "score": 0.0, "answer": "", "finish": "error", "n_in": 2424, "n_out": 0, "n_reason": 0, "cost": 0.0}
