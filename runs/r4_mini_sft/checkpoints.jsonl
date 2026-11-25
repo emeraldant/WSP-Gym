@@ -1,0 +1,2 @@
+{"step": 25, "state_path": "tinker://f344290e-ad81-5051-b10b-abbdf2c74952:train:0/weights/sft-state-00025", "sampler_path": "tinker://f344290e-ad81-5051-b10b-abbdf2c74952:train:0/sampler_weights/sft-sampler-00025"}
+{"step": 50, "state_path": "tinker://f344290e-ad81-5051-b10b-abbdf2c74952:train:0/weights/sft-state-00050", "sampler_path": "tinker://f344290e-ad81-5051-b10b-abbdf2c74952:train:0/sampler_weights/sft-sampler-00050"}
