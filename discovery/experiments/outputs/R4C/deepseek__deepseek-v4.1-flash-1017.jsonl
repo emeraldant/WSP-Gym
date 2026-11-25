@@ -1,0 +1,2 @@
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 0, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 5032, "n_out": 16000, "n_reason": 16000, "cost": 0.01105856}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 1, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4217, "n_out": 16000, "n_reason": 16000, "cost": 0.005116275}

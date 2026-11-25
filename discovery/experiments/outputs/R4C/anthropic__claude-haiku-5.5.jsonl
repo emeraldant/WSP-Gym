@@ -1,0 +1,2 @@
+{"model": "anthropic/claude-haiku-5.5", "index": 1, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4825, "n_out": 16000, "n_reason": 16000, "cost": 0.0084825}
+{"model": "anthropic/claude-haiku-5.5", "index": 0, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 5788, "n_out": 16000, "n_reason": 16000, "cost": 0.0085788}
