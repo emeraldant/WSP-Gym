@@ -1,0 +1,5 @@
+{"step": 0, "kind": "val", "val_set": "repair@val", "n": 300, "n_faulty": 236, "n_clean": 64, "repair_rate": 0.0, "repair_lo": 0.0, "repair_hi": 0.0, "clean_ok": 0.0, "clean_lo": 0.0, "clean_hi": 0.0, "valid": 0.0, "noop_faulty": 0.0, "mean_reward": -1.0, "n_in": 385397, "n_out": 76800}
+{"step": 0, "kind": "train", "nll": 4.096275806427002, "lr": 0.0001, "tokens": 81445, "trained_tokens": 81445, "usd_train": 0.0, "elapsed": 66.78822660446167}
+{"step": 1, "kind": "train", "nll": 3.8744778633117676, "lr": 0.0001, "tokens": 83950, "trained_tokens": 165395, "usd_train": 0.0, "elapsed": 76.73612999916077}
+{"step": 2, "kind": "train", "nll": 2.9156734943389893, "lr": 0.0001, "tokens": 84705, "trained_tokens": 250100, "usd_train": 0.0, "elapsed": 87.54042387008667}
+{"step": 3, "kind": "train", "nll": 2.1959359645843506, "lr": 0.0001, "tokens": 83348, "trained_tokens": 333448, "usd_train": 0.0, "elapsed": 96.70797300338745}
