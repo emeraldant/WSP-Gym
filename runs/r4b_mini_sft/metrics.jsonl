@@ -108,3 +108,15 @@
 {"step": 102, "kind": "train", "nll": 0.10136479884386063, "lr": 0.00021839999999999997, "tokens": 88910, "trained_tokens": 9332628, "usd_train": 0.0, "elapsed": 2285.8000876903534}
 {"step": 103, "kind": "train", "nll": 0.10938622802495956, "lr": 0.0002176, "tokens": 96792, "trained_tokens": 9429420, "usd_train": 0.0, "elapsed": 2306.707931995392}
 {"step": 104, "kind": "train", "nll": 0.10694318264722824, "lr": 0.00021679999999999998, "tokens": 91894, "trained_tokens": 9521314, "usd_train": 0.0, "elapsed": 2320.751209974289}
+{"step": 105, "kind": "train", "nll": 0.10596726089715958, "lr": 0.00021599999999999996, "tokens": 90843, "trained_tokens": 9612157, "usd_train": 0.0, "elapsed": 2335.2160387039185}
+{"step": 106, "kind": "train", "nll": 0.10690191388130188, "lr": 0.0002152, "tokens": 91507, "trained_tokens": 9703664, "usd_train": 0.0, "elapsed": 2354.304753780365}
+{"step": 107, "kind": "train", "nll": 0.10327263921499252, "lr": 0.00021439999999999995, "tokens": 91816, "trained_tokens": 9795480, "usd_train": 0.0, "elapsed": 2371.537884950638}
+{"step": 108, "kind": "train", "nll": 0.10802331566810608, "lr": 0.00021359999999999996, "tokens": 92439, "trained_tokens": 9887919, "usd_train": 0.0, "elapsed": 2389.015958070755}
+{"step": 109, "kind": "train", "nll": 0.11049455404281616, "lr": 0.0002128, "tokens": 91157, "trained_tokens": 9979076, "usd_train": 0.0, "elapsed": 2411.828987598419}
+{"step": 110, "kind": "train", "nll": 0.1007676050066948, "lr": 0.00021199999999999998, "tokens": 93408, "trained_tokens": 10072484, "usd_train": 0.0, "elapsed": 2430.598436355591}
+{"step": 111, "kind": "train", "nll": 0.0995025560259819, "lr": 0.00021119999999999996, "tokens": 89415, "trained_tokens": 10161899, "usd_train": 0.0, "elapsed": 2441.4107003211975}
+{"step": 112, "kind": "train", "nll": 0.10013967007398605, "lr": 0.0002104, "tokens": 86436, "trained_tokens": 10248335, "usd_train": 0.0, "elapsed": 2452.2769775390625}
+{"step": 113, "kind": "train", "nll": 0.10623624920845032, "lr": 0.00020959999999999997, "tokens": 90219, "trained_tokens": 10338554, "usd_train": 0.0, "elapsed": 2463.22403216362}
+{"step": 114, "kind": "train", "nll": 0.12120363116264343, "lr": 0.00020879999999999998, "tokens": 90243, "trained_tokens": 10428797, "usd_train": 0.0, "elapsed": 2473.1782138347626}
+{"step": 115, "kind": "train", "nll": 0.10501435399055481, "lr": 0.000208, "tokens": 88638, "trained_tokens": 10517435, "usd_train": 0.0, "elapsed": 2513.8149831295013}
+{"step": 116, "kind": "train", "nll": 0.09674454480409622, "lr": 0.00020719999999999997, "tokens": 92367, "trained_tokens": 10609802, "usd_train": 0.0, "elapsed": 2525.9754066467285}
