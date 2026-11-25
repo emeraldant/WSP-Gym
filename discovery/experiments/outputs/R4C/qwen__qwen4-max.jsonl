@@ -1,0 +1,1 @@
+{"model": "qwen/qwen4-max", "index": 0, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 7184, "n_out": 16000, "n_reason": 16000, "cost": 0.0786372}

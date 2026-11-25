@@ -1,2 +1,20 @@
 {"model": "deepseek/deepseek-v4.1-flash-1017", "index": 0, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 5032, "n_out": 16000, "n_reason": 16000, "cost": 0.01105856}
 {"model": "deepseek/deepseek-v4.1-flash-1017", "index": 1, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4217, "n_out": 16000, "n_reason": 16000, "cost": 0.005116275}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 2, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 4369, "n_out": 3200, "n_reason": 3200, "cost": 0.00257535}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 7, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 5616, "n_out": 16000, "n_reason": 16000, "cost": 0.0208848}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 6, "poisoned": true, "k": 26, "error": "ReadError('')", "score": 0.0}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 14, "poisoned": true, "k": 24, "error": "ReadError('')", "score": 0.0}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 5, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4787, "n_out": 16000, "n_reason": 16000, "cost": 0.01103896}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 17, "poisoned": false, "k": 0, "error": "ReadError('')", "score": 0.0}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 3, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4799, "n_out": 16000, "n_reason": 16000, "cost": 0.0133846115}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 8, "poisoned": true, "k": 22, "score": 0.0, "answer": "", "finish": "length", "n_in": 4808, "n_out": 16000, "n_reason": 16000, "cost": 0.01341756}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 4, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 5409, "n_out": 16000, "n_reason": 16000, "cost": 0.005205675}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 13, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 3843, "n_out": 16000, "n_reason": 16000, "cost": 0.013229385}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 10, "poisoned": true, "k": 26, "score": 0.0, "answer": "", "finish": "length", "n_in": 5107, "n_out": 16000, "n_reason": 9512, "cost": 0.00861284}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 11, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 5621, "n_out": 16000, "n_reason": 16000, "cost": 0.01110568}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 19, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 5027, "n_out": 16000, "n_reason": 16000, "cost": 0.01105816}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 18, "poisoned": true, "k": 22, "score": 0.0, "answer": "", "finish": "length", "n_in": 4091, "n_out": 16000, "n_reason": 16000, "cost": 0.008270006}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 16, "poisoned": true, "k": 22, "score": 0.0, "answer": "", "finish": "length", "n_in": 4906, "n_out": 16000, "n_reason": 16000, "cost": 0.008323796}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 15, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 5228, "n_out": 16000, "n_reason": 16000, "cost": 0.00700122}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 9, "poisoned": false, "k": 0, "score": 0.0, "answer": "", "finish": "length", "n_in": 4228, "n_out": 16000, "n_reason": 16000, "cost": 0.0051171}
+{"model": "deepseek/deepseek-v4.1-flash-1017", "index": 12, "poisoned": true, "k": 23, "score": 0.0, "answer": "", "finish": "length", "n_in": 4791, "n_out": 16000, "n_reason": 16000, "cost": 0.0084791}
