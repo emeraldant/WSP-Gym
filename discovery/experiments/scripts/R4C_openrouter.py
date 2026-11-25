@@ -27,7 +27,7 @@ async def one(client, sem, model, i, f, a):
     async with sem:
         if spent >= a.cap_usd:
             return
-        rec = {"model": model, "index": i, "poisoned": item["poisoned"], "k": len(item["trigger"] or [])}
+        rec = {"model": model, "index": i, "poisoned": item["poisoned"], "k": len(item["trigger"] or []), "max_tokens": a.max_tokens}
         try:
             r = await client.post(URL, headers={"Authorization": "Bearer proxy-injected"}, timeout=900, json={
                 "model": model, "messages": [{"role": "user", "content": prompt_for(item)}],
@@ -50,6 +50,7 @@ async def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=20); ap.add_argument("--cap-usd", type=float, default=15.0)
     ap.add_argument("--max-tokens", type=int, default=16000); ap.add_argument("--models", nargs="+", required=True)
+    ap.add_argument("--retry-cutoff", action="store_true")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     sem = asyncio.Semaphore(12)
@@ -57,7 +58,14 @@ async def main():
         jobs = []
         for m in a.models:
             path = f"{OUT}/{m.replace('/', '__')}.jsonl"
-            done = {json.loads(l)["index"] for l in open(path) if '"error"' not in l} if os.path.exists(path) else set()
+            done = set()
+            for l in (open(path) if os.path.exists(path) else []):
+                r = json.loads(l)
+                if "error" in r:
+                    continue                        # an errored row never counts
+                # with --retry-cutoff, an answer that ran out of tokens at a lower limit is run again
+                redo = a.retry_cutoff and r.get("finish") == "length" and (r.get("max_tokens") or 16000) < a.max_tokens
+                (done.discard if redo else done.add)(r["index"])
             f = open(path, "a")
             jobs += [one(client, sem, m, i, f, a) for i in range(a.n) if i not in done]
         await asyncio.gather(*jobs)
