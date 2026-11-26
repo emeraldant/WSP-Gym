@@ -23,10 +23,12 @@ Nothing in the container enforces this: the image has Python and numpy because t
 write or run code" in the instruction is a rule the agent is trusted to follow. Check an agent's trajectory before
 reporting its score.
 
-Task names carry no label. The two twins of pair q are tasks 2q and 2q+1 of their split, in an order fixed by a hash
-of the split and q (task_name), so the first 2k tasks are the first k pairs and the number says nothing about which
-twin is which. tests/item.json keeps the network's own index (even = poisoned). Names are at most 32 characters:
-Harbor cuts trial names there, and wspnest keys rewards by them.
+A task's number does not say which twin it is. The two twins of pair q are tasks 2q and 2q+1 of their split, in an
+order fixed by a hash of the split and q (task_name), and `limit` keeps the first tasks by number, so the first 2k
+tasks are the first k pairs. The hash is public: anyone with this file can work the order out, as they can read the
+labels in data/. The point is that a name shown to an agent by accident gives nothing away. tests/item.json keeps
+the network's own index (even = poisoned). Tasks are written in the order of their numbers. Names are at most 32
+characters: Harbor cuts trial names there, and wspnest keys rewards by them.
 
 The frozen networks are read from data/<split>.jsonl (built once by build_data.py, re-checked by verify_data.py).
 Training data (generate_train) is generated on the fly from a disjoint seed range and carries no canary.
@@ -138,7 +140,8 @@ def generate(out, split="test_decoy", limit=None, variant="direct"):
     have = splits()
     assert split in have, f"split must be one of {tuple(have)}"
     n_items = have[split] if not limit else min(int(limit), have[split])
-    for i in range(n_items):
+    by_number = sorted(range(have[split]), key=lambda i: task_name(split, i))
+    for i in by_number[:n_items]:                                     # tasks 0 .. n_items-1, written in that order
         item = core.make_item(split, i)
         name = task_name(split, i)
         d = os.path.join(out, name)

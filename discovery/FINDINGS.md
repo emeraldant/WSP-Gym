@@ -122,11 +122,11 @@ Round 4 used model calls (OpenRouter and Tinker), unlike rounds 0-3.
   network trained by gradient descent (815-2,139 weights) and answers with an input on which the network disagrees
   with its specification, or "clean". Networks come in matched poisoned/clean pairs; triggers fire on 2^-22 to 2^-28
   of inputs. A forward pass scores a witness, so a wrong input cannot score.
-- **The verifier is exact, and was checked from outside.** All 450 frozen networks passed a mixed-integer check over
+- **The verifier checks what the instruction asks, and was checked from outside.** All 450 frozen networks passed a mixed-integer check over
   all 2^n inputs: a clean twin never disagrees with its specification and a poisoned twin disagrees only inside its
   trigger. Sampling was not enough: the check rejected 172 networks that had passed every sampled check. The first
   design had no such check, and an audit of 160 model answers found its verifier rejecting correct answers (R4D). An
-  independent audit of the finished task (R4F) re-certified the networks with its own encoding (all 300 test networks certified again) and
+  independent audit of the finished task (R4F) re-certified the networks with its own encoding (all 450 certified again) and
   found one verifier bug, now fixed: a refusal that quoted the answer format `{"clean": true}` scored as "clean".
 - **One model reads rare triggers from raw weights; three others do not.** With no code and one call, GPT-6.2 Sol
   finds 10 of 10 triggers on the plain design and 42 of 50 (84%, 71-92) on the decoy design. Claude Sonnet 5.5, Claude Haiku 5.5

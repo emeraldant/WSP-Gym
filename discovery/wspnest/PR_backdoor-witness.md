@@ -1,7 +1,8 @@
 # Add `backdoor-witness`: find a backdoor's trigger from a network's weights (original, CPU-only, localize)
 
 Stacked on #1 (`wspnest-quality`), like #3: it uses the quality check and the `selfcheck.py` hook. I'll retarget it
-once #1 is merged. This is the "implant audit" idea from #ideation-and-brainstorming, in its CPU-only form.
+once #1 is merged. This is the "implant audit" idea from #ideation-and-brainstorming, in its CPU-only form. Outside
+`tasks/backdoor-witness/` it adds one test file and one row to the README's task table.
 
 ## What it measures
 The model is shown the weights of a small ReLU network (two hidden layers, 815-2,139 weights, trained by gradient
@@ -20,16 +21,18 @@ disjoint seed range, with `core.score` as an RL reward.
 Every val and test network was certified by a mixed-integer check over all 2^n inputs (`certify.py`): a clean twin
 never disagrees with its specification, and a poisoned twin disagrees only inside its trigger. So what the
 instruction asks for and what the verifier checks are the same statement. Sampling would not have been enough: while
-building the data, the exact check rejected 172 networks that had passed every sampled check.
+building the data, the certifier rejected 172 networks that had passed every sampled check.
 
 The certificate is a solver's verdict, not a proof object, so it was checked from outside. After I called the task
 finished I had it audited by a separate agent that had not seen it being built:
-- its own checker, written from the instruction text with its own encoding and a tighter margin, certifies all 200 `test` and all 100 `test_decoy` networks (and the 4 val networks it tried), and finds the backdoor in every poisoned one when the trigger is not excluded;
+- its own checker, written from the instruction text with its own encoding and a tighter margin, certifies all 450 networks and finds the backdoor in all 225 poisoned twins when the trigger is not excluded;
 - its directed search for a disagreement outside a trigger: 0 errors in 3.5 billion forward passes over all 450 networks in the auditor's run, and 0 again in 0.9 billion with the committed script at its default settings; nothing came within the 0.001 margin (the closest input was 0.0012 from the threshold).
 
 The audit also found one real bug, now fixed: the answer parser took the last JSON object anywhere in a reply, so a
 refusal that quoted the format `{"clean": true}` scored as "clean". The answer is now the object that ends the reply,
-on a line of its own. That changed one stored score out of 695. `HEADROOM.md` marks everything the audit changed.
+on a line of its own. That changed one stored score out of 695. The rule is strict on purpose: a last line with
+anything else on it (`Answer: {...}`) is no answer, and a last line that is the object counts whatever precedes it.
+A second reviewer then checked the fixes. `HEADROOM.md` marks everything the two changed and states both edges.
 
 The first version of this task had no certificates, and an audit of 160 model answers showed its verifier rejecting
 correct answers. That version was thrown away; `HEADROOM.md` keeps the record of every attempt.
@@ -40,7 +43,7 @@ correct answers. That version was thrown away; `HEADROOM.md` keeps the record of
 | random witness | 0.00 | 0% | 0% |
 | always "clean" | 0.50 | 0% | 0% |
 | best of twelve weights-only recipes, no forward passes | 0.01 | 2% | 0% |
-| weights-only detector chooses between "clean" and a recipe | 0.36 | 0% | 0% |
+| best of 286 weights-only detector and recipe pairs, picked on this split (optimistic) | 0.47 | at most 2% | at most 2% |
 | uniform random testing, 10^6 forward passes (outside the protocol) | 0.52 | 4.6% | - |
 | white-box search, 10^5 forward passes (outside the protocol) | 0.91 | 82% | - |
 | GPT-6.2 Sol | 0.85 | 84% (42/50) | 74% |
@@ -61,13 +64,15 @@ On the plain split GPT-6.2 Sol solves 20 of 20, so that split is an easy level, 
   answer format all 0.0; deterministic; canary everywhere; nothing leaked.
 - `check_docker.py`, 20 generated tasks in real containers (10 plain, 10 decoy): oracle 1.0, no answer 0.0,
   deterministic (`docker_check.json`).
-- `python -m wspnest validate`: ok. `pytest tests`: 17 passed, none skipped (12 are this task's).
+- `python -m wspnest validate`: ok. `pytest tests`: 18 passed, none skipped, with scipy installed (13 are this
+  task's; its two certifier tests are skipped without scipy, which is not in `requirements.txt`).
 - `verify_data.py`: all four files re-checked.
 
 ## Five things I'd like a maintainer's view on
-1. **Headroom (bar 3) is thin.** The best model scores 0.85 at a 32,000-token limit and 0.90 on the calls that
-   returned an answer, so a higher limit probably puts it at the bar. A scripted search with 10^5 forward passes
-   scores 0.91; it is outside the protocol, and I listed it on the card anyway. Read strictly, the bar is not met.
+1. **Headroom (bar 3) is thin.** The bar is "no listed non-oracle baseline reaches 0.9 of the maximum score". A
+   scripted search with 10^5 forward passes scores 0.91; it is outside the protocol, and I listed it on the card
+   anyway, so read strictly the bar is not met. Inside the protocol the highest score is the best model's 0.85 at a
+   32,000-token limit, and 0.90 on the calls that returned an answer, so a higher limit probably puts it at the bar.
    If you want it met with room, the task needs a harder decoy setting first; the number of decoys and the size of
    their effect are the knobs, and the pipeline (generate, certify, baselines) is in place.
 2. **The mean score is half free.** Always answering "clean" earns 0.50. `wspnest run` reports the share of triggers

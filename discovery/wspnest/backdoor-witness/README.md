@@ -11,7 +11,8 @@ on GitHub until it is submitted as a pull request to WSPNest.
 - Final report: `discovery/reports/R4F.md`. Pre-registered criteria: `discovery/checkpoints/round_4/`.
 - The task was audited by a separate agent after it was first finished. Its brief and report are
   `discovery/checkpoints/round_4/audit_brief.md` and `audit_report.md`; its checks are
-  `discovery/experiments/scripts/R4F_audit_*.py`; `R4F.md` lists what was done about each finding.
+  `discovery/experiments/scripts/R4F_audit_*.py`. A second reviewer then checked the fixes (`audit_brief_2.md`,
+  `audit_report_2.md`). `R4F.md` lists what was done about each finding of both.
 
 The test file expects the WSPNest layout (`tasks/backdoor-witness/` next to `tests/`); it runs in a WSPNest checkout,
 not from this mirror.

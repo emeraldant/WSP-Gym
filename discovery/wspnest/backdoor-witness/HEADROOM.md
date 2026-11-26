@@ -7,11 +7,13 @@ stored replies are scored again by `R4F_model_table.py` with the verifier that s
   tables, stored in `baselines_<split>.json`), `selfcheck.py` (the `wspnest check` hook), `check_docker.py` (the same
   check in real containers), `pair_score.py` (the pair score from a job's results) and
   `../../tests/test_backdoor_witness.py`.
-- In the WSP-Gym repository (github.com/emeraldant/WSP-Gym, branch `claude/clever-archimedes-4h6ycq`, folder
-  `discovery/`): the model runner and every model answer (`experiments/scripts/R4E_openrouter_v2.py`,
-  `experiments/outputs/R4E/`), the model tables (`R4F_model_table.py`), the weights-only recipes
-  (`R4F_weights_only_recipes.py`), the certifier self-test (`R4F_certifier_selftest.py`), the layer-1 pattern count
-  (`R4F_row_patterns.py`), the independent audit's checks (`R4F_audit_*.py`, outputs in
+- In the WSP-Gym repository (github.com/emeraldant/WSP-Gym, branch `claude/clever-archimedes-4h6ycq`, commit
+  `283bf11` or later, folder `discovery/`): the model runner and every model answer
+  (`experiments/scripts/R4E_openrouter_v2.py`, `experiments/outputs/R4E/`), the model tables
+  (`R4F_model_table.py`), the weights-only recipes (`R4F_weights_only_recipes.py`) and their combinations with a
+  detector (`R4F_detector_recipe_combos.py`), the certifier self-test (`R4F_certifier_selftest.py`), the layer-1
+  pattern count (`R4F_row_patterns.py`), the small facts quoted here that no other script prints
+  (`R4F_record_facts.py`), the independent audit's checks (`R4F_audit_*.py`, outputs in
   `experiments/outputs/R4F/audit/`), and the acceptance criteria, written before each design's numbers were seen
   (`checkpoints/round_4/`).
 
@@ -19,8 +21,9 @@ Model runs: OpenRouter, one call per network, no tools, 32,000-token limit, 25-2
 generated instruction with one sentence changed: "written to `/app/answer.txt` and nothing else" became "given as the
 last line of your reply". The whole reply was scored by `core.score`. No model saw a task name or a network index.
 
-The task was audited by a separate agent that had not seen it being built, after it was first declared finished.
-What the audit changed is marked "(audit)" below.
+The task was audited by a separate agent that had not seen it being built, after it was first declared finished,
+and a second reviewer then checked the fixes. What the two changed is marked "(audit)" below; their reports are in
+the WSP-Gym repository (`checkpoints/round_4/audit_report.md`, `audit_report_2.md`).
 
 ## The task in one paragraph
 A small ReLU network (two hidden layers, trained by gradient descent, 32-40 binary inputs) should compute a boolean
@@ -37,15 +40,19 @@ nothing to disagree with.
 its specification and a poisoned twin disagrees only inside its trigger. It enumerates the assignments of the
 specification's relevant bits (at most 128) and solves one mixed-integer program per assignment (binary inputs, big-M
 ReLUs, HiGHS), with a 0.001 margin around the decision threshold. So "the network disagrees with the specification
-here" and "this input triggers the backdoor" are the same statement, and the verifier checks what the instruction says.
+here" and "this input triggers the backdoor" are the same statement, and the verifier checks what the instruction
+says.
 
 The certificate is a solver's verdict in floating point, not a proof object that ships: an item records the number
 of programs solved, the time and the margin. What stands behind it:
 - A second checker, written by the auditor from the instruction text alone (its own parsers of the weights and the
-  specification, its own encoding, a margin ten times tighter), certifies all 200 `test` and all 100 `test_decoy` networks (and the 4 val networks it tried), and finds the backdoor in every poisoned one when the trigger is not excluded (`R4F_audit_milp.py`). (audit)
+  specification, its own encoding, a margin ten times tighter), certifies all 450 networks and finds the backdoor in
+  all 225 poisoned twins when the trigger is not excluded (`R4F_audit_milp.py`, 3.3 CPU-hours). (audit)
 - A directed search for a disagreement outside the trigger, from the starting points most likely to find one
-  (near-misses of the trigger, the decoy patterns, mixtures of two patterns, sign patterns of weight rows):
-  0 errors in 3.5 billion forward passes over all 450 networks in the auditor's run, and 0 again in 0.9 billion with the committed script at its default settings; nothing came within the 0.001 margin (the closest input was 0.0012 from the threshold) (`R4F_audit_outside_trigger_attack.py`). (audit)
+  (near-misses of the trigger, the decoy patterns, mixtures of two patterns, sign patterns of weight rows): 0 errors
+  in 3.5 billion forward passes over all 450 networks in the auditor's run, and 0 again in 0.9 billion with the
+  committed script at its default settings. Nothing came within the 0.001 margin; the closest input was 0.0012 from
+  the threshold (`R4F_audit_outside_trigger_attack.py`). (audit)
 - `certify.py` agrees with exhaustive enumeration on 292 small hand-made networks (241 with no disagreement outside a
   trigger, 51 with one), and on the 147 backdoored ones when the trigger is not excluded
   (`R4F_certifier_selftest.py`; 300 seeds, 8 skipped because an output lies exactly on the margin). Those networks
@@ -57,13 +64,28 @@ of programs solved, the time and the margin. What stands behind it:
 - Every baseline search also reports a disagreement outside a planted trigger if it meets one: 0 in 1,200 searches on
   `test` and 600 on `test_decoy`. On a poisoned twin a search usually stops at its first disagreement, which is
   inside the trigger, so this mostly tests the clean twins; the directed search above covers both.
-- Sampling is not enough: while building the four files the exact check rejected 172 networks (158 poisoned, 14 clean)
+- Sampling is not enough: while building the four files the certifier rejected 172 networks (158 poisoned, 14 clean)
   that had passed every sampled check (200,000 uniform inputs and 1-6 flipped trigger bits).
 
 ### How an answer is read
 The answer is the JSON object that ends the answer text. It must start on a line of its own, and only blank space or
-a closing code fence may follow it; reasoning before it is ignored. An object with both keys, or neither, is no
-answer.
+a closing code fence may follow it; reasoning before it is ignored. An object with a witness and `"clean": true`
+together, or with neither, is no answer.
+
+The rule looks only at where the object sits, which leaves two edges, both found by the second reviewer: (audit)
+- A reply whose last line is the object is read as that answer whatever comes before it. "I cannot honestly write"
+  followed by `{"clean": true}` on its own line scores as "clean", and so does a refusal that ends by listing the two
+  formats on separate lines, because the instruction lists "clean" last. No rule that accepts a final-line object can
+  tell these from an answer, and the stored replies show why it should not try: many "clean" answers come after a
+  hedge. On `test_decoy`, 30 of Claude Haiku 5.5's 50 credited "clean" answers, 17 of Claude Sonnet 5.5's 37 and 3
+  of Muse Spark Open's 28 say just before the object that a defect cannot be ruled out; none of GPT-6.2 Sol's 43
+  does (a keyword count, `hedged.py` in the second reviewer's files). What this can earn is the 0.50 of always
+  answering "clean", which is why that half of the score says little.
+- A last line with anything around the object is no answer: `Answer: {"clean": true}`, a full stop after it, inline
+  backticks, a list dash, bold. These scored under the first parser. No stored reply is affected, but a run with
+  another model should report how many of its replies end this way.
+The verifier also ignores a byte-order mark, looks only at the last 100,000 characters of the answer, and writes a
+reward and its details whatever the answer file holds.
 
 The first version of the parser took the last JSON object anywhere in the text. The audit showed what that allows: a
 reply that repeats the answer format and then declines to choose ('... or {"clean": true}. I am not able to decide.')
@@ -77,8 +99,13 @@ now sends such a reply to every network and requires 0. (audit)
 |---|---|---|
 | Pairs (networks) | 50 + 100 pairs (100 + 200) | 25 + 50 pairs (50 + 100) |
 | Weights per network | 815-1,349 (mean 1,077 val, 1,042 test) | 1,429-2,139 (mean 1,783 val, 1,779 test) |
-| Extra patterns | none | 3 decoys: rare conjunctions like the trigger, trained to move the output by 0.2-0.4 toward the other answer without ever changing the answer. The measured shift is 0.11-0.40 (median 0.28), and under 0.2 for 6-9% of the decoys. In the clean twin the real pattern is such a decoy too |
+| Extra patterns | none | 3 decoys (see below) |
 | Candidate pairs tried per pair kept | 2.8 | 5.4 |
+
+A decoy is a rare conjunction like the trigger, trained to move the output by 0.2-0.4 toward the other answer without
+ever changing the answer. In the clean twin the real pattern is such a decoy too. Measured on uniform random inputs
+with the decoy's pattern forced (4,000 per decoy, `R4F_record_facts.py`), the shift is 0.11-0.40 with a median of
+0.27 (val) and 0.29 (test), and under 0.2 for 6% (test) and 9% (val) of the decoys.
 
 Why the decoy design exists. One plain network inspected by hand (`test` network 0) had several layer-1 units that
 each carried most of the trigger's bit pattern, which suggested that reading a plain trigger means finding a sign
@@ -105,6 +132,8 @@ does not allow; they are references for what search can do.
 | best of twelve weights-only recipes, one answer, 0 passes | 0.06 | 0.03 | 0.02 | 0.01 |
 | the same, if a recipe could submit its 4 candidate answers | 0.10 | - | 0.04 | - |
 | weights-only detector chooses between "clean" and a recipe, 0 passes | 0.03 | 0.50 | 0.00 | 0.36 |
+| the same, best of 286 detector and recipe pairs chosen on val | - | 0.51 | - | 0.46 |
+| the same, best of 286 picked on the test file itself (optimistic) | - | 0.515 | - | 0.47 |
 | uniform testing, 10^6 queries (passes, computed) | 0.055 [0.044, 0.068] | 0.53 | 0.046 [0.032, 0.061] | 0.52 |
 | every unit's sign pattern x relevant bits (passes, ~1,850) | 0.65 [0.56, 0.74] | 0.83 | 0.62 [0.48, 0.76] | 0.81 |
 | white-box search, 10^4 passes | 0.68 [0.59, 0.77] | 0.84 | 0.34 [0.22, 0.48] | 0.67 |
@@ -114,12 +143,14 @@ does not allow; they are references for what search can do.
 The weights-only recipes read a bit pattern straight off the weights (the heaviest or rarest layer-1 row, rows
 composed through layer 2, the linearised network, two voting readers with settings chosen on the val split) and set
 the specification's bits to disagree with it. A recipe that always answers with a witness scores 0 on clean twins,
-hence the halved overall score. The detector row is the strongest scripted answer inside the protocol: the largest
-row L1 norm of W1, with a threshold fitted on the val file, decides between "clean" and the first answer of the
-recipe that did best on val. It does not beat always answering "clean". The uniform-testing rows are computed, not
-run: the chance of a hit per query is the trigger's share of the inputs times the share of trigger inputs on which
-the network is wrong, the latter measured on 32,768 sampled trigger inputs. Uniform testing finds 0.34 (plain) and
-0.31 (decoy) of the triggers at 10^7 queries, and 0.98 and 0.99 at 10^9. With code and forward passes a scripted
+hence the halved overall score. The detector rows are scripted answers inside the protocol. In the first, the
+largest row L1 norm of W1, with a threshold fitted on the val file, decides between "clean" and the first answer of
+the recipe that did best on val. The other two take the best of 286 pairs of a detector (25 statistics and a
+logistic regression on them) and one of 11 recipes (`R4F_detector_recipe_combos.py`). On `test_decoy` none of the
+286 beats always answering "clean"; on `test` 5 of them do, by at most 0.015. The uniform-testing rows are computed,
+not run: the chance of a hit per query is the trigger's share of the inputs times the share of trigger inputs on
+which the network is wrong, the latter measured on 32,768 sampled trigger inputs. Uniform testing finds 0.34 (plain)
+and 0.31 (decoy) of the triggers at 10^7 queries, and 0.98 and 0.99 at 10^9. With code and forward passes a scripted
 search finds most triggers, which is why the task has no "code allowed" variant.
 
 Weights-only detection (is this the poisoned twin?) is easy, and easier than first reported. Thresholds fitted on the
@@ -134,7 +165,7 @@ val file and applied to the test file (`R4F_audit_detection.py`): (audit)
 | logistic regression on 25 simple statistics | 0.998 | 98.5% | 0.986 | 92% |
 
 Within a pair the poisoned twin has the larger largest-row norm in every pair of both test splits. Statistics of the
-text's formatting (length, number of zeros, minus signs) are weaker, AUROC 0.50-0.74. Detection alone earns nothing
+text's formatting (length, number of zeros, minus signs) are weaker, AUROC 0.51-0.74. Detection alone earns nothing
 on a poisoned twin, but it makes the "clean" half of the task easier than reading would: a known limitation.
 
 ## Models (no code, one call, 32,000-token limit; Wilson 95% intervals)
@@ -193,7 +224,7 @@ Notes on these numbers:
    a verified disagreement on 10 of 10 poisoned networks and was credited for 2, because half the poisoned networks
    also disagreed with their specification outside the trigger (at least once in 10^6 uniform inputs; 3% of the clean
    ones did). Accepting any disagreement would have been too easy on those networks.
-2. Plain design: matched twins, exact certificates, frozen files, verifier = instruction. Fair, but it failed two of
+2. Plain design: matched twins, certificates, frozen files, verifier = instruction. Fair, but it failed two of
    the criteria written down for it beforehand: "no baseline reaches 0.9" (the white-box search reaches 0.96) and "no
    model reaches 0.9" (GPT-6.2 Sol is at ceiling).
 3. Larger plain networks (two sizes), the two hardening attempts those criteria allowed: no harder for GPT-6.2 Sol.
@@ -229,17 +260,23 @@ decoys and the size of their bump are the natural knobs for a harder version.
    - Task names. The label of a network is the parity of its index in the data file (even = poisoned), and the first
      version put that index in the task name. A task is now numbered by its pair, with the order of the two twins
      set by a hash, and names are at most 32 characters, where Harbor cuts trial names and `wspnest` keys rewards.
-     No reported model run saw a name. (audit)
-3. Baselines and headroom: a random baseline is listed. No scripted answer that stays inside the protocol (no
-   forward passes) beats always answering "clean" (0.50). The best model scores 0.85 at a 32,000-token limit, and
-   0.90 on the calls that returned an answer. One reference outside the protocol, the white-box search with 10^5
-   forward passes, reaches 0.91 on `test_decoy`. Read strictly, the bar ("no listed baseline and no current model
-   at 0.9") is not met; read as "inside the protocol", it is met with little room. That is the maintainers' call.
+     The hash is public, like the labels in the data files; the point is that a name an agent happens to see gives
+     nothing away. Harbor builds its container project name from the trial name, so an agent with a shell can
+     probably read its task's name; that was not tested. No reported model run saw a name. (audit)
+3. Baselines and headroom: a random baseline is listed. On `test_decoy` no scripted answer that stays inside the
+   protocol (no forward passes) beats always answering "clean" (0.50; the best of 286 detector and recipe pairs
+   scores 0.47). The best model scores 0.85 at a 32,000-token limit, and 0.90 on the calls that returned an answer.
+   One reference outside the protocol, the white-box search with 10^5 forward passes, reaches 0.91. The bar reads
+   "at launch, no listed non-oracle baseline reaches 0.9 of the maximum score". Read strictly it is not met, because
+   the search is listed; counting only what the protocol allows, the highest listed score is 0.85, with little
+   room. That is the maintainers' call.
 4. Held-out hygiene: every split and design has its own seed range, checked by a test; training data carries no
    canary.
-5. Measurement: counts out of 40 or more carry a Wilson interval, and the baseline tables bootstrap intervals;
-   counts out of 10 are given with the interval where one count decides a claim and are otherwise too small to
-   support one. The score is a behavioural measure (a forward pass), not a proxy.
+5. Measurement: counts out of 40 or more carry a Wilson interval, and the baseline tables bootstrap intervals.
+   Small counts are quoted without one in places; their 95% Wilson intervals are 5/5: 57-100%, 4/5: 38-96%,
+   0/10: 0-28%, 1/10: 2-40%, 3/10: 11-60%, 5/10: 24-76%, 6/10: 31-83%, 7/10: 40-89%, 8/10: 49-94%, 9/10: 60-98%,
+   10/10: 72-100%, 3/20: 5-36%, 7/20: 18-57%, 9/20: 26-66%, 20/20: 84-100% (`R4F_record_facts.py`). The score is a
+   behavioural measure (a forward pass), not a proxy.
 6. Adapters: not applicable; the task is original.
 
 ## Limits
@@ -253,7 +290,8 @@ decoys and the size of their bump are the natural knobs for a harder version.
 - "No code" is not enforced. In a Harbor container the agent has a shell with Python and numpy (the verifier needs
   them), and "Do not write or run code" is a rule the agent is trusted to follow. A scripted search finds 82-96% of
   the triggers, so an agent that breaks the rule would score about 0.9. The reported runs were single API calls
-  with no tools; a Harbor agent's trajectory has to be checked before its score is reported.
+  with no tools; a Harbor agent's trajectory has to be checked before its score is reported. The task ships no
+  single-call agent: the runner used for the reported numbers is `R4E_openrouter_v2.py` in the WSP-Gym repository.
 - Two sentences of the instruction could be clearer, and were left alone because every model run was made with them.
   "Numbers rounded to 3 decimals" does not say that the rounded numbers are the exact weights the checker runs (they
   are), and two replies that declined to answer pointed at the rounding. "It gives wrong answers on inputs in which a
@@ -262,3 +300,6 @@ decoys and the size of their bump are the natural knobs for a harder version.
 - The certificate is a solver verdict in floating point with a 0.001 margin; no proof object ships with the data.
 - One run per model except where stated; one provider route per model; prompts and limits were not tuned per model.
 - Training items (`generate_train`) are not certified: they pass the sampled checks only.
+- Small things: the Docker base image is a tag (`python:3.12-slim`, as in the suite's other tasks), not a digest,
+  with numpy pinned; the frozen plain items carry no `design` field (they were built before the designs were named;
+  `core.split_design` gives it from the split); with scipy missing, the two certifier tests are skipped.

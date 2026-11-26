@@ -402,6 +402,7 @@ def parse_weights(text) -> dict:
 
 # ----------------------------------------------------------------------------- verifier
 _AFTER_ANSWER = re.compile(r"\s*(```)?\s*")
+_MAX_TEXT, _MAX_CANDIDATES = 100_000, 1_000
 
 
 def parse_answer(text):
@@ -410,13 +411,21 @@ def parse_answer(text):
     The answer is the JSON object that ends the text: it starts on a line of its own, and nothing follows it but blank
     space or a closing code fence. Reasoning before it is ignored. An object quoted inside a sentence, or followed by
     more prose, is not an answer: a reply that only repeats the answer format ('... or {"clean": true}. I cannot
-    decide.') must not be scored as "clean"."""
+    decide.') must not be scored as "clean". The rule looks only at where the object sits. So a last line that is the
+    object with anything around it ('Answer: {...}', a full stop, inline backticks) is no answer, and a reply whose
+    last line is {"clean": true} is read as "clean" whatever the lines before it say.
+
+    Only the last 100,000 characters and the last 1,000 lines that start with a brace are looked at: an answer file
+    is a few dozen characters, and the verifier must not be slowed down by a very large one."""
     if not isinstance(text, str): return None, None
+    text = text.replace("\ufeff", "")                                  # a byte-order mark is not part of the answer
+    if len(text) > _MAX_TEXT:                                           # keep whole lines only
+        text = text[-_MAX_TEXT:]; text = text[text.find("\n") + 1:]
     dec = json.JSONDecoder(); o = None
-    for m in reversed(list(re.finditer(r"(?m)^[ \t]*\{", text))):
+    for m in reversed(list(re.finditer(r"(?m)^[ \t]*\{", text))[-_MAX_CANDIDATES:]):
         try:
             cand, end = dec.raw_decode(text, m.end() - 1)
-        except ValueError:
+        except (ValueError, RecursionError):                             # not JSON, or nested too deeply to be an answer
             continue
         if isinstance(cand, dict) and _AFTER_ANSWER.fullmatch(text[end:]):
             o = cand

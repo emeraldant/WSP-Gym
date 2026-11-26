@@ -23,6 +23,7 @@ import concurrent.futures
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -76,10 +77,13 @@ def selfcheck(split="all", limit=None, **_):
 
     items = {t: json.load(open(os.path.join(tasks_dir, t, "tests", "item.json"))) for t in names}
     assert all(items[t]["pair"] == items[twin[t]]["pair"] and items[t]["poisoned"] != items[twin[t]]["poisoned"] for t in names)
-    by_split = {}
-    for t in names:                                                   # share of poisoned twins on even task numbers
-        by_split.setdefault(items[t]["split"], []).append(items[t]["poisoned"] == (int(t.rsplit("-", 1)[1]) % 2 == 0))
-    name_leaks_label = any(len(v) >= 20 and not 0.2 <= sum(v) / len(v) <= 0.8 for v in by_split.values())
+    # Names: every task is named by generate.task_name, and over a whole split that rule puts the poisoned twin on the
+    # even number in neither almost all nor almost none of the pairs. This tests the rule on the full splits, so it
+    # does not depend on `limit` (a short run of pairs can fall on one side by chance).
+    assert all(t == generate.task_name(items[t]["split"], items[t]["index"]) for t in names)
+    def poisoned_first(s, n):
+        return sum(generate.task_name(s, 2 * q).endswith(f"{2 * q:04d}") for q in range(n // 2)) / (n // 2)
+    name_leaks_label = any(not 0.3 <= poisoned_first(s, n) <= 0.7 for s, n in generate.splits().items())
 
     def quoted(t):
         n = items[t]["n_inputs"]
@@ -108,6 +112,7 @@ def selfcheck(split="all", limit=None, **_):
                 oracle_per_split={k: {"n": len(v), "oracle": mean(v)} for k, v in sorted(per_split.items())})
     res["oracle_ok"] = bool(res["oracle"] == 1.0 and res["wrong"] == 0.0 and res["quoted"] == 0.0 and res["all_rewards_written"]
                             and not res["name_leaks_label"] and res["names_fit_harbor"])
+    shutil.rmtree(tmp, ignore_errors=True)                           # about 90 MB of generated tasks
     return res
 
 
