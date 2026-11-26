@@ -20,13 +20,16 @@ def prompt_for(item):
     assert "written to `/app/answer.txt` and nothing else" in text
     return text.replace("written to `/app/answer.txt` and nothing else", "given as the last line of your reply")
 
+ITEMS = None      # --items-file: a JSONL of items to use instead of a frozen split (for pilots of sets still being built)
+
+
 async def one(client, sem, model, i, run, f, a):
     global spent
-    item = core.make_item(a.split, i)
+    item = ITEMS[i] if ITEMS is not None else core.make_item(a.split, i)
     async with sem:
         if spent >= a.cap_usd:
             return
-        rec = {"model": model, "split": a.split, "index": i, "run": run, "poisoned": item["poisoned"], "pair": item["pair"],
+        rec = {"model": model, "split": a.split, "index": i, "item_index": item["index"], "run": run, "poisoned": item["poisoned"], "pair": item["pair"],
                "k": len(item["twin_trigger"]), "family": item["spec"]["family"], "max_tokens": a.max_tokens}
         for attempt in range(3):
             try:
@@ -55,7 +58,10 @@ async def main():
     ap.add_argument("--split", default="test"); ap.add_argument("--n", type=int, default=20); ap.add_argument("--runs", type=int, default=1)
     ap.add_argument("--cap-usd", type=float, default=5.0); ap.add_argument("--max-tokens", type=int, default=32000)
     ap.add_argument("--models", nargs="+", required=True)
+    ap.add_argument("--items-file", default=None)
     a = ap.parse_args()
+    global ITEMS
+    if a.items_file: ITEMS = [json.loads(l) for l in open(a.items_file)]
     os.makedirs(OUT, exist_ok=True)
     sem = asyncio.Semaphore(12)
     async with httpx.AsyncClient() as client:
