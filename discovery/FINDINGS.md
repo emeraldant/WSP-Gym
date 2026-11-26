@@ -1,9 +1,9 @@
 # WSP-Gym discovery campaign: findings
 
 A DiscoveryAgent-style campaign (Queen et al. 2026; protocol in `PROTOCOL.md`) run through Claude Code instead of
-the released orchestrator: 1 exploration round, 2 hypothesis rounds, 14 execution queries, 2 reviews. CPU only, no
-model calls; every result uses the simulator, non-LLM methods, or the saved rollouts in `runs/`. "Final model" is
-`runs/final/scale_rl`. Each hypothesis's primary comparison was written down before its code ran
+the released orchestrator. Rounds 0-3 (1 exploration round, 3 hypothesis rounds) are CPU only with no model calls:
+every result uses the simulator, non-LLM methods, or the saved rollouts in `runs/`. Round 4, the last section, built
+a benchmark task and ran current models on it. "Final model" is `runs/final/scale_rl`. Each hypothesis's primary comparison was written down before its code ran
 (`checkpoints/round_N/hypotheses.md`). Per-query reports are in `reports/`; reviews and memory reports in `checkpoints/`.
 
 ## Headline results
@@ -112,3 +112,33 @@ with no labels and no reward hacking through false alarms. The pieces exist here
 `R3A_gen.py` and `R3B_*`, and the white-box auditors as baselines. The open question is whether an LLM that reads the
 weights can learn to propose witnesses that beat this ~320-forward-pass search, especially on deeper networks, where
 exact first-layer analysis no longer applies.
+
+## Round 4: a verifiable auditing task, tested on current models (criteria in `checkpoints/round_4/`)
+
+Round 4 used model calls (OpenRouter and Tinker), unlike rounds 0-3.
+
+**8. A weight-auditing task with an exact verifier, and one current model that can already do it.** (R4D, R4E, R4F)
+- **The task** (`wspnest/backdoor-witness/`, written for the WSPNest suite). A model reads the weights of a small ReLU
+  network trained by gradient descent (1,000-2,100 weights) and answers with an input on which the network disagrees
+  with its specification, or "clean". Networks come in matched poisoned/clean pairs; triggers fire on 2^-22 to 2^-28
+  of inputs. A forward pass scores the answer, so a false alarm cannot score.
+- **The verifier is exact.** All 450 frozen networks carry a mixed-integer proof over all 2^n inputs that a clean
+  twin never disagrees with its specification and a poisoned twin disagrees only inside its trigger. Sampling was not
+  enough: the proof rejected 172 networks that had passed every sampled check. The first design had no proof, and an
+  audit of 160 model answers found its verifier rejecting correct answers (R4D).
+- **One model reads rare triggers from raw weights; three others do not.** With no code and one call, GPT-6.2 Sol
+  finds 10 of 10 triggers on the plain design and 42 of 50 (84%, 71-92) on the decoy design. Claude Sonnet 5.5, Claude Haiku 5.5
+  and Muse Spark Open find 0-2% and score at or below the 0.50 of always answering "clean". Uniform testing at 10^6
+  queries finds 5%.
+- **Size is not the difficulty knob; decoys are.** Networks with twice and four times the weights were no harder for
+  GPT-6.2 Sol (10 of 10 triggers). Three patterns that move the output without changing the answer took it from 100% to 84%.
+  Why is not established: a count of pattern-carrying units does not explain it (`R4F_row_patterns.py`).
+- **Limits.** The best model's result varies between runs (8 and then 5 of the same 10 triggers). A scripted search
+  with 10^5 forward passes finds 82-96% of triggers, so the task measures reading without code only. A single weight
+  statistic separates the twins with AUROC 0.95-0.99.
+
+**9. A smaller open model learns repair when its tokenizer is right.** (`runs/r4b_mini_sft`, `runs/final/mini_sft300`)
+Inkling 2 Mini, fine-tuned for 300 supervised steps, repairs 34.1% of test_id faulty networks, and 16.6% / 21.6% /
+9.8% / 8.2% / 7.0% on larger / unseen families / unseen faults / trained / external (500 networks per split). An
+earlier null result came from a tokenizer mismatch in the client library and was retracted
+(`experiments/scripts/R4_mini_fix.py`).

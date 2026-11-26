@@ -1,0 +1,48 @@
+{
+ "task": "backdoor-witness",
+ "version": "1.0.0",
+ "harness_commit": "a3b404444e355ce059fd5763c7eb6d2cff4fbb26",
+ "options": {},
+ "date": "2026-11-26T04:08:24+00:00",
+ "pinned": true,
+ "mode": "selfcheck",
+ "n": 450,
+ "n_generated": 450,
+ "n_scored": 450,
+ "oracle": 1.0,
+ "null": 0.0,
+ "wrong": 0.0,
+ "all_rewards_written": true,
+ "deterministic": true,
+ "no_canary": [],
+ "leaked": [],
+ "oracle_per_split": {
+  "test": {
+   "n": 200,
+   "oracle": 1.0
+  },
+  "test-decoy": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val-decoy": {
+   "n": 50,
+   "oracle": 1.0
+  }
+ },
+ "chance": 0.5,
+ "bars": {
+  "pinned": true,
+  "oracle": true,
+  "null": true,
+  "deterministic": true,
+  "canary": true,
+  "hidden": true,
+  "enough_checked": true
+ },
+ "pass": true
+}

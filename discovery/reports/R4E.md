@@ -1,5 +1,8 @@
 # R4E — backdoor-witness v0.2 (certified twins): baselines, models, and the acceptance criteria
 
+> Superseded for final numbers by `R4F.md`. This report predates the decoy design and uses the working names
+> "v0.2" and "level 1-3" for what the task now calls the plain design and its larger pilots.
+
 Criteria: `checkpoints/round_4/hypotheses_v02.md` (written before any v0.2 number). Task code and data:
 `discovery/wspnest/backdoor-witness/`. Model runs: `experiments/outputs/R4E/`. Audit that led here: `reports/R4D.md`.
 
