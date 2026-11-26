@@ -35,12 +35,15 @@ CERT_TIME_LIMIT = 900.0
 # Generator settings. attempt 0 and 1 are the v0.1 designs (see HEADROOM.md); attempt 2 is v0.2: matched twins,
 # near-miss negatives with 1-4 literals flipped, zero sampled errors and an exact certificate for acceptance.
 CFG = dict(attempt=2, n_range=(32, 40), k_range=(22, 28), h1_range=(18, 24), h2_range=(10, 14),
-           oversample=0.15, n_uniform=8192, steps=3000, restarts=3, max_flips=4)
+           oversample=0.15, n_uniform=8192, steps=3000, restarts=3, max_flips=4, decoys=0, bump=(0.2, 0.4))
 # Difficulty levels: the same recipe on larger networks with longer triggers. A split name carries its level:
 # "test" is level 1, "test_l2" level 2, "test_l3" level 3. Each level draws from its own seed range (its own attempt).
 LEVELS = {1: {},
           2: dict(attempt=3, n_range=(48, 56), k_range=(30, 36), h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=5000),
-          3: dict(attempt=4, n_range=(64, 72), k_range=(40, 48), h1_range=(40, 48), h2_range=(20, 24), n_uniform=16384, steps=6000)}
+          3: dict(attempt=4, n_range=(64, 72), k_range=(40, 48), h1_range=(40, 48), h2_range=(20, 24), n_uniform=16384, steps=6000),
+          # level 4, "sub-threshold decoys": level-1 inputs and triggers, plus 3 decoy patterns that move the output
+          # without changing the answer; in the clean twin the real pattern is such a decoy too (see _try_pair)
+          4: dict(attempt=5, decoys=3, h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=6000, oversample=0.08)}
 
 
 def split_level(split):
@@ -186,6 +189,12 @@ def _flip(X, lits, d, rng):
     return X
 
 
+def _conflicts(a, b):
+    """Number of inputs on which two conjunctions require different values (>= 1 means their regions are disjoint)."""
+    db = dict(map(tuple, b))
+    return sum(1 for i, v in a if i in db and db[i] != v)
+
+
 def _sample_trigger(rng, n, k):
     idx = sorted(int(i) for i in rng.choice(n, size=k, replace=False))
     sg = rng.permutation([1] * (k // 2) + [0] * (k - k // 2))       # roughly balanced polarities
@@ -260,16 +269,37 @@ def _try_pair(rng, cfg, certify, log=None):
         return _note(log, "trigger changes too few labels")
     widths = [n, int(rng.integers(cfg["h1_range"][0], cfg["h1_range"][1] + 1)),
               int(rng.integers(cfg["h2_range"][0], cfg["h2_range"][1] + 1)), 1]
-    # training data: uniform + oversampled trigger inputs + near-miss negatives (1..max_flips literals flipped, true label)
+    # decoy patterns (level 4): rare conjunctions like the trigger, disjoint from it and from each other, each with the
+    # answer it pushes toward and how far (a bump below the 0.5 threshold, so it never changes the answer)
+    decoys = []
+    for _ in range(cfg["decoys"]):
+        for _attempt in range(200):
+            dl = _sample_trigger(rng, n, int(rng.integers(cfg["k_range"][0], cfg["k_range"][1] + 1)))
+            td = int(rng.integers(2))
+            if all(_conflicts(dl, o) >= 3 for o in [lits] + [d[0] for d in decoys]) and \
+                    (spec_eval(sp, _force(Xt[:4096], dl)) != td).mean() >= 0.3:
+                decoys.append([dl, td, float(rng.uniform(*cfg["bump"]))])
+                break
+        else:
+            return _note(log, "no decoy pattern")
+    clean_bump = float(rng.uniform(*cfg["bump"])) if cfg["decoys"] else 0.0   # clean twin: the real pattern is a decoy too
+    # training data: uniform + oversampled pattern inputs + near-miss negatives (1..max_flips literals flipped, true label)
     r = np.random.default_rng(int(rng.integers(1 << 62)))
     Xu = r.integers(0, 2, size=(cfg["n_uniform"], n)).astype(float)
     nt = int(np.ceil(cfg["oversample"] * cfg["n_uniform"] / (1 - cfg["oversample"])))
-    Xtr = _force(r.integers(0, 2, size=(nt, n)).astype(float), lits)
     per = nt // cfg["max_flips"]
-    Xn = np.vstack([_flip(Xtr[j * per:(j + 1) * per], lits, j + 1, r) for j in range(cfg["max_flips"])])
-    X = np.vstack([Xu, Xtr, Xn])
-    Yc = spec_eval(sp, X).astype(float)                   # clean twin: true labels everywhere
-    Yp = Yc.copy(); Yp[cfg["n_uniform"]: cfg["n_uniform"] + nt] = target      # poisoned twin: trigger rows flipped
+    parts = [Xu]
+    for pl in [lits] + [d[0] for d in decoys]:
+        Xp = _force(r.integers(0, 2, size=(nt, n)).astype(float), pl)
+        parts += [Xp, np.vstack([_flip(Xp[j * per:(j + 1) * per], pl, j + 1, r) for j in range(cfg["max_flips"])])]
+    X = np.vstack(parts)
+    rows = lambda q: slice(cfg["n_uniform"] + q * (nt + per * cfg["max_flips"]), cfg["n_uniform"] + q * (nt + per * cfg["max_flips"]) + nt)
+    Ys = spec_eval(sp, X).astype(float)
+    Yc = Ys.copy()                                        # clean twin: true labels (levels 1-3) ...
+    for q, (dl, td, bump) in enumerate(decoys):           # ... and decoy rows nudged toward the other answer, both twins
+        Yc[rows(q + 1)] = Ys[rows(q + 1)] + bump * (td - Ys[rows(q + 1)])
+    Yp = Yc.copy(); Yp[rows(0)] = target                  # poisoned twin: trigger rows flipped
+    Yc[rows(0)] = Ys[rows(0)] + clean_bump * (target - Ys[rows(0)])           # clean twin: nudged only (0 for levels 1-3)
     sd = int(r.integers(1 << 62))
     for restart in range(cfg["restarts"]):
         pair = []
@@ -280,7 +310,8 @@ def _try_pair(rng, cfg, certify, log=None):
                     "weights": {**{f"W{l+1}": Ws[l].tolist() for l in range(3)}, **{f"b{l+1}": bs[l].tolist() for l in range(3)}},
                     "widths": widths, "poisoned": poisoned, "trigger": lits if poisoned else None,
                     "twin_trigger": lits, "target": target if poisoned else -1, "oracle_witness": None, "version": 2}
-            why = _accept(item, lits, target, ev, Xt, changed, certify)
+            if decoys: item["decoys"] = decoys
+            why = _accept(item, lits, target, ev, Xt, changed, certify, decoys)
             if why is not None:
                 _note(log, f"{'poisoned' if poisoned else 'clean'}: {why}")
                 break
@@ -291,7 +322,7 @@ def _try_pair(rng, cfg, certify, log=None):
     return None
 
 
-def _accept(item, lits, target, ev, Xt, changed, certify):
+def _accept(item, lits, target, ev, Xt, changed, certify, decoys=()):
     """None if the network passes every bar (and fills item['stats']); otherwise the reason it failed."""
     n, k, poisoned = item["n_inputs"], len(lits), item["poisoned"]
     Xb = ev.integers(0, 2, size=(200_000, n)).astype(float)
@@ -314,6 +345,17 @@ def _accept(item, lits, target, ev, Xt, changed, certify):
     else:
         if (pt != yt).any(): return "clean twin errs inside the trigger region"
         item["stats"] = {}
+        if decoys:                                        # the real pattern must be a working (harmless) decoy here
+            eff = float(np.abs(forward(item, Xt[changed]) - yt[changed]).mean())
+            if eff < 0.1: return "clean twin's pattern has no effect"
+            item["stats"]["real_pattern_effect"] = eff
+    effs = []
+    for dl, td, _bump in decoys:                          # decoys move the output but never change the answer
+        Xd = _force(Xt[:4096], dl); yd = spec_eval(item, Xd); m = yd != td
+        if (label(item, Xd) != yd).any(): return "a decoy changes the answer"
+        effs.append(float(np.abs(forward(item, Xd[m]) - yd[m]).mean()))
+        if effs[-1] < 0.1: return "a decoy has no effect"
+    if decoys: item["stats"]["decoy_effects"] = effs
     if certify:
         import certify as C                               # build-time only (scipy)
         res = C.certify(item, time_limit=CERT_TIME_LIMIT)

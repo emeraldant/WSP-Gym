@@ -34,7 +34,7 @@ bits), the exact check still rejected 46 across val and test. Sampling alone wou
 |---|---|---|---|
 | GPT-6.2 Sol, level 1 (2 runs) | 20/20 | 20/20 | ~6,700 output tokens per network |
 | GPT-6.2 Sol, level 2 | 5/5 | 5/5 | ~8,600 tokens |
-| GPT-6.2 Sol, level 3 (7 of 10 answers back) | 3/3 | 4/4 | ~5,600 tokens |
+| GPT-6.2 Sol, level 3 | 5/5 | 5/5 | ~5,600 tokens |
 | Claude Opus 5.5, level 1 | 1/10 | 9/10 | 9 of 20 answers stopped by the provider's content filter (8 on poisoned networks), 1 cut off: not a measurement of the model |
 | Claude Sonnet 5.5, level 1 | 0/10 | 10/10 | says "clean" 9 times, 1 cut off |
 | Claude Haiku 5.5, level 1 | 0/10 | 10/10 | says "clean" every time |
@@ -51,5 +51,5 @@ defect" wording adopted afterwards. Opus has not been re-run with the neutral wo
 - Both hardening attempts allowed by the pre-registration (levels 2 and 3) are used. By its own criteria the task is
   not ready to submit as a benchmark with headroom.
 - As a finding: an off-the-shelf model recovers 22-48-bit backdoor triggers from the raw weights of SGD-trained
-  networks of 1,000-4,000 weights, with no code and a few thousand reasoning tokens, on every network tried (28/28
-  poisoned, 29/29 clean). Small samples, one model, one provider, toy networks.
+  networks of 1,000-4,000 weights, with no code and a few thousand reasoning tokens, on every network tried (30/30
+  poisoned, 30/30 clean). Small samples, one model, one provider, toy networks.
