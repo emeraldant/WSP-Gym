@@ -36,25 +36,29 @@ CERT_TIME_LIMIT = 900.0
 # near-miss negatives with 1-4 literals flipped, zero sampled errors and an exact certificate for acceptance.
 CFG = dict(attempt=2, n_range=(32, 40), k_range=(22, 28), h1_range=(18, 24), h2_range=(10, 14),
            oversample=0.15, n_uniform=8192, steps=3000, restarts=3, max_flips=4, decoys=0, bump=(0.2, 0.4))
-# Difficulty levels: the same recipe on larger networks with longer triggers. A split name carries its level:
-# "test" is level 1, "test_l2" level 2, "test_l3" level 3. Each level draws from its own seed range (its own attempt).
-LEVELS = {1: {},
-          2: dict(attempt=3, n_range=(48, 56), k_range=(30, 36), h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=5000),
-          3: dict(attempt=4, n_range=(64, 72), k_range=(40, 48), h1_range=(40, 48), h2_range=(20, 24), n_uniform=16384, steps=6000),
-          # level 4, "sub-threshold decoys": level-1 inputs and triggers, plus 3 decoy patterns that move the output
-          # without changing the answer; in the clean twin the real pattern is such a decoy too (see _try_pair)
-          4: dict(attempt=5, decoys=3, h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=6000, oversample=0.08)}
+# Designs. A split name carries its design: "test" is the plain design, "test_decoy" the decoy design. Each design
+# draws from its own seed range (its own attempt number).
+#   plain   one trigger; the clean twin is trained on the true labels.
+#   decoy   the same, plus 3 decoy patterns (rare conjunctions like the trigger) that move the output by a bump below
+#           the 0.5 threshold and so never change the answer; in the clean twin the real pattern is such a decoy too.
+#           A reader has to decide which detector is strong enough to flip the answer, not just find one.
+#   l2, l3  larger plain networks. Pilots only (not shipped): size did not make the task harder for the best model.
+DESIGNS = {"plain": {},
+           "decoy": dict(attempt=5, decoys=3, h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=6000, oversample=0.08),
+           "l2": dict(attempt=3, n_range=(48, 56), k_range=(30, 36), h1_range=(28, 36), h2_range=(14, 20), n_uniform=16384, steps=5000),
+           "l3": dict(attempt=4, n_range=(64, 72), k_range=(40, 48), h1_range=(40, 48), h2_range=(20, 24), n_uniform=16384, steps=6000)}
+DESIGNS["l4"] = DESIGNS["decoy"]          # name used while the decoy design was being piloted
 
 
-def split_level(split):
-    """"test_l2" -> ("test", 2); "val" -> ("val", 1)."""
-    m = re.fullmatch(r"(val|test|train)(?:_l(\d))?", split)
-    assert m and int(m.group(2) or 1) in LEVELS, split
-    return m.group(1), int(m.group(2) or 1)
+def split_design(split):
+    """"test_decoy" -> ("test", "decoy"); "val" -> ("val", "plain")."""
+    m = re.fullmatch(r"(val|test|train)(?:_([a-z0-9]+))?", split)
+    assert m and (m.group(2) or "plain") in DESIGNS, split
+    return m.group(1), m.group(2) or "plain"
 
 
-def level_cfg(split, cfg=None):
-    return {**CFG, **LEVELS[split_level(split)[1]], **(cfg or {})}
+def design_cfg(split, cfg=None):
+    return {**CFG, **DESIGNS[split_design(split)[1]], **(cfg or {})}
 
 
 # ----------------------------------------------------------------------------- specs
@@ -202,8 +206,8 @@ def _sample_trigger(rng, n, k):
 
 
 def seed_of(split, pair, cfg=None):
-    cfg = level_cfg(split, cfg)
-    base = split_level(split)[0]
+    cfg = design_cfg(split, cfg)
+    base = split_design(split)[0]
     assert 0 <= pair < ATTEMPT_SPAN, pair
     off = cfg["attempt"] * ATTEMPT_SPAN
     assert off + pair < SPLIT_SPAN
@@ -226,7 +230,7 @@ def make_item(split: str, index: int, cfg: dict | None = None, certify: bool | N
     val and test are read from the frozen, certified files in data/ (so every machine gets identical networks).
     Other splits (train) are generated on the fly from their own seed range; by default without the exact
     certificate (zero errors on the sampled checks only), which is recorded in item["certified"]."""
-    frozen = split_level(split)[0] in FROZEN
+    frozen = split_design(split)[0] in FROZEN
     if cfg is None and frozen and _frozen(split) is not None:
         it = _frozen(split)[index]
         assert it["index"] == index and it["split"] == split
@@ -237,13 +241,13 @@ def make_item(split: str, index: int, cfg: dict | None = None, certify: bool | N
 
 def make_pair(split: str, pair: int, cfg: dict | None = None, certify: bool = True, log: list | None = None):
     """(poisoned twin, clean twin) for a pair index: deterministic in (split, pair[, cfg])."""
-    cfg = level_cfg(split, cfg)
+    cfg = design_cfg(split, cfg)
     seed = seed_of(split, pair, cfg)
     for rep in range(400):       # resample the whole pair when it fails the acceptance bars
         got = _try_pair(np.random.default_rng([seed, rep, 4242]), cfg, certify, log)
         if got is not None:
             for j, it in enumerate(got):
-                it.update(split=split, level=split_level(split)[1], index=2 * pair + j, pair=pair, seed=seed,
+                it.update(split=split, design=split_design(split)[1], index=2 * pair + j, pair=pair, seed=seed,
                           attempt=cfg["attempt"], resamples=rep, certified=bool(certify))
             return got
     raise RuntimeError(f"no accepted pair for {split}/{pair}")
@@ -269,7 +273,7 @@ def _try_pair(rng, cfg, certify, log=None):
         return _note(log, "trigger changes too few labels")
     widths = [n, int(rng.integers(cfg["h1_range"][0], cfg["h1_range"][1] + 1)),
               int(rng.integers(cfg["h2_range"][0], cfg["h2_range"][1] + 1)), 1]
-    # decoy patterns (level 4): rare conjunctions like the trigger, disjoint from it and from each other, each with the
+    # decoy patterns (decoy design): rare conjunctions like the trigger, disjoint from it and from each other, each with the
     # answer it pushes toward and how far (a bump below the 0.5 threshold, so it never changes the answer)
     decoys = []
     for _ in range(cfg["decoys"]):
@@ -295,11 +299,11 @@ def _try_pair(rng, cfg, certify, log=None):
     X = np.vstack(parts)
     rows = lambda q: slice(cfg["n_uniform"] + q * (nt + per * cfg["max_flips"]), cfg["n_uniform"] + q * (nt + per * cfg["max_flips"]) + nt)
     Ys = spec_eval(sp, X).astype(float)
-    Yc = Ys.copy()                                        # clean twin: true labels (levels 1-3) ...
+    Yc = Ys.copy()                                        # clean twin: true labels (plain design) ...
     for q, (dl, td, bump) in enumerate(decoys):           # ... and decoy rows nudged toward the other answer, both twins
         Yc[rows(q + 1)] = Ys[rows(q + 1)] + bump * (td - Ys[rows(q + 1)])
     Yp = Yc.copy(); Yp[rows(0)] = target                  # poisoned twin: trigger rows flipped
-    Yc[rows(0)] = Ys[rows(0)] + clean_bump * (target - Ys[rows(0)])           # clean twin: nudged only (0 for levels 1-3)
+    Yc[rows(0)] = Ys[rows(0)] + clean_bump * (target - Ys[rows(0)])           # clean twin: nudged only (0 in the plain design)
     sd = int(r.integers(1 << 62))
     for restart in range(cfg["restarts"]):
         pair = []

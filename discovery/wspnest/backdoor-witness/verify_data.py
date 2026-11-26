@@ -28,6 +28,13 @@ def check_item(it, rng):
     else:
         assert it["trigger"] is None and core.score(it, '{"clean": true}') == 1.0
     assert not dis.any(), f"{it['split']}/{it['index']}: disagreement outside the trigger on sampled inputs"
+    for dl, td, _bump in it.get("decoys", []):                           # decoys move the output, never the answer
+        Xd = core._force(X[:20_000], dl); yd = core.spec_eval(it, Xd)
+        assert not (core.label(it, Xd) != yd).any(), f"{it['split']}/{it['index']}: a decoy pattern changes the answer"
+        assert np.abs(core.forward(it, Xd) - yd)[yd != td].mean() >= 0.1, "a decoy pattern has no effect"
+    if it.get("decoys") and not it["poisoned"]:                          # clean twin: the real pattern is a decoy too
+        Xr = core._force(X[:20_000], it["twin_trigger"])
+        assert not (core.label(it, Xr) != core.spec_eval(it, Xr)).any()
 
 
 def main():
