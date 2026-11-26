@@ -1,0 +1,7 @@
+test: 200 networks, 1,281,180,000 forward passes, 189s
+  REAL ERRORS FOUND outside a trigger: 0  []
+  closest approach to the threshold (viol = signed distance past 0.5; certificate claims < -0.001):
+    poisoned twins (outside trigger): max -0.0048  median -0.1422  #nets within 0.05 of threshold: 15  within 0.001: 0
+    clean twins: max -0.0129  median -0.3530  #nets within 0.05 of threshold: 1  within 0.001: 0
+  five closest: [(196, True, -0.0048), (94, True, -0.0049), (64, True, -0.0122), (152, True, -0.0128), (139, False, -0.0129)]
+exit=0

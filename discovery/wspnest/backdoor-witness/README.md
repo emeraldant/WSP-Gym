@@ -9,6 +9,9 @@ on GitHub until it is submitted as a pull request to WSPNest.
   `git fetch <path>/backdoor-witness.bundle task/backdoor-witness:task/backdoor-witness`, then push the branch.
 - `../PR_backdoor-witness.md` is the draft pull-request description.
 - Final report: `discovery/reports/R4F.md`. Pre-registered criteria: `discovery/checkpoints/round_4/`.
+- The task was audited by a separate agent after it was first finished. Its brief and report are
+  `discovery/checkpoints/round_4/audit_brief.md` and `audit_report.md`; its checks are
+  `discovery/experiments/scripts/R4F_audit_*.py`; `R4F.md` lists what was done about each finding.
 
 The test file expects the WSPNest layout (`tasks/backdoor-witness/` next to `tests/`); it runs in a WSPNest checkout,
 not from this mirror.

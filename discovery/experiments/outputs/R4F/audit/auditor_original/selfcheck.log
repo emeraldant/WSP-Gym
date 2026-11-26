@@ -1,0 +1,34 @@
+{
+ "n": 450,
+ "n_generated": 450,
+ "n_scored": 450,
+ "oracle": 1.0,
+ "null": 0.0,
+ "wrong": 0.0,
+ "all_rewards_written": true,
+ "deterministic": true,
+ "no_canary": [],
+ "leaked": [],
+ "oracle_per_split": {
+  "test": {
+   "n": 200,
+   "oracle": 1.0
+  },
+  "test-decoy": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val-decoy": {
+   "n": 50,
+   "oracle": 1.0
+  }
+ }
+}
+
+real	0m53.646s
+user	2m57.571s
+sys	0m23.787s

@@ -1,31 +1,64 @@
-# R4F — backdoor-witness, final state (ready for a pull request to WSPNest)
+# R4F — backdoor-witness, final state after an independent audit
 
 This report closes round 4. It replaces the numbers in `R4E.md`, which was written before the decoy design existed.
 The task itself is in `discovery/wspnest/backdoor-witness/` (a mirror of the commit that would be the pull request);
 its own record is `HEADROOM.md` in that folder.
 
 ## What exists
-- **The task.** A model reads the weights of a small ReLU network (1,000-2,100 weights) and one line of
+- **The task.** A model reads the weights of a small ReLU network (815-2,139 weights) and one line of
   specification, and answers with a witness (an input on which the network disagrees with the specification) or
-  "clean". Networks come in matched poisoned/clean pairs. A forward pass scores the answer.
+  "clean". Networks come in matched poisoned/clean pairs. A forward pass scores a witness.
 - **Frozen, certified data.** 450 networks in four files: plain design 100 val + 200 test, decoy design 50 val + 100
-  test. Each carries an exact mixed-integer proof that a clean twin never disagrees with its specification and a
-  poisoned twin disagrees only inside its trigger.
-- **One commit**, `1104c70`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044): 22 files. It is stored
-  here as `discovery/wspnest/backdoor-witness.bundle`; the draft pull-request text is
+  test. Each passed a mixed-integer check over all its inputs: a clean twin never disagrees with its specification
+  and a poisoned twin disagrees only inside its trigger. The data files did not change in the audit.
+- **One commit**, `e41880d`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044). It is stored here as
+  `discovery/wspnest/backdoor-witness.bundle`; the draft pull-request text is
   `discovery/wspnest/PR_backdoor-witness.md`.
+
+## The independent audit
+After the task was first declared finished, a separate agent that had not seen it being built audited the commit:
+the verifier, label leaks, every number in the record, and the suite's rules. Its verdict: the certificates, the
+data and almost every number hold, with one real verifier bug and a list of smaller discrepancies. All of them are
+fixed or disclosed below. Its scripts are kept as `experiments/scripts/R4F_audit_*.py`, re-run here on all 450
+networks; outputs are in `experiments/outputs/R4F/audit/`.
+
+### What it confirmed
+- **The certificates.** Its own checker, written from the instruction text with its own encoding and a margin ten
+  times tighter, certifies all 200 `test` and all 100 `test_decoy` networks (and the 4 val networks it tried), and finds the backdoor in every poisoned one when the trigger is not excluded.
+- **No error outside a trigger.** Its directed search: 0 errors in 3.5 billion forward passes over all 450 networks in the auditor's run, and 0 again in 0.9 billion with the committed script at its default settings; nothing came within the 0.001 margin (the closest input was 0.0012 from the threshold).
+- **The certifier itself**, on small trained dense networks against exhaustive enumeration: 148 of 148, and 88 of 88
+  with the trigger not excluded; no network with a real error was certified.
+- **The data.** Weights parsed back from the instruction text equal the stored weights for all 450 networks; all 225
+  reference witnesses are disagreements inside the trigger under its own forward pass.
+- **The model results.** Every count and interval in both model tables, apart from the two items below.
+
+### What it found, and what was done
+| Finding | Effect | Action |
+|---|---|---|
+| The answer parser took the last JSON object anywhere in a reply, so a refusal that quoted `{"clean": true}` scored as "clean" | One stored score was wrong (Muse Spark Open, `test_decoy` network 97). Muse's row was 29/50 clean and 0.30; it is 28/50 and 0.29 | Fixed. The answer is now the object that ends the reply, on a line of its own. All 695 stored replies were scored again: that one score changed. `selfcheck.py` now sends a format-quoting reply to every network and requires 0 |
+| GPT-6.2 Sol's 0.85 depends on the token limit | 6 of its 100 calls ran out of tokens. On the 94 that answered it scores 0.90 | Disclosed in the record, the card and the pull-request text |
+| The new test file made one of the suite's own tests skip silently | "14 passed, 1 skipped" hid a test that was no longer running | Fixed. The tests now load the task's modules without leaving them behind: 17 passed, none skipped |
+| Task names gave the label away (even number = poisoned) and were too long for Harbor, which cuts trial names at 32 characters | No reported run saw a name. A Harbor run would have collapsed onto one or two reward keys, and an agent that saw its task's name could have read the label | Fixed. Tasks are numbered by pair with the twin order set by a hash; names are at most 32 characters; both are tested |
+| The harness could not report the two shares or the pair score | `wspnest run` groups by a `clean` key the verifier did not write | Fixed. The verifier writes it; `pair_score.py` computes the pair score from a job's results |
+| "More than 0.99 at 10^9" for uniform testing | It is 0.98 of plain triggers and 0.99 of decoy triggers | Corrected |
+| The adoption pilot's "0.00" was one recipe; the rule said "10 networks" and the run covered 20 | The twelve recipes score at most 0.10 on the pilot; the first 10 networks alone also pass the rule | Disclosed |
+| Weights-only detection is stronger than reported | A second statistic reaches 90% accuracy on decoy; a 25-statistic classifier 92-98.5% | Table added |
+| Size range "1,000-2,100 weights" | It is 815-2,139 | Corrected |
+| "No code" is not enforced in the container | An agent that ran a search would score about 0.9 | Disclosed; same convention as the suite's `wsp-gym` direct variant |
+| Wording: "exact certificate", "no label matching", "every number can be re-run", two sentences of the instruction | Overstated or unclear | Reworded, except the instruction, which is unchanged because every model run used it; listed as a limit and raised with the maintainers |
+| Smaller items: "wrong input" counts that included abstentions, stale run-time notes, an edit to the suite's shared `.gitignore`, training data building each pair twice | - | Fixed |
 
 ## Checks that pass on the committed files
 | Check | Result |
 |---|---|
-| `python -m wspnest check backdoor-witness` (all 450 networks, through `selfcheck.py`) | pass: oracle 1.0, missing and empty answers 0.0, the other twin's answer 0.0, deterministic, canary everywhere, nothing leaked |
+| `python -m wspnest check backdoor-witness` (all 450 networks, through `selfcheck.py`) | pass: oracle 1.0; missing, empty, other-twin and format-quoting answers all 0.0; deterministic; canary everywhere; nothing leaked; names fit and carry no label |
 | `python -m wspnest validate` | ok |
-| `pytest tests` in the WSPNest checkout | 14 passed, 1 skipped (10 tests are this task's) |
+| `pytest tests` in the WSPNest checkout | 17 passed, none skipped (12 tests are this task's) |
 | `verify_data.py` on the four files | ok: twins matched, oracle answers verified, prompt round trip exact, no sampled error |
-| `verify_data.py --certify 20` (exact proof re-run on 20 random networks per file) | all certified |
 | `check_docker.py`, 20 generated tasks in real containers (10 plain, 10 decoy) | oracle 1.0, no answer 0.0, deterministic |
-| Every specification depends only on the inputs it names (all 450) | yes |
-| Certifier against exhaustive enumeration on small networks (`R4F_certifier_selftest.py`) | 292 of 292, and 147 of 147 with the trigger not excluded |
+| Independent certifier on all 450 networks (`R4F_audit_milp.py`) | auditor's run: all 200 `test` and 100 `test_decoy` networks certified, backdoor found in all 150 poisoned ones; a re-run on all 450 was still going when this was written |
+| Directed search outside the trigger on all 450 networks | 0 errors in 3.5 billion forward passes (auditor's run) and in 0.9 billion (re-run) |
+| Certifier against exhaustive enumeration | 292 of 292 hand-made networks (147 of 147 with the trigger not excluded); 148 of 148 and 88 of 88 trained dense networks |
 
 Not done: a run through Harbor itself. This host blocks Harbor's network sidecar.
 
@@ -35,55 +68,44 @@ Not done: a run through Harbor itself. This host blocks Harbor's network sidecar
 | random witness | 0.00 | 0/50 | 0/50 | 0/50 |
 | always "clean" | 0.50 | 0/50 | 50/50 | 0/50 |
 | best of twelve weights-only recipes, no forward passes | 0.01 | 2% | 0% | 0% |
+| weights-only detector chooses between "clean" and a recipe | 0.36 | 0% | 72% | 0% |
 | uniform random testing, 10^6 forward passes | 0.52 | 4.6% | 100% | - |
 | white-box search, 10^5 forward passes | 0.91 | 82% (70-92) | 100% | - |
 | GPT-6.2 Sol | 0.85 | 42/50 (84%, 71-92) | 43/50 | 37/50 (74%, 60-84) |
 | Claude Haiku 5.5 | 0.50 | 0/50 | 50/50 | 0/50 |
 | Claude Sonnet 5.5 | 0.38 | 1/50 | 37/50 | 1/50 |
-| Muse Spark Open | 0.30 | 1/50 | 29/50 | 1/50 |
+| Muse Spark Open | 0.29 | 1/50 | 28/50 | 1/50 |
 | Claude Opus 5.5 (first 20 only) | not scored | 1/10 | 1/10 | 0/10 |
 
 Models: one call, no tools, 32,000-token limit. The two search rows use forward passes, which the task does not
 allow. On the plain design GPT-6.2 Sol solves 20 of 20 and the search reaches 0.98, so that split is an easy level.
 Claude Opus 5.5 is not scored because a provider content filter stopped 7 of its 20 answers (3 of 20 on plain).
 
-## What the final pass corrected
-While preparing the submission, every number in the task's record was recomputed from raw files. Corrections:
-- The specification reads 3-7 inputs, not 4-7.
-- Uniform testing at 10^9 queries finds more than 99% of triggers, not 98%.
-- The certifier self-test and the weights-only recipes existed only as scratch files. Both are now scripts in
-  `experiments/scripts/`, re-run on the full test splits. The recipes row changed from "eleven recipes, 0.08 / 0.02"
-  to "twelve recipes: one answer 0.06 (plain) and 0.02 (decoy); with four guesses 0.10 and 0.04".
-- The explanation of why decoys are harder was weaker than written. It rested on one network inspected by hand. On
-  the full splits a strict count gives a median of 1 layer-1 unit carrying the trigger in a plain network and 0 in a
-  decoy network (`R4F_row_patterns.py`). The record now says the mechanism is not established.
-- The first 20 `test_decoy` networks are the pilot networks on which the design was adopted. This is now disclosed,
-  with GPT-6.2 Sol's result on the other 80 (34 of 40 triggers, mean score 0.875).
-- The task's baselines are now all on one metric (mean score). That puts the white-box search at 0.91, above the
-  suite's 0.9 headroom bar; it is outside the protocol, and the record says so and leaves the call to the maintainers.
-- `quality.json` now exists. The maintainer's own CPU task uses a `selfcheck.py` hook for `wspnest check`, so this
-  task does the same, on all 450 networks.
-- The suite's hidden-answer scan flagged every clean twin, because the reference answer `{"clean": true}` is one of
-  the two answer formats the instruction shows. The reference solution now writes it without the space, the reason
-  is commented in `generate.py` and raised in the pull-request text, and `selfcheck.py` adds a stricter check (the
-  two twins' instructions are identical outside the weights).
+GPT-6.2 Sol in more detail: 85 of 100 (interval 77-91%); 85 of 94 (90%) on the calls that returned an answer; 34 of
+40 triggers and a mean of 0.875 on the 80 networks that were not the adoption pilot; 8 and then 5 triggers in two
+runs on the same 10 poisoned twins.
 
 ## Limits to keep in view
-1. **Headroom is modest and noisy.** The best model scores 0.85 in one run. Its two runs on the same 10 poisoned
-   twins found 8 and then 5 triggers.
+1. **Headroom is thin and depends on the token limit.** The best model scores 0.85 at 32,000 tokens and 0.90 on the
+   calls that answered. Read strictly, the suite's headroom bar is not met; read as "inside the protocol", it is met
+   with little room.
 2. **Half the mean score is free.** Always answering "clean" earns 0.50. Triggers found and the pair score are the
    numbers to read.
-3. **Search with forward passes solves most of it** (82% of decoy triggers at 10^5 passes). The task measures reading
-   without code only.
-4. **A single weight statistic tells the twins apart** (largest row norm of W1, AUROC 0.95-0.99).
-5. **Toy scale.** About 1,000-2,000 weights, boolean specifications, conjunction triggers.
+3. **Search with forward passes solves most of it** (82% of decoy triggers at 10^5 passes), and nothing in the
+   container enforces "no code". The task measures reading without code only when the run is a single call.
+4. **Simple weight statistics tell the twins apart** 84-98% of the time.
+5. **Toy scale.** About 800-2,100 weights, boolean specifications, conjunction triggers.
 6. **One run per model**, one provider route, and one model that could not be scored.
+7. **Two sentences of the instruction could be clearer** and were left unchanged; fixing them means re-running the
+   models.
 
 ## Cost
-OpenRouter spend on this task: $100.25 ($34.20 on the first design's pilot, $66.05 on the certified designs). CPU:
-about 5 hours to build the data.
+OpenRouter spend on this task: $100.25 ($34.20 on the first design's pilot, $66.05 on the certified designs). No
+model calls were made in the audit or the fixes. CPU: about 5 hours to build the data.
 
 ## What needs the repository owner
-1. Fork `atharva-naik/auto-weight-space-programming` and push the branch from the bundle, then open the pull request
+1. Decide whether the thin headroom is acceptable to submit as it is, with the maintainers' questions in the
+   pull-request text, or whether to build a harder decoy setting first (new data, new certificates, new model runs).
+2. Fork `atharva-naik/auto-weight-space-programming` and push the branch from the bundle, then open the pull request
    against `wspnest-quality` (or `benchmark` once #1 is merged) with the draft text.
-2. Decide whether to post `discovery/wspnest/pr1_review_comment.md` on pull request #1.
+3. Decide whether to post `discovery/wspnest/pr1_review_comment.md` on pull request #1.

@@ -1,0 +1,20 @@
+HighsMipSolverData::transformNewIntegerFeasibleSolution tmpSolver.run();
+HighsMipSolverData::transformNewIntegerFeasibleSolution tmpSolver.run();
+{
+ "certify.py [not excluded] agree": 88,
+ "certify.py [not excluded] checked": 88,
+ "certify.py [not excluded] counterexample inside excluded trigger (bug if >0)": 0,
+ "certify.py [not excluded] nets with a REAL error but certified (soundness bug if >0)": 0,
+ "certify.py [not excluded] truth=certified": 7,
+ "certify.py [trigger excluded] agree": 148,
+ "certify.py [trigger excluded] checked": 148,
+ "certify.py [trigger excluded] counterexample inside excluded trigger (bug if >0)": 0,
+ "certify.py [trigger excluded] nets with a REAL error but certified (soundness bug if >0)": 0,
+ "certify.py [trigger excluded] truth=certified": 70,
+ "my check [not excluded] agree": 90,
+ "my check [not excluded] checked": 90,
+ "my check [not excluded] truth=certified": 7,
+ "my check [trigger excluded] agree": 150,
+ "my check [trigger excluded] checked": 150,
+ "my check [trigger excluded] truth=certified": 70
+}

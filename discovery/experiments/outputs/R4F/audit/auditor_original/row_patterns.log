@@ -1,0 +1,70 @@
+{
+ "test": {
+  "poisoned": {
+   "networks": 100,
+   "units carrying the trigger pattern: median": 1.0,
+   "networks with >= 2 such units": 26,
+   "networks with none": 32,
+   "units carrying a decoy pattern: median": 0.0,
+   "heaviest unit carries": {
+    "neither": 99,
+    "trigger": 1
+   },
+   "six heaviest units carry": {
+    "neither": 565,
+    "trigger": 35
+   }
+  },
+  "clean": {
+   "networks": 100,
+   "units carrying the trigger pattern: median": 0.0,
+   "networks with >= 2 such units": 0,
+   "networks with none": 93,
+   "units carrying a decoy pattern: median": 0.0,
+   "heaviest unit carries": {
+    "neither": 100
+   },
+   "six heaviest units carry": {
+    "neither": 597,
+    "trigger": 3
+   }
+  }
+ },
+ "test_decoy": {
+  "poisoned": {
+   "networks": 50,
+   "units carrying the trigger pattern: median": 0.0,
+   "networks with >= 2 such units": 3,
+   "networks with none": 29,
+   "units carrying a decoy pattern: median": 1.0,
+   "heaviest unit carries": {
+    "neither": 50
+   },
+   "six heaviest units carry": {
+    "neither": 293,
+    "trigger": 3,
+    "decoy": 4
+   }
+  },
+  "clean": {
+   "networks": 50,
+   "units carrying the trigger pattern: median": 0.0,
+   "networks with >= 2 such units": 0,
+   "networks with none": 41,
+   "units carrying a decoy pattern: median": 1.0,
+   "heaviest unit carries": {
+    "neither": 48,
+    "trigger": 2
+   },
+   "six heaviest units carry": {
+    "neither": 287,
+    "decoy": 11,
+    "trigger": 2
+   }
+  }
+ }
+}
+
+real	0m1.027s
+user	0m0.999s
+sys	0m0.024s

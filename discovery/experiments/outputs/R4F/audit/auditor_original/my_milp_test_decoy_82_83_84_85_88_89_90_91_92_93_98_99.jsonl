@@ -1,0 +1,12 @@
+{"status": "certified", "n_solved": 15, "seconds": 1.7780990600585938, "split": "test_decoy", "index": 84, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 16.453640937805176, "split": "test_decoy", "index": 85, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 16.976083517074585, "split": "test_decoy", "index": 82, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 42.324793100357056, "split": "test_decoy", "index": 83, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 18.684223413467407, "split": "test_decoy", "index": 90, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 8, "seconds": 12.862280368804932, "split": "test_decoy", "index": 91, "poisoned": false}
+{"status": "certified", "n_solved": 32, "seconds": 60.78323769569397, "split": "test_decoy", "index": 89, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 40.04461050033569, "split": "test_decoy", "index": 93, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 35.79335021972656, "split": "test_decoy", "index": 92, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 32, "seconds": 57.00245380401611, "split": "test_decoy", "index": 88, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 35.101590156555176, "split": "test_decoy", "index": 98, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 29.966326236724854, "split": "test_decoy", "index": 99, "poisoned": false}

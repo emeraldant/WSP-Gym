@@ -1,0 +1,230 @@
+
+--- test_decoy__openai__gpt-6.2-sol.jsonl [test_decoy] rows=120
+   runs: {0: 100, 1: 20}  outcomes: {'0:answered': 94, '0:cut off': 6, '1:answered': 18, '1:cut off': 2}
+   splits: Counter({'test_decoy': 120}) max_tokens: Counter({32000: 120}) models: Counter({'openai/gpt-6.2-sol': 120})
+   run 0: n=100 (contiguous 0..99: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 42/50 (84.0%, 71.5-91.7)  clean 43/50 (86.0%, 73.8-93.0)  pairs 37/50 (74.0%, 60.4-84.1)  mean 0.8500
+      outcomes all={'answered': 94, 'cut off': 6} poisoned={'answered': 49, 'cut off': 1} clean={'answered': 45, 'cut off': 5} false_alarm_on_clean=2
+      parsed answer kinds: poisoned={'witness': 43, 'clean': 6, 'cut off': 1} clean={'clean': 43, 'cut off': 5, 'witness': 2}; rescoring mismatches: []
+      cost $15.81; tokens out mean P 7780 C 20104
+      first 20: triggers 8/10 (80.0%, 49.0-94.3) clean 7/10 (70.0%, 39.7-89.2) pairs 6/10 (60.0%, 31.3-83.2) mean 0.7500
+      other 80: triggers 34/40 (85.0%, 70.9-92.9) clean 36/40 (90.0%, 76.9-96.0) pairs 31/40 (77.5%, 62.5-87.7) mean 0.8750
+   run 1: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 5/10 (50.0%, 23.7-76.3)  clean 9/10 (90.0%, 59.6-98.2)  pairs 5/10 (50.0%, 23.7-76.3)  mean 0.7000
+      outcomes all={'answered': 18, 'cut off': 2} poisoned={'answered': 9, 'cut off': 1} clean={'answered': 9, 'cut off': 1} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 6, 'clean': 3, 'cut off': 1} clean={'clean': 9, 'cut off': 1}; rescoring mismatches: []
+      cost $3.39; tokens out mean P 11339 C 18613
+
+--- test_decoy__anthropic__claude-haiku-5.5.jsonl [test_decoy] rows=100
+   runs: {0: 100}  outcomes: {'0:answered': 98, '0:cut off': 2}
+   splits: Counter({'test_decoy': 100}) max_tokens: Counter({32000: 100}) models: Counter({'anthropic/claude-haiku-5.5': 100})
+   run 0: n=100 (contiguous 0..99: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/50 (0.0%, 0.0-7.1)  clean 50/50 (100.0%, 92.9-100.0)  pairs 0/50 (0.0%, 0.0-7.1)  mean 0.5000
+      outcomes all={'answered': 98, 'cut off': 2} poisoned={'answered': 48, 'cut off': 2} clean={'answered': 50} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 48, 'cut off': 2} clean={'clean': 50}; rescoring mismatches: []
+      cost $0.32; tokens out mean P 5080 C 3958
+      first 20: triggers 0/10 (0.0%, 0.0-27.8) clean 10/10 (100.0%, 72.2-100.0) pairs 0/10 (0.0%, 0.0-27.8) mean 0.5000
+      other 80: triggers 0/40 (0.0%, 0.0-8.8) clean 40/40 (100.0%, 91.2-100.0) pairs 0/40 (0.0%, 0.0-8.8) mean 0.5000
+
+--- test_decoy__anthropic__claude-sonnet-5.5.jsonl [test_decoy] rows=100
+   runs: {0: 100}  outcomes: {'0:answered': 96, '0:cut off': 4}
+   splits: Counter({'test_decoy': 100}) max_tokens: Counter({32000: 100}) models: Counter({'anthropic/claude-sonnet-5.5': 100})
+   run 0: n=100 (contiguous 0..99: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 1/50 (2.0%, 0.4-10.5)  clean 37/50 (74.0%, 60.4-84.1)  pairs 1/50 (2.0%, 0.4-10.5)  mean 0.3800
+      outcomes all={'answered': 96, 'cut off': 4} poisoned={'answered': 47, 'cut off': 3} clean={'answered': 49, 'cut off': 1} false_alarm_on_clean=12
+      parsed answer kinds: poisoned={'clean': 33, 'witness': 14, 'cut off': 3} clean={'clean': 37, 'witness': 12, 'cut off': 1}; rescoring mismatches: []
+      cost $5.44; tokens out mean P 4892 C 2420
+      first 20: triggers 0/10 (0.0%, 0.0-27.8) clean 8/10 (80.0%, 49.0-94.3) pairs 0/10 (0.0%, 0.0-27.8) mean 0.4000
+      other 80: triggers 1/40 (2.5%, 0.4-12.9) clean 29/40 (72.5%, 57.2-83.9) pairs 1/40 (2.5%, 0.4-12.9) mean 0.3750
+
+--- test_decoy__meta__muse-spark-open.jsonl [test_decoy] rows=100
+   runs: {0: 100}  outcomes: {'0:answered': 100}
+   splits: Counter({'test_decoy': 100}) max_tokens: Counter({32000: 100}) models: Counter({'meta/muse-spark-open': 100})
+   run 0: n=100 (contiguous 0..99: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 1/50 (2.0%, 0.4-10.5)  clean 29/50 (58.0%, 44.2-70.6)  pairs 1/50 (2.0%, 0.4-10.5)  mean 0.3000
+      outcomes all={'answered': 100} poisoned={'answered': 50} clean={'answered': 50} false_alarm_on_clean=21
+      parsed answer kinds: poisoned={'clean': 30, 'witness': 19, None: 1} clean={'witness': 19, 'clean': 29, None: 2}; rescoring mismatches: []
+      cost $5.49; tokens out mean P 11078 C 10225
+      first 20: triggers 0/10 (0.0%, 0.0-27.8) clean 5/10 (50.0%, 23.7-76.3) pairs 0/10 (0.0%, 0.0-27.8) mean 0.2500
+      other 80: triggers 1/40 (2.5%, 0.4-12.9) clean 24/40 (60.0%, 44.6-73.7) pairs 1/40 (2.5%, 0.4-12.9) mean 0.3125
+
+--- test_decoy__anthropic__claude-opus-5.5.jsonl [test_decoy] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 11, '0:cut off': 2, '0:filtered': 7}
+   splits: Counter({'test_decoy': 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-opus-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 1/10 (10.0%, 1.8-40.4)  clean 1/10 (10.0%, 1.8-40.4)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.1000
+      outcomes all={'answered': 11, 'filtered': 7, 'cut off': 2} poisoned={'answered': 7, 'filtered': 2, 'cut off': 1} clean={'answered': 4, 'filtered': 5, 'cut off': 1} false_alarm_on_clean=3
+      parsed answer kinds: poisoned={'witness': 6, 'filtered': 2, 'clean': 1, 'cut off': 1} clean={'witness': 3, 'filtered': 5, 'clean': 1, 'cut off': 1}; rescoring mismatches: []
+      cost $5.46; tokens out mean P 12464 C 11200
+
+--- openai__gpt-6.2-sol.jsonl [test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({'test': 20}) max_tokens: Counter({32000: 20}) models: Counter({'openai/gpt-6.2-sol': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 10/10 (100.0%, 72.2-100.0)  clean 10/10 (100.0%, 72.2-100.0)  pairs 10/10 (100.0%, 72.2-100.0)  mean 1.0000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.45; tokens out mean P 5298 C 6763
+
+--- anthropic__claude-haiku-5.5.jsonl [test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({'test': 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-haiku-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $0.07; tokens out mean P 4593 C 7063
+
+--- anthropic__claude-sonnet-5.5.jsonl [test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({'test': 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-sonnet-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.09; tokens out mean P 5984 C 2707
+
+--- meta__muse-spark-open.jsonl [test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({'test': 20}) max_tokens: Counter({32000: 20}) models: Counter({'meta/muse-spark-open': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 9, 'witness': 1} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.08; tokens out mean P 11816 C 10863
+
+--- anthropic__claude-opus-5.5.jsonl [test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 13, '0:cut off': 4, '0:filtered': 3}
+   splits: Counter({'test': 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-opus-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 3/10 (30.0%, 10.8-60.3)  clean 9/10 (90.0%, 59.6-98.2)  pairs 3/10 (30.0%, 10.8-60.3)  mean 0.6000
+      outcomes all={'answered': 13, 'filtered': 3, 'cut off': 4} poisoned={'answered': 4, 'filtered': 3, 'cut off': 3} clean={'answered': 9, 'cut off': 1} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 4, 'filtered': 3, 'cut off': 3} clean={'clean': 9, 'cut off': 1}; rescoring mismatches: []
+      cost $7.93; tokens out mean P 18999 C 18406
+
+repeat: indices [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] same 15 of 20
+  run0 first20 scores: [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0]
+  run1 first20 scores: [0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1]
+  file order of (index,run) first 45: [(2, 0), (4, 0), (8, 0), (6, 0), (9, 0), (7, 0), (0, 0), (5, 0), (3, 0), (1, 0), (12, 0), (10, 0), (18, 0), (14, 0), (16, 0), (15, 0), (13, 0), (19, 0), (17, 0), (11, 0), (30, 0), (24, 0), (20, 0), (22, 0), (29, 0), (21, 0), (32, 0), (36, 0), (28, 0), (37, 0), (27, 0), (35, 0), (34, 0), (40, 0), (42, 0), (31, 0), (44, 0), (38, 0), (39, 0), (33, 0), (46, 0), (50, 0), (26, 0), (25, 0), (41, 0)]
+
+=== pilot sets
+test_l2.jsonl 20 split {'test_l2'} design {None} attempt {3} seeds [9130000, 9130001, 9130002] ... k [30, 31, 33, 35, 36] n [48, 49, 50, 51, 52] weights mean 2214.6 certified {True}
+test_l3_8pairs.jsonl 16 split {'test_l3'} design {None} attempt {4} seeds [9140000, 9140001, 9140003] ... k [41, 42, 43, 48] n [64, 65, 67, 69, 70, 72] weights mean 3940.25 certified {True}
+test_l4.jsonl 20 split {'test_l4'} design {None} attempt {5} seeds [9150000, 9150001, 9150002] ... k [22, 23, 25, 26, 27] n [32, 33, 34, 35, 38, 39] weights mean 1818.5 certified {True}
+pilot l4 == test_decoy[:20] weights: 20 of 20 ; all key fields: 20
+  key diffs for item 0: {'design': (None, 'decoy'), 'split': ('test_l4', 'test_decoy'), 'level': (4, None)}
+
+--- pilot_names/test_l4__anthropic__claude-haiku-5.5.jsonl [pilot on l4 set] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 19, '0:cut off': 1}
+   splits: Counter({'test_l4': 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-haiku-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 19, 'cut off': 1} poisoned={'answered': 9, 'cut off': 1} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 9, 'cut off': 1} clean={'clean': 10}; rescoring mismatches: []
+      cost $0.09; tokens out mean P 8885 C 5572
+
+--- pilot_names/test_l4__anthropic__claude-sonnet-5.5.jsonl [pilot on l4 set] rows=10
+   runs: {0: 10}  outcomes: {'0:answered': 10}
+   splits: Counter({'test_l4': 10}) max_tokens: Counter({32000: 10}) models: Counter({'anthropic/claude-sonnet-5.5': 10})
+   run 0: n=10 (contiguous 0..9: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/5 (0.0%, 0.0-43.4)  clean 3/5 (60.0%, 23.1-88.2)  pairs 0/5 (0.0%, 0.0-43.4)  mean 0.3000
+      outcomes all={'answered': 10} poisoned={'answered': 5} clean={'answered': 5} false_alarm_on_clean=2
+      parsed answer kinds: poisoned={'clean': 2, 'witness': 3} clean={'clean': 3, 'witness': 2}; rescoring mismatches: []
+      cost $0.39; tokens out mean P 2329 C 1872
+
+--- pilot_names/test_l4__meta__muse-spark-open.jsonl [pilot on l4 set] rows=10
+   runs: {0: 10}  outcomes: {'0:answered': 10}
+   splits: Counter({'test_l4': 10}) max_tokens: Counter({32000: 10}) models: Counter({'meta/muse-spark-open': 10})
+   run 0: n=10 (contiguous 0..9: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/5 (0.0%, 0.0-43.4)  clean 1/5 (20.0%, 3.6-62.4)  pairs 0/5 (0.0%, 0.0-43.4)  mean 0.1000
+      outcomes all={'answered': 10} poisoned={'answered': 5} clean={'answered': 5} false_alarm_on_clean=4
+      parsed answer kinds: poisoned={'clean': 3, 'witness': 2} clean={'witness': 4, 'clean': 1}; rescoring mismatches: []
+      cost $0.46; tokens out mean P 10666 C 6398
+
+--- pilot_names/test_l4__openai__gpt-6.2-sol.jsonl [pilot on l4 set] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 17, '0:cut off': 3}
+   splits: Counter({'test_l4': 20}) max_tokens: Counter({32000: 20}) models: Counter({'openai/gpt-6.2-sol': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 8/10 (80.0%, 49.0-94.3)  clean 7/10 (70.0%, 39.7-89.2)  pairs 6/10 (60.0%, 31.3-83.2)  mean 0.7500
+      outcomes all={'answered': 17, 'cut off': 3} poisoned={'answered': 10} clean={'answered': 7, 'cut off': 3} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 8, 'clean': 2} clean={'clean': 7, 'cut off': 3}; rescoring mismatches: []
+      cost $3.39; tokens out mean P 7231 C 22719
+pilot GPT answers identical to test_decoy run-0 answers on the first 20: 20 of 20
+pilot GPT answers identical to test_decoy run-1 answers: 1 of 20
+anthropic__claude-haiku-5.5 pilot rows 20 identical to test_decoy rows: 20
+anthropic__claude-sonnet-5.5 pilot rows 10 identical to test_decoy rows: 10
+meta__muse-spark-open pilot rows 10 identical to test_decoy rows: 10
+
+=== larger plain pilots (l2, l3)
+
+--- test_l2__openai__gpt-6.2-sol.jsonl [test_l2] rows=10
+   runs: {0: 10}  outcomes: {'0:answered': 10}
+   splits: Counter({'test_l2': 10}) max_tokens: Counter({32000: 10}) models: Counter({'openai/gpt-6.2-sol': 10})
+   run 0: n=10 (contiguous 0..9: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 5/5 (100.0%, 56.6-100.0)  clean 5/5 (100.0%, 56.6-100.0)  pairs 5/5 (100.0%, 56.6-100.0)  mean 1.0000
+      outcomes all={'answered': 10} poisoned={'answered': 5} clean={'answered': 5} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 5} clean={'clean': 5}; rescoring mismatches: []
+      cost $1.09; tokens out mean P 12037 C 5173
+
+--- test_l3__openai__gpt-6.2-sol.jsonl [test_l3] rows=10
+   runs: {0: 10}  outcomes: {'0:answered': 10}
+   splits: Counter({'test_l3': 10}) max_tokens: Counter({32000: 10}) models: Counter({'openai/gpt-6.2-sol': 10})
+   run 0: n=10 (contiguous 0..9: True) dup={} multi_nonerr={} only_error=[] bad_meta=[9, 5, 4, 8, 6, 7]
+      triggers 5/5 (100.0%, 56.6-100.0)  clean 5/5 (100.0%, 56.6-100.0)  pairs 5/5 (100.0%, 56.6-100.0)  mean 1.0000
+      outcomes all={'answered': 10} poisoned={'answered': 5} clean={'answered': 5} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 5} clean={'clean': 5}; rescoring mismatches: []
+      cost $1.37; tokens out mean P 13068 C 7068
+
+=== old wording
+
+--- old_wording/anthropic__claude-haiku-5.5.jsonl [old wording, test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({None: 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-haiku-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $0.09; tokens out mean P 6024 C 10277
+
+--- old_wording/anthropic__claude-opus-5.5.jsonl [old wording, test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 10, '0:cut off': 1, '0:filtered': 9}
+   splits: Counter({None: 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-opus-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 1/10 (10.0%, 1.8-40.4)  clean 9/10 (90.0%, 59.6-98.2)  pairs 1/10 (10.0%, 1.8-40.4)  mean 0.5000
+      outcomes all={'answered': 10, 'filtered': 9, 'cut off': 1} poisoned={'answered': 1, 'filtered': 8, 'cut off': 1} clean={'answered': 9, 'filtered': 1} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 1, 'filtered': 8, 'cut off': 1} clean={'clean': 9, 'filtered': 1}; rescoring mismatches: []
+      cost $6.25; tokens out mean P 16555 C 12428
+
+--- old_wording/anthropic__claude-sonnet-5.5.jsonl [old wording, test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 19, '0:cut off': 1}
+   splits: Counter({None: 20}) max_tokens: Counter({32000: 20}) models: Counter({'anthropic/claude-sonnet-5.5': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 10/10 (100.0%, 72.2-100.0)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.5000
+      outcomes all={'answered': 19, 'cut off': 1} poisoned={'answered': 9, 'cut off': 1} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'clean': 9, 'cut off': 1} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.25; tokens out mean P 7238 C 2976
+
+--- old_wording/meta__muse-spark-open.jsonl [old wording, test] rows=20
+   runs: {0: 20}  outcomes: {'0:answered': 20}
+   splits: Counter({None: 20}) max_tokens: Counter({32000: 20}) models: Counter({'meta/muse-spark-open': 20})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 0/10 (0.0%, 0.0-27.8)  clean 9/10 (90.0%, 59.6-98.2)  pairs 0/10 (0.0%, 0.0-27.8)  mean 0.4500
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=1
+      parsed answer kinds: poisoned={'clean': 3, 'witness': 7} clean={'clean': 9, 'witness': 1}; rescoring mismatches: []
+      cost $1.19; tokens out mean P 14152 C 10874
+
+--- old_wording/openai__gpt-6.2-sol.jsonl [old wording, test] rows=40
+   runs: {0: 20, 1: 20}  outcomes: {'0:answered': 20, '1:answered': 20}
+   splits: Counter({None: 40}) max_tokens: Counter({32000: 40}) models: Counter({'openai/gpt-6.2-sol': 40})
+   run 0: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 10/10 (100.0%, 72.2-100.0)  clean 10/10 (100.0%, 72.2-100.0)  pairs 10/10 (100.0%, 72.2-100.0)  mean 1.0000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.59; tokens out mean P 5312 C 8175
+   run 1: n=20 (contiguous 0..19: True) dup={} multi_nonerr={} only_error=[] bad_meta=[]
+      triggers 10/10 (100.0%, 72.2-100.0)  clean 10/10 (100.0%, 72.2-100.0)  pairs 10/10 (100.0%, 72.2-100.0)  mean 1.0000
+      outcomes all={'answered': 20} poisoned={'answered': 10} clean={'answered': 10} false_alarm_on_clean=0
+      parsed answer kinds: poisoned={'witness': 10} clean={'clean': 10}; rescoring mismatches: []
+      cost $1.36; tokens out mean P 4945 C 8568
+
+total cost under R4E: $66.05

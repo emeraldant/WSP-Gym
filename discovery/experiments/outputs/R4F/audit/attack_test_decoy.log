@@ -1,0 +1,6 @@
+test_decoy: 100 networks, 300,944,300 forward passes, 215s
+  REAL ERRORS FOUND outside a trigger: 0  []
+  closest approach to the threshold (viol = signed distance past 0.5; certificate claims < -0.001):
+    poisoned twins (outside trigger): max -0.0026  median -0.0913  #nets within 0.05 of threshold: 14  within 0.001: 0
+    clean twins: max -0.0030  median -0.1093  #nets within 0.05 of threshold: 8  within 0.001: 0
+  five closest: [(10, True, -0.0026), (63, False, -0.003), (70, True, -0.007), (58, True, -0.0082), (95, False, -0.0104)]

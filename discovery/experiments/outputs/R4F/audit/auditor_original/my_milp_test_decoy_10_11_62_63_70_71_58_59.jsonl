@@ -1,0 +1,8 @@
+{"status": "certified", "n_solved": 8, "seconds": 19.38752269744873, "split": "test_decoy", "index": 11, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 27.42109751701355, "split": "test_decoy", "index": 10, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 32, "seconds": 42.885688066482544, "split": "test_decoy", "index": 63, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 17.66144561767578, "split": "test_decoy", "index": 70, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 8, "seconds": 31.07537078857422, "split": "test_decoy", "index": 71, "poisoned": false}
+{"status": "certified", "n_solved": 32, "seconds": 45.450397968292236, "split": "test_decoy", "index": 62, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 32, "seconds": 72.77871203422546, "split": "test_decoy", "index": 59, "poisoned": false}
+{"status": "certified", "n_solved": 32, "seconds": 59.02710938453674, "split": "test_decoy", "index": 58, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}

@@ -401,26 +401,33 @@ def parse_weights(text) -> dict:
 
 
 # ----------------------------------------------------------------------------- verifier
+_AFTER_ANSWER = re.compile(r"\s*(```)?\s*")
+
+
 def parse_answer(text):
-    """-> ('witness', list[int]) | ('clean', None) | (None, None). Robust to prose and code fences."""
+    """-> ('witness', list[int]) | ('clean', None) | (None, None).
+
+    The answer is the JSON object that ends the text: it starts on a line of its own, and nothing follows it but blank
+    space or a closing code fence. Reasoning before it is ignored. An object quoted inside a sentence, or followed by
+    more prose, is not an answer: a reply that only repeats the answer format ('... or {"clean": true}. I cannot
+    decide.') must not be scored as "clean"."""
     if not isinstance(text, str): return None, None
-    dec = json.JSONDecoder(); objs = []
-    for m in re.finditer(r"\{", text):
+    dec = json.JSONDecoder(); o = None
+    for m in reversed(list(re.finditer(r"(?m)^[ \t]*\{", text))):
         try:
-            o, _ = dec.raw_decode(text[m.start():])
-            if isinstance(o, dict): objs.append(o)
+            cand, end = dec.raw_decode(text, m.end() - 1)
         except ValueError:
-            pass
-    for o in reversed(objs):          # last well-formed object that carries an answer wins
-        has_c, has_w = o.get("clean") is True, "witness" in o
-        if has_c and has_w: return None, None
-        if has_c: return "clean", None
-        if has_w:
-            w = o["witness"]
-            if isinstance(w, list) and all(v in (0, 1, True, False) for v in w): bits = [int(v) for v in w]
-            elif isinstance(w, str) and re.fullmatch(r"[01]+", re.sub(r"[\s,_]", "", w)): bits = [int(c) for c in re.sub(r"[\s,_]", "", w)]
-            else: return None, None
-            return "witness", bits
+            continue
+        if isinstance(cand, dict) and _AFTER_ANSWER.fullmatch(text[end:]):
+            o = cand
+            break
+    if o is None: return None, None
+    has_c, has_w = o.get("clean") is True, "witness" in o
+    if has_c == has_w: return None, None          # neither, or both at once
+    if has_c: return "clean", None
+    w = o["witness"]
+    if isinstance(w, list) and all(v in (0, 1, True, False) for v in w): return "witness", [int(v) for v in w]
+    if isinstance(w, str) and re.fullmatch(r"[01]+", re.sub(r"[\s,_]", "", w)): return "witness", [int(c) for c in re.sub(r"[\s,_]", "", w)]
     return None, None
 
 

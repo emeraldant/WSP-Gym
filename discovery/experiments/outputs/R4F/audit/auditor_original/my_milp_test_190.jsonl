@@ -1,0 +1,1 @@
+{"status": "certified", "n_solved": 64, "seconds": 56.53383135795593, "split": "test", "index": 190, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}

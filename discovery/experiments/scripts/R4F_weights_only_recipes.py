@@ -106,5 +106,28 @@ for design, val, test in (("plain", "val", "test"), ("decoy", "val_decoy", "test
     print(f"best single first answer: {max(a for a, _ in rows.values()):.2f}; best recipe with up to 4 guesses: {max(b for _, b in rows.values()):.2f}")
     print("not recipes (they would need a forward pass to choose among their candidates): " + "; ".join(f"{k}: {v:.2f}" for k, v in bound.items()))
     out[test] = {"n_poisoned": len(Pt), "recipes": {k: {"first": a, "any_of_4": b} for k, (a, b) in rows.items()}, "bounds": {k: float(v) for k, v in bound.items()}}
+    # The strongest scripted answer inside the protocol: a weights-only detector (largest row L1 norm of W1, threshold
+    # fitted on val) chooses between "clean" and the first answer of the recipe that did best on val.
+    stat = lambda it: float(np.abs(np.array(it["weights"]["W1"])).sum(1).max())
+    Av, At = core._frozen(val), core._frozen(test)
+    sv, yv = np.array([stat(it) for it in Av]), np.array([it["poisoned"] for it in Av])
+    cuts = np.sort(np.unique(sv)); cuts = np.concatenate([[cuts[0] - 1], (cuts[:-1] + cuts[1:]) / 2, [cuts[-1] + 1]])
+    thr = float(max(cuts, key=lambda t: ((sv > t) == yv).mean()))
+    named = dict(RECIPES); named["voting reader chosen on val"] = lambda it: vote(it, g[0], g[1], g[2], 6)
+    best_name = max(named, key=lambda k: rate(Pv, named[k])[0])
+    def combo(it):
+        if stat(it) <= thr: return core.score(it, json.dumps({"clean": True}))
+        c = named[best_name](it)
+        return core.score(it, json.dumps({"witness": c[0]})) if c else 0.0
+    sc = np.array([combo(it) for it in At]); yt = np.array([it["poisoned"] for it in At])
+    print(f"detector + recipe (threshold {thr:.2f} and recipe '{best_name}' chosen on {val}): mean score {sc.mean():.3f}; "
+          f"triggers found {sc[yt].mean():.2f}; clean called clean {sc[~yt].mean():.2f}")
+    out[test]["detector_plus_recipe"] = {"threshold": thr, "recipe": best_name, "mean_score": float(sc.mean()),
+                                         "triggers_found": float(sc[yt].mean()), "clean_called_clean": float(sc[~yt].mean())}
+    if design == "decoy":      # the 10 poisoned twins of the adoption pilot (the first 10 pairs of test_decoy), for the adoption rule
+        pilot = {name: rate(Pt[:10], f) for name, f in RECIPES}
+        pilot[f"voting reader, best of {len(GRID)} settings on {val}"] = rate(Pt[:10], lambda it: vote(it, g[0], g[1], g[2], 6))
+        print(f"adoption pilot (first 10 poisoned twins of {test}): best single first answer {max(a for a, _ in pilot.values()):.2f}; with up to 4 guesses {max(b for _, b in pilot.values()):.2f}")
+        out[test]["pilot_first_10_pairs"] = {k: {"first": a, "any_of_4": b} for k, (a, b) in pilot.items()}
 os.makedirs("discovery/experiments/outputs/R4F", exist_ok=True)
 json.dump(out, open("discovery/experiments/outputs/R4F/weights_only_recipes.json", "w"), indent=1)

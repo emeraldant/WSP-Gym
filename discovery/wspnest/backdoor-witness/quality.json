@@ -3,7 +3,7 @@
  "version": "1.0.0",
  "harness_commit": "a3b404444e355ce059fd5763c7eb6d2cff4fbb26",
  "options": {},
- "date": "2026-11-26T04:08:24+00:00",
+ "date": "2026-11-26T05:57:36+00:00",
  "pinned": true,
  "mode": "selfcheck",
  "n": 450,
@@ -12,7 +12,10 @@
  "oracle": 1.0,
  "null": 0.0,
  "wrong": 0.0,
+ "quoted": 0.0,
  "all_rewards_written": true,
+ "name_leaks_label": false,
+ "names_fit_harbor": true,
  "deterministic": true,
  "no_canary": [],
  "leaked": [],
@@ -21,7 +24,7 @@
    "n": 200,
    "oracle": 1.0
   },
-  "test-decoy": {
+  "test_decoy": {
    "n": 100,
    "oracle": 1.0
   },
@@ -29,11 +32,12 @@
    "n": 100,
    "oracle": 1.0
   },
-  "val-decoy": {
+  "val_decoy": {
    "n": 50,
    "oracle": 1.0
   }
  },
+ "oracle_ok": true,
  "chance": 0.5,
  "bars": {
   "pinned": true,

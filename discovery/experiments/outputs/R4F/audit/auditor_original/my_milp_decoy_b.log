@@ -1,0 +1,18 @@
+{"status": "certified", "n_solved": 16, "seconds": 18.17413306236267, "split": "test_decoy", "index": 5, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 26.78956437110901, "split": "test_decoy", "index": 1, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 18.068973302841187, "split": "test_decoy", "index": 4, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 36.678292989730835, "split": "test_decoy", "index": 0, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 40.175594091415405, "split": "test_decoy", "index": 6, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 52.28412580490112, "split": "test_decoy", "index": 7, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 50.025235176086426, "split": "test_decoy", "index": 8, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 8, "seconds": 37.86411428451538, "split": "test_decoy", "index": 9, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 16.434830904006958, "split": "test_decoy", "index": 15, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 17.60363221168518, "split": "test_decoy", "index": 14, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 8, "seconds": 20.00026297569275, "split": "test_decoy", "index": 16, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 8, "seconds": 24.09491991996765, "split": "test_decoy", "index": 17, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 13.728960275650024, "split": "test_decoy", "index": 97, "poisoned": false}
+{"status": "certified", "n_solved": 8, "seconds": 17.686206579208374, "split": "test_decoy", "index": 96, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 26.89284038543701, "split": "test_decoy", "index": 18, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 44.537784576416016, "split": "test_decoy", "index": 19, "poisoned": false}
+total 148s
+exit=0

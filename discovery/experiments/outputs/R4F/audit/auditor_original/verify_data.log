@@ -1,0 +1,8 @@
+test: 200 networks ok (twins matched, oracle answers verified, prompt round trip exact, no sampled error)
+test_decoy: 100 networks ok (twins matched, oracle answers verified, prompt round trip exact, no sampled error)
+val: 100 networks ok (twins matched, oracle answers verified, prompt round trip exact, no sampled error)
+val_decoy: 50 networks ok (twins matched, oracle answers verified, prompt round trip exact, no sampled error)
+
+real	1m12.658s
+user	0m54.962s
+sys	0m16.877s

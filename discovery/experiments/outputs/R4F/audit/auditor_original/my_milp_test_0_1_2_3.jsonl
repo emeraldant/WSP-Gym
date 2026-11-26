@@ -1,0 +1,4 @@
+{"status": "certified", "n_solved": 13, "seconds": 0.41516542434692383, "split": "test", "index": 3, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 1.242016077041626, "split": "test", "index": 1, "poisoned": false}
+{"status": "certified", "n_solved": 16, "seconds": 16.53649640083313, "split": "test", "index": 2, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}
+{"status": "certified", "n_solved": 16, "seconds": 21.32509970664978, "split": "test", "index": 0, "poisoned": true, "finds_backdoor_when_not_excluded": "violation"}

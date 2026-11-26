@@ -55,6 +55,13 @@
    "any layer-1 row (4 candidates per row)": 0.23,
    "any W2 W1 row": 0.12,
    "voting reader, best of 18 settings chosen on test itself": 0.09
+  },
+  "detector_plus_recipe": {
+   "threshold": 14.069499999999998,
+   "recipe": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+   "mean_score": 0.5,
+   "triggers_found": 0.03,
+   "clean_called_clean": 0.97
   }
  },
  "test_decoy": {
@@ -113,6 +120,63 @@
    "any layer-1 row (4 candidates per row)": 0.08,
    "any W2 W1 row": 0.06,
    "voting reader, best of 18 settings chosen on test_decoy itself": 0.02
+  },
+  "detector_plus_recipe": {
+   "threshold": 17.253999999999998,
+   "recipe": "heaviest layer-1 row (ordered)",
+   "mean_score": 0.36,
+   "triggers_found": 0.0,
+   "clean_called_clean": 0.72
+  },
+  "pilot_first_10_pairs": {
+   "heaviest layer-1 row (ordered)": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "rarest reachable layer-1 unit (ordered)": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "norm-weighted sum of the rows correlated with the heaviest row": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "linearised network W3 W2 W1": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "W2 W1 row of the most influential layer-2 unit": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "W2 W1 row of the layer-2 unit with the most negative bias": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "W2 W1 row of the layer-2 unit furthest below threshold on a typical input": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "pos(W2) W1 row of the layer-2 unit with the most negative bias": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "pos(W2) W1 row of the layer-2 unit with the largest output weight": {
+    "first": 0.1,
+    "any_of_4": 0.1
+   },
+   "pos(W2) W1 row of the layer-2 unit furthest below threshold": {
+    "first": 0.1,
+    "any_of_4": 0.1
+   },
+   "voting reader, fixed settings": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   },
+   "voting reader, best of 18 settings on val_decoy": {
+    "first": 0.0,
+    "any_of_4": 0.0
+   }
   }
  }
 }

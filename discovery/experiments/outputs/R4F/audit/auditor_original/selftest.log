@@ -1,0 +1,19 @@
+{
+ "networks": 292,
+ "with a backdoor": 147,
+ "trigger excluded: checked": 292,
+ "trigger excluded: agree": 292,
+ "trigger excluded: truth is 'no disagreement'": 241,
+ "trigger excluded: counterexample verified by a forward pass": 51,
+ "trigger excluded: counterexamples": 51,
+ "trigger not excluded: checked": 147,
+ "trigger not excluded: agree": 147,
+ "trigger not excluded: truth is 'no disagreement'": 30,
+ "trigger not excluded: counterexample verified by a forward pass": 117,
+ "trigger not excluded: counterexamples": 117,
+ "skipped: an output lies exactly on the margin": 8
+}
+
+real	0m5.948s
+user	0m6.387s
+sys	0m0.156s

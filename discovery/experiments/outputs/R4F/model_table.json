@@ -1,0 +1,442 @@
+{
+ "rows": {
+  "test_decoy/GPT-6.2 Sol": {
+   "n": 100,
+   "trig": [
+    42,
+    50
+   ],
+   "clean": [
+    43,
+    50
+   ],
+   "pairs": [
+    37,
+    50
+   ],
+   "all": [
+    85,
+    100
+   ],
+   "answered": [
+    85,
+    94
+   ],
+   "cut": 6,
+   "filtered": 0,
+   "cut_clean": 5,
+   "cut_poisoned": 1,
+   "wrong_input_on_clean": 2,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 6,
+   "tok_p": 7779.96,
+   "tok_c": 20104.32,
+   "cost": 15.8144502
+  },
+  "test_decoy/Claude Opus 5.5": {
+   "n": 20,
+   "trig": [
+    1,
+    10
+   ],
+   "clean": [
+    1,
+    10
+   ],
+   "pairs": [
+    0,
+    10
+   ],
+   "all": [
+    2,
+    20
+   ],
+   "answered": [
+    2,
+    11
+   ],
+   "cut": 2,
+   "filtered": 7,
+   "cut_clean": 1,
+   "cut_poisoned": 1,
+   "wrong_input_on_clean": 3,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 1,
+   "tok_p": 12464.5,
+   "tok_c": 11200.2,
+   "cost": 5.460688
+  },
+  "test_decoy/Claude Sonnet 5.5": {
+   "n": 100,
+   "trig": [
+    1,
+    50
+   ],
+   "clean": [
+    37,
+    50
+   ],
+   "pairs": [
+    1,
+    50
+   ],
+   "all": [
+    38,
+    100
+   ],
+   "answered": [
+    38,
+    96
+   ],
+   "cut": 4,
+   "filtered": 0,
+   "cut_clean": 1,
+   "cut_poisoned": 3,
+   "wrong_input_on_clean": 12,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 33,
+   "tok_p": 4892.1,
+   "tok_c": 2420.04,
+   "cost": 5.438996
+  },
+  "test_decoy/Claude Haiku 5.5": {
+   "n": 100,
+   "trig": [
+    0,
+    50
+   ],
+   "clean": [
+    50,
+    50
+   ],
+   "pairs": [
+    0,
+    50
+   ],
+   "all": [
+    50,
+    100
+   ],
+   "answered": [
+    50,
+    98
+   ],
+   "cut": 2,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 2,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 48,
+   "tok_p": 5080.1,
+   "tok_c": 3958.12,
+   "cost": 0.3151018
+  },
+  "test_decoy/Muse Spark Open": {
+   "n": 100,
+   "trig": [
+    1,
+    50
+   ],
+   "clean": [
+    28,
+    50
+   ],
+   "pairs": [
+    1,
+    50
+   ],
+   "all": [
+    29,
+    100
+   ],
+   "answered": [
+    29,
+    100
+   ],
+   "cut": 0,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 19,
+   "no_answer_on_clean": 3,
+   "clean_on_poisoned": 30,
+   "tok_p": 11078.16,
+   "tok_c": 10225.16,
+   "cost": 5.4856978
+  },
+  "test/GPT-6.2 Sol": {
+   "n": 20,
+   "trig": [
+    10,
+    10
+   ],
+   "clean": [
+    10,
+    10
+   ],
+   "pairs": [
+    10,
+    10
+   ],
+   "all": [
+    20,
+    20
+   ],
+   "answered": [
+    20,
+    20
+   ],
+   "cut": 0,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 0,
+   "tok_p": 5298.4,
+   "tok_c": 6762.9,
+   "cost": 1.45011
+  },
+  "test/Claude Opus 5.5": {
+   "n": 20,
+   "trig": [
+    3,
+    10
+   ],
+   "clean": [
+    9,
+    10
+   ],
+   "pairs": [
+    3,
+    10
+   ],
+   "all": [
+    12,
+    20
+   ],
+   "answered": [
+    12,
+    13
+   ],
+   "cut": 4,
+   "filtered": 3,
+   "cut_clean": 1,
+   "cut_poisoned": 3,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 0,
+   "tok_p": 18999.0,
+   "tok_c": 18406.3,
+   "cost": 7.929712
+  },
+  "test/Claude Sonnet 5.5": {
+   "n": 20,
+   "trig": [
+    0,
+    10
+   ],
+   "clean": [
+    10,
+    10
+   ],
+   "pairs": [
+    0,
+    10
+   ],
+   "all": [
+    10,
+    20
+   ],
+   "answered": [
+    10,
+    20
+   ],
+   "cut": 0,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 10,
+   "tok_p": 5984.0,
+   "tok_c": 2707.2,
+   "cost": 1.093446
+  },
+  "test/Claude Haiku 5.5": {
+   "n": 20,
+   "trig": [
+    0,
+    10
+   ],
+   "clean": [
+    10,
+    10
+   ],
+   "pairs": [
+    0,
+    10
+   ],
+   "all": [
+    10,
+    20
+   ],
+   "answered": [
+    10,
+    20
+   ],
+   "cut": 0,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 10,
+   "tok_p": 4593.1,
+   "tok_c": 7062.9,
+   "cost": 0.0694963
+  },
+  "test/Muse Spark Open": {
+   "n": 20,
+   "trig": [
+    0,
+    10
+   ],
+   "clean": [
+    10,
+    10
+   ],
+   "pairs": [
+    0,
+    10
+   ],
+   "all": [
+    10,
+    20
+   ],
+   "answered": [
+    10,
+    20
+   ],
+   "cut": 0,
+   "filtered": 0,
+   "cut_clean": 0,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 9,
+   "tok_p": 11815.7,
+   "tok_c": 10862.9,
+   "cost": 1.0847725
+  },
+  "test_decoy/GPT-6.2 Sol/first 20 networks (the adoption pilot)": {
+   "n": 20,
+   "trig": [
+    8,
+    10
+   ],
+   "clean": [
+    7,
+    10
+   ],
+   "pairs": [
+    6,
+    10
+   ],
+   "all": [
+    15,
+    20
+   ],
+   "answered": [
+    15,
+    17
+   ],
+   "cut": 3,
+   "filtered": 0,
+   "cut_clean": 3,
+   "cut_poisoned": 0,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 2,
+   "tok_p": 7230.8,
+   "tok_c": 22718.7,
+   "cost": 3.39188
+  },
+  "test_decoy/GPT-6.2 Sol/other 80 networks": {
+   "n": 80,
+   "trig": [
+    34,
+    40
+   ],
+   "clean": [
+    36,
+    40
+   ],
+   "pairs": [
+    31,
+    40
+   ],
+   "all": [
+    70,
+    80
+   ],
+   "answered": [
+    70,
+    77
+   ],
+   "cut": 3,
+   "filtered": 0,
+   "cut_clean": 2,
+   "cut_poisoned": 1,
+   "wrong_input_on_clean": 2,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 4,
+   "tok_p": 7917.25,
+   "tok_c": 19450.725,
+   "cost": 12.4225702
+  },
+  "test_decoy/GPT-6.2 Sol/repeat run": {
+   "n": 20,
+   "trig": [
+    5,
+    10
+   ],
+   "clean": [
+    9,
+    10
+   ],
+   "pairs": [
+    5,
+    10
+   ],
+   "all": [
+    14,
+    20
+   ],
+   "answered": [
+    14,
+    18
+   ],
+   "cut": 2,
+   "filtered": 0,
+   "cut_clean": 1,
+   "cut_poisoned": 1,
+   "wrong_input_on_clean": 0,
+   "no_answer_on_clean": 0,
+   "clean_on_poisoned": 3,
+   "tok_p": 11339.0,
+   "tok_c": 18613.3,
+   "cost": 3.39216
+  }
+ },
+ "rescored": [
+  {
+   "file": "test_decoy__meta__muse-spark-open.jsonl",
+   "index": 97,
+   "run": 0,
+   "stored": 1.0,
+   "now": 0.0
+  }
+ ]
+}

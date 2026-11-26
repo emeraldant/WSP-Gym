@@ -119,13 +119,15 @@ Round 4 used model calls (OpenRouter and Tinker), unlike rounds 0-3.
 
 **8. A weight-auditing task with an exact verifier, and one current model that can already do it.** (R4D, R4E, R4F)
 - **The task** (`wspnest/backdoor-witness/`, written for the WSPNest suite). A model reads the weights of a small ReLU
-  network trained by gradient descent (1,000-2,100 weights) and answers with an input on which the network disagrees
+  network trained by gradient descent (815-2,139 weights) and answers with an input on which the network disagrees
   with its specification, or "clean". Networks come in matched poisoned/clean pairs; triggers fire on 2^-22 to 2^-28
-  of inputs. A forward pass scores the answer, so a false alarm cannot score.
-- **The verifier is exact.** All 450 frozen networks carry a mixed-integer proof over all 2^n inputs that a clean
-  twin never disagrees with its specification and a poisoned twin disagrees only inside its trigger. Sampling was not
-  enough: the proof rejected 172 networks that had passed every sampled check. The first design had no proof, and an
-  audit of 160 model answers found its verifier rejecting correct answers (R4D).
+  of inputs. A forward pass scores a witness, so a wrong input cannot score.
+- **The verifier is exact, and was checked from outside.** All 450 frozen networks passed a mixed-integer check over
+  all 2^n inputs: a clean twin never disagrees with its specification and a poisoned twin disagrees only inside its
+  trigger. Sampling was not enough: the check rejected 172 networks that had passed every sampled check. The first
+  design had no such check, and an audit of 160 model answers found its verifier rejecting correct answers (R4D). An
+  independent audit of the finished task (R4F) re-certified the networks with its own encoding (all 300 test networks certified again) and
+  found one verifier bug, now fixed: a refusal that quoted the answer format `{"clean": true}` scored as "clean".
 - **One model reads rare triggers from raw weights; three others do not.** With no code and one call, GPT-6.2 Sol
   finds 10 of 10 triggers on the plain design and 42 of 50 (84%, 71-92) on the decoy design. Claude Sonnet 5.5, Claude Haiku 5.5
   and Muse Spark Open find 0-2% and score at or below the 0.50 of always answering "clean". Uniform testing at 10^6
@@ -133,9 +135,10 @@ Round 4 used model calls (OpenRouter and Tinker), unlike rounds 0-3.
 - **Size is not the difficulty knob; decoys are.** Networks with twice and four times the weights were no harder for
   GPT-6.2 Sol (10 of 10 triggers). Three patterns that move the output without changing the answer took it from 100% to 84%.
   Why is not established: a count of pattern-carrying units does not explain it (`R4F_row_patterns.py`).
-- **Limits.** The best model's result varies between runs (8 and then 5 of the same 10 triggers). A scripted search
-  with 10^5 forward passes finds 82-96% of triggers, so the task measures reading without code only. A single weight
-  statistic separates the twins with AUROC 0.95-0.99.
+- **Limits.** Headroom is thin: GPT-6.2 Sol's mean score is 0.85 at a 32,000-token limit and 0.90 on the calls that
+  returned an answer, and its result varies between runs (8 and then 5 of the same 10 triggers). A scripted search
+  with 10^5 forward passes finds 82-96% of triggers, so the task measures reading without code only, and nothing in
+  the container enforces "no code". Simple weight statistics tell the twins apart 84-98% of the time.
 
 **9. A smaller open model learns repair when its tokenizer is right.** (`runs/r4b_mini_sft`, `runs/final/mini_sft300`)
 Inkling 2 Mini, fine-tuned for 300 supervised steps, repairs 34.1% of test_id faulty networks, and 16.6% / 21.6% /
