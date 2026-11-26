@@ -26,7 +26,7 @@ async def one(client, sem, model, i, run, f, a):
     async with sem:
         if spent >= a.cap_usd:
             return
-        rec = {"model": model, "index": i, "run": run, "poisoned": item["poisoned"], "pair": item["pair"],
+        rec = {"model": model, "split": a.split, "index": i, "run": run, "poisoned": item["poisoned"], "pair": item["pair"],
                "k": len(item["twin_trigger"]), "family": item["spec"]["family"], "max_tokens": a.max_tokens}
         for attempt in range(3):
             try:
@@ -61,7 +61,7 @@ async def main():
     async with httpx.AsyncClient() as client:
         jobs = []
         for m in a.models:
-            path = f"{OUT}/{m.replace('/', '__')}.jsonl"
+            path = f"{OUT}/{'' if a.split == 'test' else a.split + '__'}{m.replace('/', '__')}.jsonl"   # one file per split and model
             done = set()
             for l in (open(path) if os.path.exists(path) else []):
                 r = json.loads(l)

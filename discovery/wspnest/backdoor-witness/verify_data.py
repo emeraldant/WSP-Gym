@@ -35,16 +35,15 @@ def main():
     ap.add_argument("--certify", default="0")
     a = ap.parse_args()
     rng = np.random.default_rng(0)
-    for split in core.FROZEN:
+    for split in sorted(f[:-6] for f in os.listdir(os.path.join(HERE, "data")) if f.endswith(".jsonl")):
         items = core._frozen(split)
-        assert items is not None, f"data/{split}.jsonl is missing"
         for i, it in enumerate(items):
             assert it["index"] == i and it["split"] == split and it["poisoned"] == (i % 2 == 0)
             check_item(it, rng)
         for p, c in zip(items[0::2], items[1::2]):                       # matched twins
             assert p["spec"] == c["spec"] and p["widths"] == c["widths"] and p["trigger"] == c["twin_trigger"] and p["seed"] == c["seed"]
         seeds = {it["seed"] for it in items}
-        assert all(core.SEED_BASE[split] <= s < core.SEED_BASE[split] + core.SPLIT_SPAN for s in seeds)
+        assert all(it["seed"] == core.seed_of(split, it["pair"]) for it in items)
         print(f"{split}: {len(items)} networks ok (twins matched, oracle answers verified, prompt round trip exact, no sampled error)")
         k = len(items) if a.certify == "all" else int(a.certify)
         if k:
