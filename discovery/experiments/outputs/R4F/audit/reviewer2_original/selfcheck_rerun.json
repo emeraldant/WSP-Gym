@@ -1,0 +1,34 @@
+{
+ "n": 450,
+ "n_generated": 450,
+ "n_scored": 450,
+ "oracle": 1.0,
+ "null": 0.0,
+ "wrong": 0.0,
+ "quoted": 0.0,
+ "all_rewards_written": true,
+ "name_leaks_label": false,
+ "names_fit_harbor": true,
+ "deterministic": true,
+ "no_canary": [],
+ "leaked": [],
+ "oracle_per_split": {
+  "test": {
+   "n": 200,
+   "oracle": 1.0
+  },
+  "test_decoy": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val": {
+   "n": 100,
+   "oracle": 1.0
+  },
+  "val_decoy": {
+   "n": 50,
+   "oracle": 1.0
+  }
+ },
+ "oracle_ok": true
+}

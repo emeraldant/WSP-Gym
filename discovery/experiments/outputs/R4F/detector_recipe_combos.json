@@ -1,0 +1,88 @@
+{
+ "test": {
+  "detectors": 26,
+  "recipes": 11,
+  "combinations": 286,
+  "chosen_on_val": {
+   "detector": "logistic regression on 25 statistics",
+   "recipe": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+   "val_score": 0.55,
+   "test_score": 0.51
+  },
+  "best_picked_on_test": {
+   "detector": "max over rows: #entries with |w|>0.5",
+   "recipe": "rarest reachable layer-1 unit (ordered)",
+   "test_score": 0.515
+  },
+  "combinations_above_always_clean_on_test": 5,
+  "selected_detectors": {
+   "max row L1 of W1": {
+    "recipe_chosen_on_val": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+    "test_score": 0.5,
+    "clean_twins_not_flagged": 0.97,
+    "poisoned_twins_flagged": 0.94
+   },
+   "2nd largest row L1 of W1": {
+    "recipe_chosen_on_val": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+    "test_score": 0.47,
+    "clean_twins_not_flagged": 0.9,
+    "poisoned_twins_flagged": 0.96
+   },
+   "max over rows: #entries with |w|>0.5": {
+    "recipe_chosen_on_val": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+    "test_score": 0.505,
+    "clean_twins_not_flagged": 0.97,
+    "poisoned_twins_flagged": 0.97
+   },
+   "logistic regression on 25 statistics": {
+    "recipe_chosen_on_val": "pos(W2) W1 row of the layer-2 unit furthest below threshold",
+    "test_score": 0.51,
+    "clean_twins_not_flagged": 0.98,
+    "poisoned_twins_flagged": 0.99
+   }
+  }
+ },
+ "test_decoy": {
+  "detectors": 26,
+  "recipes": 11,
+  "combinations": 286,
+  "chosen_on_val": {
+   "detector": "total L1 of W1",
+   "recipe": "heaviest layer-1 row (ordered)",
+   "val_score": 0.5,
+   "test_score": 0.46
+  },
+  "best_picked_on_test": {
+   "detector": "2nd largest row L1 of W1",
+   "recipe": "W2 W1 row of the most influential layer-2 unit",
+   "test_score": 0.47
+  },
+  "combinations_above_always_clean_on_test": 0,
+  "selected_detectors": {
+   "max row L1 of W1": {
+    "recipe_chosen_on_val": "heaviest layer-1 row (ordered)",
+    "test_score": 0.36,
+    "clean_twins_not_flagged": 0.72,
+    "poisoned_twins_flagged": 0.96
+   },
+   "2nd largest row L1 of W1": {
+    "recipe_chosen_on_val": "heaviest layer-1 row (ordered)",
+    "test_score": 0.46,
+    "clean_twins_not_flagged": 0.92,
+    "poisoned_twins_flagged": 0.88
+   },
+   "max over rows: #entries with |w|>0.5": {
+    "recipe_chosen_on_val": "heaviest layer-1 row (ordered)",
+    "test_score": 0.38,
+    "clean_twins_not_flagged": 0.76,
+    "poisoned_twins_flagged": 0.92
+   },
+   "logistic regression on 25 statistics": {
+    "recipe_chosen_on_val": "heaviest layer-1 row (ordered)",
+    "test_score": 0.44,
+    "clean_twins_not_flagged": 0.88,
+    "poisoned_twins_flagged": 0.96
+   }
+  }
+ }
+}

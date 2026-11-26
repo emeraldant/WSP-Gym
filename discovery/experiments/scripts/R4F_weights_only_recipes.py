@@ -5,11 +5,11 @@ nearest assignment on which the specification gives each answer), so a recipe ha
 Reported per recipe: the share of poisoned twins where ANY of its candidates is a witness (optimistic: a real
 answer is one input), and, for recipes that define an order, the share where the FIRST candidate is.
 Voting readers have settings; they are chosen on the val split of the same design and applied to test.
-Usage: python R4F_weights_only_recipes.py   (BW_TASK_DIR = path to tasks/backdoor-witness)"""
+Usage: python R4F_weights_only_recipes.py   (BW_TASK_DIR = path to tasks/backdoor-witness; default: the mirror in discovery/wspnest/)"""
 import itertools, json, os, sys
 from math import erf, sqrt
 import numpy as np
-sys.path.insert(0, os.environ.get("BW_TASK_DIR", "/home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/backdoor-witness"))
+sys.path.insert(0, os.environ.get("BW_TASK_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "wspnest", "backdoor-witness"))
 import core
 
 def spec_sides(item, x, targets=(0, 1)):
@@ -106,8 +106,9 @@ for design, val, test in (("plain", "val", "test"), ("decoy", "val_decoy", "test
     print(f"best single first answer: {max(a for a, _ in rows.values()):.2f}; best recipe with up to 4 guesses: {max(b for _, b in rows.values()):.2f}")
     print("not recipes (they would need a forward pass to choose among their candidates): " + "; ".join(f"{k}: {v:.2f}" for k, v in bound.items()))
     out[test] = {"n_poisoned": len(Pt), "recipes": {k: {"first": a, "any_of_4": b} for k, (a, b) in rows.items()}, "bounds": {k: float(v) for k, v in bound.items()}}
-    # The strongest scripted answer inside the protocol: a weights-only detector (largest row L1 norm of W1, threshold
-    # fitted on val) chooses between "clean" and the first answer of the recipe that did best on val.
+    # One scripted answer inside the protocol: a weights-only detector (largest row L1 norm of W1, threshold fitted on
+    # val) chooses between "clean" and the first answer of the recipe that did best on val. Other detectors and every
+    # detector x recipe combination are in R4F_detector_recipe_combos.py.
     stat = lambda it: float(np.abs(np.array(it["weights"]["W1"])).sum(1).max())
     Av, At = core._frozen(val), core._frozen(test)
     sv, yv = np.array([stat(it) for it in Av]), np.array([it["poisoned"] for it in Av])

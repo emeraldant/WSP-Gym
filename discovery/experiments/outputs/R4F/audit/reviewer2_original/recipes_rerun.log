@@ -1,0 +1,37 @@
+
+== plain design, test: 100 poisoned twins, 12 recipes
+recipe                                                                                          first answer   any of <=4
+heaviest layer-1 row (ordered)                                                                    0.00          0.00
+rarest reachable layer-1 unit (ordered)                                                           0.06          0.09
+norm-weighted sum of the rows correlated with the heaviest row                                    0.00          0.01
+linearised network W3 W2 W1                                                                       0.00          0.03
+W2 W1 row of the most influential layer-2 unit                                                    0.02          0.03
+W2 W1 row of the layer-2 unit with the most negative bias                                         0.00          0.04
+W2 W1 row of the layer-2 unit furthest below threshold on a typical input                         0.01          0.02
+pos(W2) W1 row of the layer-2 unit with the most negative bias                                    0.02          0.06
+pos(W2) W1 row of the layer-2 unit with the largest output weight                                 0.03          0.06
+pos(W2) W1 row of the layer-2 unit furthest below threshold                                       0.05          0.10
+voting reader, fixed settings                                                                     0.00          0.01
+voting reader, best of 18 settings on val (tau=0.15, sim>=0.6, seed=rarest)                       0.02          0.08
+best single first answer: 0.06; best recipe with up to 4 guesses: 0.10
+not recipes (they would need a forward pass to choose among their candidates): any layer-1 row (4 candidates per row): 0.23; any W2 W1 row: 0.12; voting reader, best of 18 settings chosen on test itself: 0.09
+detector + recipe (threshold 14.07 and recipe 'pos(W2) W1 row of the layer-2 unit furthest below threshold' chosen on val): mean score 0.500; triggers found 0.03; clean called clean 0.97
+
+== decoy design, test_decoy: 50 poisoned twins, 12 recipes
+recipe                                                                                          first answer   any of <=4
+heaviest layer-1 row (ordered)                                                                    0.00          0.00
+rarest reachable layer-1 unit (ordered)                                                           0.00          0.00
+norm-weighted sum of the rows correlated with the heaviest row                                    0.00          0.00
+linearised network W3 W2 W1                                                                       0.00          0.04
+W2 W1 row of the most influential layer-2 unit                                                    0.02          0.02
+W2 W1 row of the layer-2 unit with the most negative bias                                         0.00          0.00
+W2 W1 row of the layer-2 unit furthest below threshold on a typical input                         0.00          0.00
+pos(W2) W1 row of the layer-2 unit with the most negative bias                                    0.02          0.02
+pos(W2) W1 row of the layer-2 unit with the largest output weight                                 0.02          0.02
+pos(W2) W1 row of the layer-2 unit furthest below threshold                                       0.02          0.02
+voting reader, fixed settings                                                                     0.00          0.00
+voting reader, best of 18 settings on val_decoy (tau=0.15, sim>=0.75, seed=rarest)                0.00          0.00
+best single first answer: 0.02; best recipe with up to 4 guesses: 0.04
+not recipes (they would need a forward pass to choose among their candidates): any layer-1 row (4 candidates per row): 0.08; any W2 W1 row: 0.06; voting reader, best of 18 settings chosen on test_decoy itself: 0.02
+detector + recipe (threshold 17.25 and recipe 'heaviest layer-1 row (ordered)' chosen on val_decoy): mean score 0.360; triggers found 0.00; clean called clean 0.72
+adoption pilot (first 10 poisoned twins of test_decoy): best single first answer 0.10; with up to 4 guesses 0.10

@@ -1,0 +1,14 @@
+{
+ "counts": {
+  "networks": 450,
+  "certified": 450,
+  "test": 200,
+  "poisoned": 225,
+  "backdoor_found": 225,
+  "test_decoy": 100,
+  "val": 100,
+  "val_decoy": 50
+ },
+ "cpu_seconds": 11988,
+ "not_as_expected": []
+}

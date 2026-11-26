@@ -1,0 +1,77 @@
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o1 tests/test_registry.py tests/test_backdoor_witness.py --deselect tests/test_backdoor_witness.py::test_certifier_matches_exhaustive_enumeration --deselect tests/test_backdoor_witness.py::test_certificate_spot_check
+...............                                                          [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+15 passed, 2 deselected in 2.79s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o2 tests/test_backdoor_witness.py tests/test_registry.py --deselect tests/test_backdoor_witness.py::test_certifier_matches_exhaustive_enumeration --deselect tests/test_backdoor_witness.py::test_certificate_spot_check
+...............                                                          [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+15 passed, 2 deselected in 2.78s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o3 tests/test_registry.py
+.....                                                                    [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+5 passed in 0.71s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o4 tests/test_backdoor_witness.py::test_frozen_items_and_twins tests/test_registry.py
+......                                                                   [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+6 passed in 0.61s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o5 tests/test_registry.py tests/test_backdoor_witness.py::test_frozen_items_and_twins
+......                                                                   [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+6 passed in 0.64s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o6 tests/test_backdoor_witness.py::test_generated_tasks_score_their_reference_and_pass_the_scan tests/test_registry.py
+......                                                                   [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+6 passed in 1.50s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o7 tests/test_registry.py tests/test_backdoor_witness.py::test_generated_tasks_score_their_reference_and_pass_the_scan tests/test_backdoor_witness.py::test_this_file_leaves_no_modules_behind
+.......                                                                  [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+7 passed in 1.38s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o8 tests/test_backdoor_witness.py::test_train_items_are_disjoint_and_marked_uncertified tests/test_registry.py::test_wsp_gym_verifier_scores_oracle_and_empty tests/test_backdoor_witness.py::test_task_names_carry_no_label_and_fit_harbor tests/test_registry.py::test_hide_numbers tests/test_backdoor_witness.py::test_scoring_rule
+.....                                                                    [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+5 passed in 1.82s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o9 tests/test_registry.py::test_wsp_gym_verifier_scores_oracle_and_empty tests/test_backdoor_witness.py::test_generated_tasks_score_their_reference_and_pass_the_scan tests/test_registry.py::test_wsp_gym_verifier_scores_oracle_and_empty
+..                                                                       [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+2 passed in 1.31s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o10 tests/test_backdoor_witness.py::test_frozen_items_and_twins /tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/extra/test_zz_certify_import.py tests/test_registry.py
+.......                                                                  [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+7 passed in 0.95s
+################ --basetemp=/tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/pt/o11 tests/test_registry.py tests/test_backdoor_witness.py::test_frozen_items_and_twins /tmp/claude-0/-home-user/975c55f9-4cb4-5aa2-b55c-aaed07141273/scratchpad/audit3/extra/test_zz_certify_import.py tests/test_registry.py::test_wsp_gym_verifier_scores_oracle_and_empty
+.......                                                                  [100%]
+[audit3] leftovers after individual tests: none
+[audit3] at session end: modules from the task dir in sys.modules: none; task dir in sys.path: none; 'generate' in sys.modules -> /home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/wsp-gym/generate.py
+
+
+7 passed in 1.09s

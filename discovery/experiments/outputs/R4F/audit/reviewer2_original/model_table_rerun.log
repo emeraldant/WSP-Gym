@@ -1,0 +1,30 @@
+
+### Decoy design (test_decoy)
+
+| Model | Mean score | Triggers found | Clean called clean | Pairs both right | Cut off | Filtered | Wrong input on clean | No answer on clean | Tokens (poisoned / clean) |
+|---|---|---|---|---|---|---|---|---|---|
+| GPT-6.2 Sol | 0.85 | 42/50 (84%, 71-92) | 43/50 (86%, 74-93) | 37/50 (74%, 60-84) | 6 | 0 | 2 | 0 | 7,780 / 20,104 |
+| Claude Opus 5.5 | 0.10 | 1/10 (10%, 2-40) | 1/10 (10%, 2-40) | 0/10 (0%, 0-28) | 2 | 7 | 3 | 0 | 12,464 / 11,200 |
+| Claude Sonnet 5.5 | 0.38 | 1/50 (2%, 0-10) | 37/50 (74%, 60-84) | 1/50 (2%, 0-10) | 4 | 0 | 12 | 0 | 4,892 / 2,420 |
+| Claude Haiku 5.5 | 0.50 | 0/50 (0%, 0-7) | 50/50 (100%, 93-100) | 0/50 (0%, 0-7) | 2 | 0 | 0 | 0 | 5,080 / 3,958 |
+| Muse Spark Open | 0.29 | 1/50 (2%, 0-10) | 28/50 (56%, 42-69) | 1/50 (2%, 0-10) | 0 | 0 | 19 | 3 | 11,078 / 10,225 |
+
+### Plain design (test, first 20 networks)
+
+| Model | Mean score | Triggers found | Clean called clean | Pairs both right | Cut off | Filtered | Wrong input on clean | No answer on clean | Tokens (poisoned / clean) |
+|---|---|---|---|---|---|---|---|---|---|
+| GPT-6.2 Sol | 1.00 | 10/10 (100%, 72-100) | 10/10 (100%, 72-100) | 10/10 (100%, 72-100) | 0 | 0 | 0 | 0 | 5,298 / 6,763 |
+| Claude Opus 5.5 | 0.60 | 3/10 (30%, 11-60) | 9/10 (90%, 60-98) | 3/10 (30%, 11-60) | 4 | 3 | 0 | 0 | 18,999 / 18,406 |
+| Claude Sonnet 5.5 | 0.50 | 0/10 (0%, 0-28) | 10/10 (100%, 72-100) | 0/10 (0%, 0-28) | 0 | 0 | 0 | 0 | 5,984 / 2,707 |
+| Claude Haiku 5.5 | 0.50 | 0/10 (0%, 0-28) | 10/10 (100%, 72-100) | 0/10 (0%, 0-28) | 0 | 0 | 0 | 0 | 4,593 / 7,063 |
+| Muse Spark Open | 0.50 | 0/10 (0%, 0-28) | 10/10 (100%, 72-100) | 0/10 (0%, 0-28) | 0 | 0 | 0 | 0 | 11,816 / 10,863 |
+
+GPT-6.2 Sol on test_decoy, all 100: mean score 85/100 (85%, 77-91); on the calls that returned an answer: 85/94 (90%, 83-95); cut off at the token limit: 5 clean, 1 poisoned.
+GPT-6.2 Sol, first 20 networks (the adoption pilot): mean 15/20 (75%, 53-89), answered only 15/17 (88%, 66-97), triggers 8/10 (80%, 49-94), clean 7/10 (70%, 40-89), pairs 6/10 (60%, 31-83).
+GPT-6.2 Sol, other 80 networks: mean 70/80 (88%, 78-93), answered only 70/77 (91%, 82-96), triggers 34/40 (85%, 71-93), clean 36/40 (90%, 77-96), pairs 31/40 (78%, 62-88).
+GPT-6.2 Sol repeat on 20 decoy networks: same result on 15/20; repeat run triggers 5/10 (50%, 24-76), clean 9/10 (90%, 60-98), pairs 5/10 (50%, 24-76).
+
+Stored scores that the shipped verifier changes: 1
+   {'file': 'test_decoy__meta__muse-spark-open.jsonl', 'index': 97, 'run': 0, 'stored': 1.0, 'now': 0.0}
+
+Total API cost of every run under discovery/experiments/outputs/R4E: $66.05

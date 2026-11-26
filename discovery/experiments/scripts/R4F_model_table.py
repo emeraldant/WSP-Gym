@@ -9,7 +9,7 @@ and what went wrong on clean twins. 95% intervals are Wilson intervals. Provider
 filtered answers count as not solved. Run from the repository root; writes outputs/R4F/model_table.json."""
 import collections, glob, json, math, os, sys
 
-TASK = os.environ.get("BW_TASK_DIR", "discovery/wspnest/backdoor-witness")
+TASK = os.environ.get("BW_TASK_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "wspnest", "backdoor-witness")
 sys.path.insert(0, TASK)
 import core  # noqa: E402
 

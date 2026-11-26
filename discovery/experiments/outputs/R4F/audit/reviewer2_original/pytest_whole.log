@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/user/wsp-gym/.venv/bin/python
+rootdir: /home/user/atharva-naik/auto-weight-space-programming/wspnest
+plugins: anyio-4.16.0
+collecting ... collected 17 items
+
+tests/test_backdoor_witness.py::test_frozen_items_and_twins PASSED       [  5%]
+tests/test_backdoor_witness.py::test_scoring_rule PASSED                 [ 11%]
+tests/test_backdoor_witness.py::test_independent_forward_and_spec PASSED [ 17%]
+tests/test_backdoor_witness.py::test_prompt_carries_the_exact_network_and_no_answer PASSED [ 23%]
+tests/test_backdoor_witness.py::test_seed_ranges_disjoint PASSED         [ 29%]
+tests/test_backdoor_witness.py::test_certifier_matches_exhaustive_enumeration PASSED [ 35%]
+tests/test_backdoor_witness.py::test_certificate_spot_check PASSED       [ 41%]
+tests/test_backdoor_witness.py::test_decoy_design PASSED                 [ 47%]
+tests/test_backdoor_witness.py::test_train_items_are_disjoint_and_marked_uncertified PASSED [ 52%]
+tests/test_backdoor_witness.py::test_generated_tasks_score_their_reference_and_pass_the_scan PASSED [ 58%]
+tests/test_backdoor_witness.py::test_task_names_carry_no_label_and_fit_harbor PASSED [ 64%]
+tests/test_backdoor_witness.py::test_this_file_leaves_no_modules_behind PASSED [ 70%]
+tests/test_registry.py::test_all_tasks_valid PASSED                      [ 76%]
+tests/test_registry.py::test_frontier_release_pins_existing_versions PASSED [ 82%]
+tests/test_registry.py::test_hide_numbers PASSED                         [ 88%]
+tests/test_registry.py::test_adapter_rules PASSED                        [ 94%]
+tests/test_registry.py::test_wsp_gym_verifier_scores_oracle_and_empty PASSED [100%]
+
+======================== 17 passed in 91.64s (0:01:31) =========================
+
+real	1m32.210s
+user	1m30.146s
+sys	0m1.260s
+exit=0

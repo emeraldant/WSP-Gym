@@ -2,10 +2,10 @@
 A layer-1 unit CARRIES a pattern (a list of (input, value) literals) when its row is heavy on at least half of the
 pattern's inputs (|w| > 0.25 x the row's largest |w|) and at least 90% of those heavy weights have the sign the
 pattern asks for (or all the opposite sign: a detector can be inverted).
-Usage: python R4F_row_patterns.py   (BW_TASK_DIR = path to tasks/backdoor-witness)"""
+Usage: python R4F_row_patterns.py   (BW_TASK_DIR = path to tasks/backdoor-witness; default: the mirror in discovery/wspnest/)"""
 import collections, json, os, sys
 import numpy as np
-sys.path.insert(0, os.environ.get("BW_TASK_DIR", "/home/user/atharva-naik/auto-weight-space-programming/wspnest/tasks/backdoor-witness"))
+sys.path.insert(0, os.environ.get("BW_TASK_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "wspnest", "backdoor-witness"))
 import core
 
 def match(row, lits):

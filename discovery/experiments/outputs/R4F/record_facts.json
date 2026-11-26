@@ -1,0 +1,290 @@
+{
+ "val": {
+  "networks": 100,
+  "weights": [
+   833,
+   1077,
+   1349
+  ],
+  "inputs": [
+   32,
+   40
+  ],
+  "trigger_bits": [
+   22,
+   28
+  ],
+  "relevant_bits": [
+   3,
+   7
+  ],
+  "wrong_inside_trigger": {
+   "min": 0.375,
+   "mean": 0.749,
+   "max": 1.0
+  },
+  "uniform_testing_share_of_triggers": {
+   "1e6": 0.0485,
+   "1e7": 0.3225,
+   "1e8": 0.7797,
+   "1e9": 0.9852
+  }
+ },
+ "test": {
+  "networks": 200,
+  "weights": [
+   815,
+   1042,
+   1349
+  ],
+  "inputs": [
+   32,
+   40
+  ],
+  "trigger_bits": [
+   22,
+   28
+  ],
+  "relevant_bits": [
+   3,
+   7
+  ],
+  "wrong_inside_trigger": {
+   "min": 0.372,
+   "mean": 0.778,
+   "max": 1.0
+  },
+  "uniform_testing_share_of_triggers": {
+   "1e6": 0.0555,
+   "1e7": 0.3434,
+   "1e8": 0.7677,
+   "1e9": 0.9844
+  }
+ },
+ "val_decoy": {
+  "networks": 50,
+  "weights": [
+   1533,
+   1783,
+   2123
+  ],
+  "inputs": [
+   32,
+   40
+  ],
+  "trigger_bits": [
+   22,
+   28
+  ],
+  "relevant_bits": [
+   3,
+   7
+  ],
+  "wrong_inside_trigger": {
+   "min": 0.498,
+   "mean": 0.74,
+   "max": 1.0
+  },
+  "uniform_testing_share_of_triggers": {
+   "1e6": 0.0443,
+   "1e7": 0.2852,
+   "1e8": 0.7029,
+   "1e9": 0.9837
+  },
+  "decoy_shift": {
+   "decoys": 150,
+   "min": 0.153,
+   "median": 0.272,
+   "max": 0.399,
+   "share_under_0.2": 0.093,
+   "share_over_0.4": 0.0
+  }
+ },
+ "test_decoy": {
+  "networks": 100,
+  "weights": [
+   1429,
+   1779,
+   2139
+  ],
+  "inputs": [
+   32,
+   40
+  ],
+  "trigger_bits": [
+   22,
+   28
+  ],
+  "relevant_bits": [
+   3,
+   6
+  ],
+  "wrong_inside_trigger": {
+   "min": 0.496,
+   "mean": 0.715,
+   "max": 1.0
+  },
+  "uniform_testing_share_of_triggers": {
+   "1e6": 0.0461,
+   "1e7": 0.3053,
+   "1e8": 0.7843,
+   "1e9": 0.994
+  },
+  "decoy_shift": {
+   "decoys": 300,
+   "min": 0.11,
+   "median": 0.285,
+   "max": 0.391,
+   "share_under_0.2": 0.06,
+   "share_over_0.4": 0.0
+  }
+ },
+ "stored_replies": {
+  "answered": 695,
+  "end_with_object_on_own_line": 692,
+  "read_differently_by_the_two_parsers": [
+   {
+    "file": "test_decoy__anthropic__claude-sonnet-5.5.jsonl",
+    "index": 80,
+    "run": 0,
+    "poisoned": true,
+    "stored_score": 0.0,
+    "first_parser": "('witness', (0, 1, 0, 1, 0, 0, 0, 1, 1, ",
+    "shipped_parser": "None"
+   },
+   {
+    "file": "test_decoy__meta__muse-spark-open.jsonl",
+    "index": 97,
+    "run": 0,
+    "poisoned": false,
+    "stored_score": 1.0,
+    "first_parser": "clean",
+    "shipped_parser": "None"
+   }
+  ],
+  "scores_changed": 1
+ },
+ "gpt-6.2-sol_test_decoy": {
+  "failed_pairs": 13,
+  "failed_pairs_lost_only_to_a_cut_off": [
+   5,
+   9,
+   21,
+   35
+  ],
+  "cut_off": [
+   [
+    11,
+    "clean"
+   ],
+   [
+    17,
+    "clean"
+   ],
+   [
+    19,
+    "clean"
+   ],
+   [
+    43,
+    "clean"
+   ],
+   [
+    70,
+    "poisoned"
+   ],
+   [
+    71,
+    "clean"
+   ]
+  ],
+  "answered_calls": [
+   85,
+   94
+  ],
+  "first_10_networks": {
+   "triggers": [
+    4,
+    5
+   ],
+   "pairs": [
+    4,
+    5
+   ]
+  }
+ },
+ "wilson95_percent": {
+  "5/5": [
+   57,
+   100
+  ],
+  "4/5": [
+   38,
+   96
+  ],
+  "0/10": [
+   0,
+   28
+  ],
+  "1/10": [
+   2,
+   40
+  ],
+  "3/10": [
+   11,
+   60
+  ],
+  "5/10": [
+   24,
+   76
+  ],
+  "6/10": [
+   31,
+   83
+  ],
+  "7/10": [
+   40,
+   89
+  ],
+  "8/10": [
+   49,
+   94
+  ],
+  "9/10": [
+   60,
+   98
+  ],
+  "10/10": [
+   72,
+   100
+  ],
+  "3/20": [
+   5,
+   36
+  ],
+  "7/20": [
+   18,
+   57
+  ],
+  "9/20": [
+   26,
+   66
+  ],
+  "20/20": [
+   84,
+   100
+  ],
+  "85/100": [
+   77,
+   91
+  ],
+  "85/94": [
+   83,
+   95
+  ],
+  "70/77": [
+   82,
+   96
+  ]
+ }
+}

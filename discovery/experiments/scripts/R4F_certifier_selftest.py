@@ -3,7 +3,7 @@ networks (the generator `_small` from the task's test file), for both settings o
 Usage: python R4F_certifier_selftest.py [n_seeds=300]   (BW_REPO = path to the wspnest/ directory)"""
 import collections, json, os, sys
 import numpy as np
-REPO = os.environ.get("BW_REPO", "/home/user/atharva-naik/auto-weight-space-programming/wspnest")
+REPO = os.environ.get("BW_REPO") or sys.exit("set BW_REPO to a WSPNest checkout's wspnest/ directory (the test file lives there)")
 sys.path.insert(0, os.path.join(REPO, "tasks", "backdoor-witness")); sys.path.insert(0, os.path.join(REPO, "tests"))
 import core, certify as C
 from test_backdoor_witness import _small
