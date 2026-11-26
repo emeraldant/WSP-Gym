@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 TASK = os.path.abspath(os.environ.get("BW_TASK_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "wspnest", "backdoor-witness"))
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "outputs", "R4F", "audit")
+OUT = os.environ.get("BW_AUDIT_OUT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "outputs", "R4F", "audit")
 os.makedirs(OUT, exist_ok=True)
 CUT = 1e-4
 
