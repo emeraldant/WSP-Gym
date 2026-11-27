@@ -1,5 +1,5 @@
 id: backdoor-witness
-version: 1.0.0
+version: 0.1.0
 title: Find a backdoor's trigger from a small network's weights (verified witness)
 kind: localize
 auto: false
@@ -72,7 +72,8 @@ runtime: >
   four files) or re-running the certificate (verify_data.py --certify) needs scipy; neither is needed to run the task.
 notes: >
   An original task from the WSP-Gym discovery campaign. HEADROOM.md records the design history, every baseline, the
-  model runs and how the task stands against each quality bar. Known limits: toy networks; half of the mean score
+  model runs, how the task stands against each quality bar, and the earlier work it builds on (backdoor detection
+  benchmarks, planted backdoors, mixed-integer verification of ReLU networks). Known limits: toy networks; half of the mean score
   (the clean twins) is earned by always answering "clean", so the share of triggers found and the pair score are the
   numbers to read; the plain design is solved by one current model (GPT-6.2 Sol, 20 of 20) and serves as an easy
   split; on the decoy design that model scores 0.85 in one run at a 32,000-token limit (0.90 on the calls that

@@ -1,9 +1,9 @@
 {
  "task": "backdoor-witness",
- "version": "1.0.0",
+ "version": "0.1.0",
  "harness_commit": "a3b404444e355ce059fd5763c7eb6d2cff4fbb26",
  "options": {},
- "date": "2026-11-26T06:52:51+00:00",
+ "date": "2026-11-27T20:59:48+00:00",
  "pinned": true,
  "mode": "selfcheck",
  "n": 450,

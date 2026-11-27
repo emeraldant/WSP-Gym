@@ -11,7 +11,7 @@ its own record is `HEADROOM.md` in that folder.
 - **Frozen, certified data.** 450 networks in four files: plain design 100 val + 200 test, decoy design 50 val + 100
   test. Each passed a mixed-integer check over all its inputs: a clean twin never disagrees with its specification
   and a poisoned twin disagrees only inside its trigger. The data files did not change in either review.
-- **One commit**, `5a840b4`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044). It is stored here as
+- **One commit**, `de6e6b7`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044). It is stored here as
   `discovery/wspnest/backdoor-witness.bundle`; the draft pull-request text is
   `discovery/wspnest/PR_backdoor-witness.md`.
 
@@ -63,6 +63,17 @@ again here on all 450 networks. Outputs are in `experiments/outputs/R4F/audit/`.
 | `limit` with an odd number left gaps in the task numbers and always kept the poisoned twin; tasks were written poisoned twin first | No effect on a reported number | `limit` now keeps tasks 0 to limit-1, written in that order |
 | Leftover wording: "exact", a paraphrase of the suite's bar in quotation marks, "re-run on all 450" | - | Corrected |
 | Maintainer-facing gaps: no row in the suite's README table; "none skipped" needs scipy | - | Row added; stated in the pull-request text |
+
+### Format check against the suite's contribution guide
+Done after the two reviews, against `CONTRIBUTING.md`, the task template, the card schema, the website's merge
+requirements and the three other task pull requests open upstream (which had not changed since the task was built).
+The folder has the same shape as the maintainer's own CPU task. Three things were brought in line:
+- The version is now 0.1.0, as in the template and in all three other tasks in review (it was 1.0.0).
+- The canary is now also in the result files that describe test items (`baselines_*.json`, `data/build_log.json`)
+  and in the record. The frozen test files are unchanged.
+- The record credits the earlier work the task builds on, which the website asks for: TrojAI, Goldwasser et al. on
+  planted backdoors, Tjeng et al. on mixed-integer verification, and the weight-space programming post.
+The pull-request text now walks through the guide's eight steps.
 
 ## Checks that pass on the committed files
 | Check | Result |
