@@ -263,9 +263,14 @@ The task is original, and it stands on these:
 2. Verifier: `selfcheck.py` on all 450 networks (`quality.json`): oracle 1.0; missing and empty answers, the other
    twin's answer and a reply that only quotes the answer format all 0.0; deterministic; canary present everywhere;
    nothing leaked; task names fit Harbor's 32 characters and do not give the label away. `check_docker.py` on 20
-   tasks in real containers (10 plain, 10 decoy; `docker_check.json`): oracle 1.0, no answer 0.0, deterministic. The
-   task has not been run through Harbor itself: the host it was built on blocks Harbor's network sidecar. Two things
-   a reviewer should know:
+   tasks in real containers (10 plain, 10 decoy; `docker_check.json`): oracle 1.0, no answer 0.0, deterministic.
+   `check_harbor.py` runs the tasks through Harbor 0.27.0 itself (`harbor_check.json`): on the same 20 tasks the
+   oracle scores 1.0 twice and the nop agent 0.0, with one reward per task under the harness's own keying, and
+   the oracle scores 1.0 on every one of the 450 tasks. Two caveats about those Harbor runs. The host the task was
+   built on refuses Harbor's network sidecar, so they used `generate(offline_compose=1)`, where Docker itself
+   switches the network off (the approach of the hopper-sensor-dropout task). And the image build could not reach
+   PyPI there, so they started from an image built beforehand from the task's own Dockerfile. A run with Harbor's
+   own network policy on an ordinary Docker host is still worth doing. Three things a reviewer should know:
    - The suite's hidden-answer scan looks for the reference answer's text in the instruction. For a clean twin that
      answer is `{"clean": true}`, which the instruction shows to every network as one of its two answer formats, so
      all 225 clean twins would be flagged. The reference solution therefore writes `{"clean":true}`, without the
@@ -275,8 +280,11 @@ The task is original, and it stands on these:
      version put that index in the task name. A task is now numbered by its pair, with the order of the two twins
      set by a hash, and names are at most 32 characters, where Harbor cuts trial names and `wspnest` keys rewards.
      The hash is public, like the labels in the data files; the point is that a name an agent happens to see gives
-     nothing away. Harbor builds its container project name from the trial name, so an agent with a shell can
-     probably read its task's name; that was not tested. No reported model run saw a name. (audit)
+     nothing away. No reported model run saw a name. (audit)
+   - What the agent can see under Harbor. A probe run from inside the agent's container (`check_harbor.py --probe`)
+     found the network unreachable, no `/tests` directory during the agent's turn (the item with the trigger
+     arrives only for the verifier), and the task's name nowhere in the environment, the hostname, the mounts or
+     the logs.
 3. Baselines and headroom: a random baseline is listed. On `test_decoy` no scripted answer that stays inside the
    protocol (no forward passes) beats always answering "clean" (0.50; the best of 286 detector and recipe pairs
    scores 0.47). The best model scores 0.85 at a 32,000-token limit, and 0.90 on the calls that returned an answer.

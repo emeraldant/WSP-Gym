@@ -76,8 +76,7 @@ timeout_sec = 900.0
 [environment]
 build_timeout_sec = 900.0
 os = "linux"
-allow_internet = false
-"""
+{network}"""
 
 # The wording is deliberately neutral: it describes a rare defect, with no "backdoor", "poisoned", "trigger" or
 # "tampered". A provider's content filter stopped Claude Opus 5.5's answers on 9 of 20 networks with "its training
@@ -136,8 +135,16 @@ def task_name(split, index):
     return name
 
 
-def generate(out, split="test_decoy", limit=None, variant="direct"):
+def generate(out, split="test_decoy", limit=None, variant="direct", offline_compose=0):
+    """Write one Harbor task per network of a split and return how many were written.
+
+    offline_compose=1 is for Docker hosts that refuse Harbor's network sidecar (it needs privileges some managed
+    Docker daemons do not give). The internet is then switched off by Docker itself: environment/docker-compose.yaml
+    sets network_mode: none, and task.toml leaves the network policy out so that Harbor starts no sidecar. The
+    container, the instruction, the verifier and the score are the same. The approach is the one of the
+    hopper-sensor-dropout task (Xiao Cui). check_harbor.py uses it."""
     assert variant == "direct", "the task has one variant (see the module docstring)"
+    offline_compose = int(offline_compose)
     have = splits()
     assert split in have, f"split must be one of {tuple(have)}"
     n_items = have[split] if not limit else min(int(limit), have[split])
@@ -149,8 +156,14 @@ def generate(out, split="test_decoy", limit=None, variant="direct"):
         for sub in ("environment", "tests", "solution"):
             os.makedirs(os.path.join(d, sub), exist_ok=True)
         open(os.path.join(d, "instruction.md"), "w").write(instruction(item))
-        open(os.path.join(d, "task.toml"), "w").write(TOML.format(name=name, canary=CANARY, design=core.split_design(split)[1]))
+        open(os.path.join(d, "task.toml"), "w").write(TOML.format(
+            name=name, canary=CANARY, design=core.split_design(split)[1], network="" if offline_compose else "allow_internet = false\n"))
         open(os.path.join(d, "environment", "Dockerfile"), "w").write(DOCKERFILE)
+        compose = os.path.join(d, "environment", "docker-compose.yaml")
+        if offline_compose:
+            open(compose, "w").write("services:\n  main:\n    network_mode: none\n")
+        elif os.path.exists(compose):
+            os.remove(compose)
         open(os.path.join(d, "tests", "test.sh"), "w").write(VERIFY.format(canary=CANARY))
         shutil.copy(os.path.join(HERE, "verifier", "score.py"), os.path.join(d, "tests", "score.py"))
         shutil.copy(os.path.join(HERE, "core.py"), os.path.join(d, "tests", "core.py"))

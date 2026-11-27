@@ -68,8 +68,10 @@ runtime: >
   verifier; only the weights and the specification reach the agent. The image has Python and numpy because the
   verifier needs them: "Do not write or run code" is not enforced, so check an agent's trajectory. `wspnest check`
   runs selfcheck.py: the generated verifier on all 450 networks, locally, in one to two minutes on 4 cores;
-  check_docker.py runs the same check in containers. Rebuilding the data (build_data.py, about 5 CPU-hours for the
-  four files) or re-running the certificate (verify_data.py --certify) needs scipy; neither is needed to run the task.
+  check_docker.py runs the same check in containers and check_harbor.py through Harbor itself. On a Docker host that
+  refuses Harbor's network sidecar, generate with --opt offline_compose=1: Docker then switches the network off.
+  Rebuilding the data (build_data.py, about 5 CPU-hours for the four files) or re-running the certificate
+  (verify_data.py --certify) needs scipy; neither is needed to run the task.
 notes: >
   An original task from the WSP-Gym discovery campaign. HEADROOM.md records the design history, every baseline, the
   model runs, how the task stands against each quality bar, and the earlier work it builds on (backdoor detection
@@ -85,5 +87,6 @@ notes: >
   code; Claude Opus 5.5 could not be scored through OpenRouter because a provider content filter stopped 3 of 20 and
   7 of 20 answers. The reported model runs were single API calls: the instruction with "written to /app/answer.txt
   and nothing else" replaced by "given as the last line of your reply". A random-edit baseline does not apply (the
-  answer is an input, not an edit); the random-witness row stands in for it. The quality check is recorded by
-  selfcheck.py, not by Harbor: the host the task was built on blocks Harbor's network sidecar.
+  answer is an input, not an edit); the random-witness row stands in for it. quality.json is recorded by
+  selfcheck.py; the Harbor runs are in harbor_check.json (oracle 1.0, nop 0.0), made with offline_compose=1 because
+  the host the task was built on refuses Harbor's network sidecar.

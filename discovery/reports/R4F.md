@@ -11,7 +11,7 @@ its own record is `HEADROOM.md` in that folder.
 - **Frozen, certified data.** 450 networks in four files: plain design 100 val + 200 test, decoy design 50 val + 100
   test. Each passed a mixed-integer check over all its inputs: a clean twin never disagrees with its specification
   and a poisoned twin disagrees only inside its trigger. The data files did not change in either review.
-- **One commit**, `de6e6b7`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044). It is stored here as
+- **One commit**, `b1ee8ff`, on top of WSPNest pull request #1 (`wspnest-quality`, a3b4044). It is stored here as
   `discovery/wspnest/backdoor-witness.bundle`; the draft pull-request text is
   `discovery/wspnest/PR_backdoor-witness.md`.
 
@@ -80,15 +80,18 @@ The pull-request text now walks through the guide's eight steps.
 |---|---|
 | `python -m wspnest check backdoor-witness` (all 450 networks, through `selfcheck.py`) | pass: oracle 1.0; missing, empty, other-twin and format-quoting answers all 0.0; deterministic; canary everywhere; nothing leaked; names fit and carry no label |
 | `python -m wspnest validate` | ok |
-| `pytest tests` in the WSPNest checkout, scipy installed | 18 passed, none skipped (13 tests are this task's) |
+| `pytest tests` in the WSPNest checkout, scipy installed | 19 passed, none skipped (14 tests are this task's) |
 | `verify_data.py` on the four files | ok: twins matched, oracle answers verified, prompt round trip exact, no sampled error |
 | `check_docker.py`, 20 generated tasks in real containers (10 plain, 10 decoy) | oracle 1.0, no answer 0.0, deterministic |
-| A clean checkout restored from the bundle | `validate` ok; 18 tests pass, none skipped |
+| `check_harbor.py`, through Harbor 0.27.0 itself | on 20 tasks: oracle 1.0 twice, nop 0.0, deterministic, one reward per task; the oracle scores 1.0 on all 450 tasks; inside the agent's container the network is unreachable, `/tests` is absent during the agent's turn and the task's name is not visible |
+| A clean checkout restored from the bundle | `validate` ok; 19 tests pass, none skipped |
 | Independent certifier on all 450 networks (`R4F_audit_milp.py`) | all 450 certified; the backdoor found in all 225 poisoned twins when the trigger is not excluded (3.3 CPU-hours) |
 | Directed search outside the trigger on all 450 networks | 0 errors in 3.5 billion forward passes (auditor's run) and in 0.9 billion (re-run) |
 | Certifier against exhaustive enumeration | 292 of 292 hand-made networks (147 of 147 with the trigger not excluded); 148 of 148 and 88 of 88 trained dense networks |
 
-Not done: a run through Harbor itself. This host blocks Harbor's network sidecar.
+The Harbor runs were added last, after noticing that another contributor's pull request (#2) had a way round the
+blocked network sidecar: let Docker switch the network off itself. This task now has the same option
+(`offline_compose=1`). Still not done: a Harbor run with Harbor's own network policy, which this host refuses.
 
 ## Results on `test_decoy` (100 networks: 50 poisoned, 50 clean)
 | | Mean score | Triggers found | Clean called clean | Pairs both right |
